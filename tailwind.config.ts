@@ -8,10 +8,23 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      height: {
+        "screen-svh": "100svh",
+      },
       backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "gradient-bg": "linear-gradient(to left, #2C2828, #403A3A)",
+      },
+      colors: {
+        custom: {
+          green: "#22C55E",
+          red: "#EF4444",
+          blue: "#3B82F6",
+        },
+      },
+      letterSpacing: {
+        title: "20px",
+        subtitle: "6px",
+        text: "2px",
       },
     },
   },
