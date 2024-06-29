@@ -35,7 +35,7 @@ export async function EncryptGameDataAction({
       .sign(secret);
 
     cookies().set("game-data", JWT, cookieProps);
-    return;
+    return JWT;
   } else {
     const gameData = cookieStore.get("game-data")?.value!;
     const obj = {
