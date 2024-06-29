@@ -5,7 +5,7 @@ import GamemodeSelector from "./gamemode-selection.client";
 
 export default function Home() {
   return (
-    <main className="w-full h-fit xl:h-screen-svh bg-gradient-bg  py-6 ">
+    <main className="w-full h-fit xl:h-screen-svh bg-gradient-bg  flex flex-col items-center justify-start py-6 ">
       <WidthWrapper>
         <div className="gap-10 md:gap-4 flex flex-col items-center justify-center w-full h-full">
           <h1 className="font-bold tracking-title  text-white md:text-[40px] text-[30px] text-center xl:text-[80px]">
@@ -21,6 +21,7 @@ export default function Home() {
               description="Try and beat your own high scores"
               features={["High Score Battle", "Player VS CPU"]}
               image={SinglePlayerImage}
+              tag="single"
             ></GamemodeSelector>
             <GamemodeSelector
               title="MULTI PLAYER"
@@ -28,6 +29,7 @@ export default function Home() {
               features={["Co Op Battles", "Online Battles"]}
               image={MultiPlayerImage}
               secondary
+              tag="multi"
             ></GamemodeSelector>
           </div>
         </div>
