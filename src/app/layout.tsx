@@ -19,7 +19,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={pixelifySans.className}>{children}</body>
+      <body className={pixelifySans.className}>
+        <main className="w-full h-fit  bg-gradient-bg  flex flex-col items-center justify-start">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
