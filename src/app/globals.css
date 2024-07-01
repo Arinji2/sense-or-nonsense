@@ -2,32 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Scroll Bar Style */
+::-webkit-scrollbar {
+  background: none;
+  width: 16px;
+  height: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+  border: solid 0 rgb(0 0 0 / 0%);
+  border-right-width: 4px;
+  border-left-width: 4px;
+  border-radius: 2px 9px;
+  box-shadow: rgba(0, 134, 227, 0.14) 0px 0px 0px 1px inset,
+    rgba(34, 197, 94, 0.7) 0px 0px 0px 4px inset !important;
+  -webkit-border-radius: 2px 9px;
+  -webkit-box-shadow: rgba(0, 134, 227, 0.14) 0px 0px 0px 1px inset,
+    rgba(34, 197, 94, 0.7) 0px 0px 0px 4px inset !important;
+}
+
+::-webkit-scrollbar-track-piece {
+  margin: 4px 0;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  border-right-width: 0;
+  border-left-width: 0;
+  border-top-width: 4px;
+  border-bottom-width: 4px;
+  border-radius: 2px 9px;
+  -webkit-border-radius: 2px 9px;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
