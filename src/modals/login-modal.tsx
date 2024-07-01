@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import LoginImage from "../../public/login.png";
-import { EncryptGameDataAction } from "../../utils/game-data";
 import useAnimate from "../../utils/useAnimate";
 
 export default function LoginModal({
@@ -87,21 +86,6 @@ export default function LoginModal({
             <div className="w-fit h-fit flex flex-wrap flex-row items-center justify-center gap-5 xl:gap-10 ">
               <button
                 onClick={async () => {
-                  const token = await EncryptGameDataAction({
-                    key: "mode",
-                    value: mode,
-                    reset: true,
-                  });
-                  await fetch("/api/cookies/set-cookie", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      name: "game-data",
-                      token: token,
-                    }),
-                  });
                   router.push("/login");
                 }}
                 className="xl:w-fit w-full shrink-0 h-fit text-[15px] xl:text-[20px] hover:scale-100 scale-105 transition-transform ease-in-out duration-200  bg-purple-500 text-white rounded-md p-2 xl:p-4 flex flex-col items-center justify-center"
@@ -110,21 +94,6 @@ export default function LoginModal({
               </button>
               <button
                 onClick={async () => {
-                  const token = await EncryptGameDataAction({
-                    key: "mode",
-                    value: mode,
-                    reset: true,
-                  });
-                  await fetch("/api/cookies/set-cookie", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      name: "game-data",
-                      token: token,
-                    }),
-                  });
                   router.push(`/${mode}`);
                 }}
                 className="xl:w-fit w-full shrink-0 h-fit text-[15px] xl:text-[20px] hover:scale-100 scale-105 transition-transform ease-in-out duration-200  bg-blue-500 text-white rounded-md p-2 xl:p-4 flex flex-col items-center justify-center"
