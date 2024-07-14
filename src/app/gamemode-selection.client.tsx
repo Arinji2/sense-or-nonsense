@@ -1,6 +1,7 @@
 "use client";
 import LoginModal from "@/modals/login-modal";
 import Image, { StaticImageData } from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../utils/cn";
@@ -13,6 +14,7 @@ export default function GamemodeSelector({
   description,
   secondary,
   tag,
+  isLoggedin,
 }: {
   title: string;
   features: string[];
@@ -20,22 +22,26 @@ export default function GamemodeSelector({
   description: string;
   secondary?: boolean;
   tag: "single" | "multi";
+  isLoggedin: boolean;
 }) {
   const [documentDefined, setDocumentDefined] = useState(false);
   useEffect(() => {
     setDocumentDefined(true);
   }, []);
   const animate = useAnimate(800);
+  const router = useRouter();
 
   return (
     <>
       {documentDefined &&
+        !isLoggedin &&
         createPortal(
           <LoginModal Animate={animate} mode={tag} />,
           document.body
         )}
       <button
         onClick={() => {
+          if (isLoggedin) router.push(`/${tag}`);
           animate.setQueue(true);
         }}
         className="w-full h-[500px] outline-none xl:h-full group xl:max-h-[500px] flex flex-col max-w-[610px] items-center justify-start rounded-lg relative overflow-hidden"

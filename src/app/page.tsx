@@ -1,9 +1,12 @@
 import WidthWrapper from "@/wrappers/width-wrapper";
 import MultiPlayerImage from "../../public/multi.png";
 import SinglePlayerImage from "../../public/single.png";
+import { GetUserMode } from "../../utils/getMode";
 import GamemodeSelector from "./gamemode-selection.client";
 
-export default function Home() {
+export default async function Home() {
+  const { userID } = await GetUserMode();
+
   return (
     <WidthWrapper>
       <div className="gap-10 xl:h-screen-svh  py-6  md:gap-4 flex flex-col items-center justify-center w-full h-full">
@@ -21,6 +24,7 @@ export default function Home() {
             features={["High Score Battle", "Player VS CPU"]}
             image={SinglePlayerImage}
             tag="single"
+            isLoggedin={userID !== null}
           ></GamemodeSelector>
           <GamemodeSelector
             title="MULTI PLAYER"
@@ -29,6 +33,7 @@ export default function Home() {
             image={MultiPlayerImage}
             secondary
             tag="multi"
+            isLoggedin={userID !== null}
           ></GamemodeSelector>
         </div>
       </div>

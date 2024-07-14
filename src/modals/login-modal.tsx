@@ -1,5 +1,6 @@
 "use client";
 
+import { InitGuest } from "@/actions/guest";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -94,6 +95,7 @@ export default function LoginModal({
               </button>
               <button
                 onClick={async () => {
+                  await InitGuest();
                   router.push(`/${mode}`);
                 }}
                 className="xl:w-fit w-full shrink-0 h-fit text-[15px] xl:text-[20px] hover:scale-100 scale-105 transition-transform ease-in-out duration-200  bg-blue-500 text-white rounded-md p-2 xl:p-4 flex flex-col items-center justify-center"
