@@ -13,14 +13,13 @@ export default function PlayNowButton({
   return (
     <button
       onClick={async () => {
-        console.log(gameData);
         await EncryptGameDataAction({
           key: "game_id",
           value: gameData.id.toString(),
           reset: true,
         });
 
-        router.push("/fighter");
+        router.push("/fighters");
       }}
       className="text-white text-[15px] shrink-0 bg-green-500 p-2 px-4 rounded-sm"
     >
