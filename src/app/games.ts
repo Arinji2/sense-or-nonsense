@@ -3,7 +3,7 @@ import CPUImage from "../../public/modes/cpu.png";
 import HighScoreImage from "../../public/modes/highscore.png";
 import OnlineImage from "../../public/modes/online.png";
 
-const games = [
+export const GamesList = [
   {
     id: 0,
     title: "HIGH SCORE BATTLE",
@@ -42,5 +42,3 @@ const games = [
     showTime: true,
   },
 ];
-
-export default games;

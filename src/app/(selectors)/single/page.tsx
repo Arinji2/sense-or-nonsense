@@ -4,7 +4,7 @@ import { ConnectPBAdmin } from "@/../utils/connectPB";
 import { GetUserMode } from "@/../utils/getMode";
 import { ScoreSchema } from "@/../validations/scores/schema";
 import { ScoresSchemaType } from "@/../validations/scores/types";
-import GAMEDATA from "@/app/games";
+import { GamesList } from "@/app/games";
 import { GameComponent } from "../GameComponent";
 
 export default async function Page() {
@@ -34,7 +34,7 @@ export default async function Page() {
         </h1>
 
         <div className="w-full md:h-full h-full flex flex-row  justify-start items-stretch xl:items-center overflow-x-scroll snap-x snap-mandatory  ">
-          {GAMEDATA.map((game) => {
+          {GamesList.map((game) => {
             if (game.isMultiplayer) return null;
             return (
               <GameComponent

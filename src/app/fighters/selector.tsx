@@ -4,6 +4,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { FightersList } from "./fighters";
+import { DecryptGameDataAction } from "../../../utils/game-data";
+import { useRouter } from "next/navigation";
 const scroll = 400;
 
 function Scroll(
@@ -52,6 +54,7 @@ function Scroll(
 export default function Selector() {
   const scrollingDiv = useRef<HTMLDivElement | null>(null);
   const [clicked, setClicked] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="w-[90%] xl:w-full xl:h-[90%] h-[95%] mb-4 relative xl:max-w-[600px] ">
@@ -76,7 +79,14 @@ export default function Selector() {
         className="w-full xl:max-w-[600px] h-full rounded-md gap-3 no-scrollbar flex flex-row items-center justify-start overflow-x-scroll snap-x snap-mandatory"
       >
         {FightersList.map((fighter) => (
-          <div
+          <button
+            onClick={async () => {
+              const data = await DecryptGameDataAction();
+
+              if (data.game_id && !Number.isInteger(data.game_id)) {
+                router.push("/single");
+              }
+            }}
             key={fighter.id}
             style={{ "--fighterColor": fighter.color } as React.CSSProperties}
             className="w-full max-w-[800px] snap-center h-full brightness-75 hover:brightness-100 transition-all ease-in-out duration-300 shrink-0 bg-gradient-to-b from-[--fighterColor] to from-60%  flex flex-col items-center justify-start py-14 xl:py-16 pt-8 xl:pt-10"
@@ -99,7 +109,7 @@ export default function Selector() {
                 {fighter.description}
               </p>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>
