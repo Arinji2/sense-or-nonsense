@@ -77,6 +77,7 @@ export default function Selector() {
       >
         {FightersList.map((fighter) => (
           <div
+            key={fighter.id}
             style={{ "--fighterColor": fighter.color } as React.CSSProperties}
             className="w-full max-w-[800px] snap-center h-full brightness-75 hover:brightness-100 transition-all ease-in-out duration-300 shrink-0 bg-gradient-to-b from-[--fighterColor] to from-60%  flex flex-col items-center justify-start py-14 xl:py-16 pt-8 xl:pt-10"
           >
