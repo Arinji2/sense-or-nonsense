@@ -43,3 +43,7 @@
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
