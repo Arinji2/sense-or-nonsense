@@ -1,14 +1,16 @@
 "use client";
 
+import FighterModal from "@/modals/fighter-select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { FightersList } from "./fighters";
-import { DecryptGameDataAction } from "../../../utils/game-data";
 import { useRouter } from "next/navigation";
-import useAnimate from "../../../utils/useAnimate";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import LoginModal from "@/modals/login-modal";
+import { DecryptGameDataAction } from "../../../utils/game-data";
+import useAnimate from "../../../utils/useAnimate";
+import { COOPSupportForFighterSelect } from "../../../validations/generic/types";
+import { GamesList } from "../games";
+import { FightersList } from "./fighters";
 const scroll = 400;
 
 function Scroll(
@@ -64,16 +66,50 @@ export default function Selector() {
   const [selectedFighterID, setSelectedFighterID] = useState<number | null>(
     null
   );
+  const [multiplayerSupport, setMultiplayerSupport] =
+    useState<COOPSupportForFighterSelect>({
+      supported: false,
+      currentPlayer: 1,
+    });
   useEffect(() => {
     setDocumentDefined(true);
-  }, []);
+    async function CheckMultiplayerSupport() {
+      const gameData = await DecryptGameDataAction();
+      if (!gameData.game_id) {
+        router.push("/single");
+      }
+
+      const isMuliplayerSupported =
+        GamesList.find((game) => game.id === Number.parseInt(gameData.game_id!))
+          ?.isMultiplayer || false;
+
+      let currentPlayer = 1;
+
+      if (isMuliplayerSupported) {
+        if (Array.isArray(gameData.fighter_data)) {
+          currentPlayer = gameData.fighter_data.length + 1;
+        }
+      }
+
+      setMultiplayerSupport({
+        supported: isMuliplayerSupported,
+        currentPlayer,
+      });
+    }
+    CheckMultiplayerSupport().then();
+  }, [router]);
 
   return (
     <>
       {documentDefined &&
         Number.isInteger(selectedFighterID) &&
         createPortal(
-          <LoginModal Animate={animate} mode={"multi"} />,
+          <FighterModal
+            Animate={animate}
+            fighterID={selectedFighterID!}
+            multiplayerSupport={multiplayerSupport}
+            setMultiplayerSupport={setMultiplayerSupport}
+          />,
           document.body
         )}
 
@@ -109,7 +145,7 @@ export default function Selector() {
               onClick={async () => {
                 const data = await DecryptGameDataAction();
 
-                if (data.game_id && !Number.isInteger(data.game_id)) {
+                if (!data.game_id) {
                   router.push("/single");
                 }
 
@@ -134,7 +170,7 @@ export default function Selector() {
                 <h2 className="font-semibold tracking-subtitle text-white text-[40px] text-center xl:text-[60px] truncate w-full">
                   {fighter.name.toUpperCase()}
                 </h2>
-                <p className="text-white tracking-text text-[25px] text-center line-clamp-3">
+                <p className="text-white tracking-text text-[20px] md:text-[25px] text-center line-clamp-3">
                   {fighter.description}
                 </p>
               </div>
