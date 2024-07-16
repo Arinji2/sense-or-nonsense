@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Pixelify_Sans } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const pixelifySans = Pixelify_Sans({
@@ -20,6 +21,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={pixelifySans.className}>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              backgroundColor: "#2c2828",
+              color: "white",
+              borderRadius: "4px",
+              fontWeight: 500,
+              letterSpacing: "1px",
+            },
+          }}
+        />
         <main className="w-full h-fit  bg-gradient-bg  flex flex-col items-center justify-start">
           {children}
         </main>
