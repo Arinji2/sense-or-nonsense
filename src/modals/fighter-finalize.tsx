@@ -102,14 +102,14 @@ export default function FighterFinalize({
       >
         <div
           ref={containerRef}
-          className="w-[90%] max-w-[1280px] xl:w-[80%] relative  md:h-[80%] h-[80%] flex flex-col group  items-center justify-start gap-10 py-10 xl:h-[500px] bg-custom-black overflow-hidden rounded-md "
+          className="w-[90%] max-w-[1280px] overflow-y-scroll no-scrollbar xl:w-[80%] relative  md:h-[80%] h-[80%] flex flex-col group  items-center justify-start gap-10 py-10 xl:h-[500px] bg-custom-black overflow-hidden rounded-md "
         >
           <button
             aria-label="Close Modal"
             onClick={() => {
-              Animate.setQueue(false);
+              closeOpenMenus({});
             }}
-            className="absolute xl:block hidden top-8 right-8"
+            className="absolute top-2 xl:top-8 right-2 xl:right-8"
           >
             <X className="size-10 text-white" />
           </button>
