@@ -1,5 +1,5 @@
 import WidthWrapper from "@/wrappers/width-wrapper";
-import Selector from "./selector";
+import Selector from "./selector.client";
 
 export default async function Page() {
   return (
