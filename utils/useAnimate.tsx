@@ -12,7 +12,7 @@ export default function useAnimate(animationDuration: number) {
         setShowComponent(true);
       }, 20);
       return () => {
-        clearInterval(interval);
+        clearTimeout(interval);
       };
     } else {
       setShowComponent(false);
@@ -21,10 +21,10 @@ export default function useAnimate(animationDuration: number) {
       }, animationDuration + 100);
 
       return () => {
-        clearInterval(interval);
+        clearTimeout(interval);
       };
     }
-  }, [showComponent, queue, animationDuration]);
+  }, [queue, animationDuration]);
 
   return { showComponent, actualState, setQueue, queue } as const;
 }
