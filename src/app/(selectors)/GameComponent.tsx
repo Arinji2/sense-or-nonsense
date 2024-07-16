@@ -1,4 +1,4 @@
-import GAMEDATA from "@/app/games";
+import { GamesList } from "@/app/games";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "../../../utils/cn";
@@ -13,7 +13,7 @@ export function GameComponent({
   scoreData,
   multi,
 }: {
-  GameData: (typeof GAMEDATA)[0];
+  GameData: (typeof GamesList)[0];
   scoreData?: ScoreSchemaType;
   multi?: boolean;
 }) {

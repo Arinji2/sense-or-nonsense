@@ -1,13 +1,13 @@
 "use client";
 
-import GAMEDATA from "@/app/games";
+import { GamesList } from "@/app/games";
 import { useRouter } from "next/navigation";
 import { EncryptGameDataAction } from "../../../utils/game-data";
 
 export default function PlayNowButton({
   gameData,
 }: {
-  gameData: (typeof GAMEDATA)[0];
+  gameData: (typeof GamesList)[0];
 }) {
   const router = useRouter();
   return (
