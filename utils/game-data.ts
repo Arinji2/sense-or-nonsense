@@ -12,10 +12,12 @@ export async function EncryptGameDataAction({
   key,
   value,
   reset,
+  deleteKey,
 }: {
   key: string;
   value: string;
   reset?: boolean;
+  deleteKey?: boolean;
 }) {
   const secret = new TextEncoder().encode(process.env.SECRET_KEY!);
   const cookieStore = cookies();
@@ -58,6 +60,10 @@ export async function EncryptGameDataAction({
       [key]: value,
     };
 
+    if (deleteKey) {
+      delete obj[key as keyof typeof obj];
+    }
+
     const JWT: string = await new SignJWT({
       obj,
     })
@@ -88,6 +94,7 @@ export async function DecryptGameDataAction() {
   }
 
   const jwtData = decodeJwt(gameData);
+
   const parse = GameDataSchema.safeParse(jwtData.obj!);
 
   if (!parse.success) {

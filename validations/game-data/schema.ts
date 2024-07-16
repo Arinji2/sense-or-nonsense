@@ -22,7 +22,7 @@ export const GameDataSchema = z.object({
     .optional()
     .transform((val) => {
       if (typeof val === "string") {
-        return [JSON.parse(val)] as GameFighterSchemaType[];
+        return JSON.parse(val) as GameFighterSchemaType[];
       } else if (Array.isArray(val)) {
         return val as GameFighterSchemaType[];
       }
