@@ -165,7 +165,7 @@ export default function FighterFinalize({
             </button>
             <button
               onClick={async () => {
-                router.push("/levels");
+                router.push("/backdrop");
               }}
               className="xl:w-fit  w-full shrink-0 h-fit will-change-transform text-[15px] xl:text-[20px] hover:scale-100 scale-105 transition-transform ease-in-out duration-200  bg-green-500 text-white rounded-md p-2 xl:p-4 flex flex-col items-center justify-center"
             >
