@@ -2,7 +2,7 @@ import WidthWrapper from "@/wrappers/width-wrapper";
 import Image from "next/image";
 import { BackdropSelected } from "../../../validations/generic/types";
 import { BackdropsList } from "./backdrops";
-import Menu from "./menu";
+import Menu from "./menu.client";
 import { Selector } from "./selector.client";
 
 export default async function Page({

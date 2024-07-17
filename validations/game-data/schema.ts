@@ -27,4 +27,6 @@ export const GameDataSchema = z.object({
         return val as GameFighterSchemaType[];
       }
     }),
+  difficulty: z.string().optional(),
+  backdrop: z.string().optional(),
 });
