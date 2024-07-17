@@ -19,7 +19,7 @@ export default function PlayNowButton({
           reset: true,
         });
 
-        router.push("/fighters");
+        router.push("/difficulty");
       }}
       className="text-white text-[15px] shrink-0 bg-green-500 p-2 px-4 rounded-sm"
     >
