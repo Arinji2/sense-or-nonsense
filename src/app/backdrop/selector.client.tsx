@@ -1,24 +1,42 @@
 "use client";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { cn } from "../../../utils/cn";
+import { BackdropSelected } from "../../../validations/generic/types";
 import { BackdropsList } from "./backdrops";
 
-function Backdrop({ data }: { data: (typeof BackdropsList)[0] }) {
+function Backdrop({
+  data,
+  backdropData,
+}: {
+  data: (typeof BackdropsList)[0];
+  backdropData: BackdropSelected;
+}) {
   const searchParams = useSearchParams();
-  const params = useMemo(
-    () => new URLSearchParams(searchParams),
-    [searchParams]
-  );
+  const backdropRef = useRef<HTMLButtonElement>(null);
+  const params = new URLSearchParams(searchParams);
+
   const pathname = usePathname();
   const router = useRouter();
-  const isSelected = useMemo(() => {
-    return params.get("selected") === data.id.toString();
-  }, [params, data.id]);
+  const isSelected = useMemo(
+    () => backdropData.verified && backdropData.id === data.id,
+    [backdropData, data]
+  );
+
+  useEffect(() => {
+    if (isSelected) {
+      backdropRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "center",
+      });
+    }
+  }, [isSelected]);
 
   return (
     <button
+      ref={backdropRef}
       onClick={() => {
         params.set("selected", data.id.toString());
         window.history.pushState(null, "", `?${params.toString()}`);
@@ -42,6 +60,7 @@ function Backdrop({ data }: { data: (typeof BackdropsList)[0] }) {
           "object-cover absolute brightness-50 group-hover:brightness-100 transition-all ease-in-out duration-200":
             true,
           "brightness-100": isSelected,
+          "brightness-[.2]": !isSelected && backdropData.verified,
         })}
       />
       <div className="w-full line-clamp-2 bg-black/60 backdrop-blur-[1px] h-fit px-4 py-3">
@@ -53,11 +72,15 @@ function Backdrop({ data }: { data: (typeof BackdropsList)[0] }) {
   );
 }
 
-export function Selector() {
+export function Selector({ backdropData }: { backdropData: BackdropSelected }) {
   return (
     <div className="w-[90%] z-20 xl:w-full py-10 h-fit flex flex-row items-center justify-center gap-10 flex-wrap">
       {BackdropsList.map((backdrop) => (
-        <Backdrop key={backdrop.id} data={backdrop} />
+        <Backdrop
+          key={backdrop.id}
+          data={backdrop}
+          backdropData={backdropData}
+        />
       ))}
     </div>
   );

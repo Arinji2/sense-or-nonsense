@@ -3,7 +3,9 @@
 import { ChevronUpCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { cn } from "../../../utils/cn";
+import { EncryptGameDataAction } from "../../../utils/game-data";
 import { BackdropSelected } from "../../../validations/generic/types";
 import { BackdropsList } from "./backdrops";
 
@@ -56,7 +58,15 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
         </button>
         <button
           disabled={!backdrop.verified}
-          onClick={async () => {}}
+          onClick={async () => {
+            await EncryptGameDataAction({
+              key: "backdrop",
+              value: backdrop.id.toString(),
+            });
+
+            toast.success("Backdrop selected successfully!");
+            router.push("/pregame");
+          }}
           className="w-fit px-6 disabled:bg-gray-500  shrink-0 h-fit will-change-transform text-[10px] xl:text-[15px] enabled:hover:scale-100  scale-105 transition-transform ease-in-out duration-200  bg-green-500 text-white rounded-md p-2 flex flex-col items-center justify-center"
         >
           LETS GO!

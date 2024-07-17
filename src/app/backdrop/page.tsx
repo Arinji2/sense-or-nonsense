@@ -32,26 +32,26 @@ export default async function Page({
     }
   }
   return (
-    <>
+    <div className="w-full h-fit   relative flex flex-col items-center justify-start">
       {selectedBackdropData.verified && (
         <div className="w-full h-[100svh] fixed top-0 left-0">
           <Image
             src={BackdropsList[selectedBackdropData.id].image}
             alt="Backdrop"
             fill
-            className="brightness-[.1] fixed"
+            className="brightness-[.1] fixed object-cover"
           />
         </div>
       )}
       <WidthWrapper>
-        <div className="w-full h-fit     relative flex flex-col py-10  gap-10 items-center justify-start">
+        <div className="w-full h-fit   relative flex flex-col py-10  gap-10 items-center justify-start">
           <h1 className=" z-20 font-bold tracking-subtitle xl:leading-[100px] text-white px-2   w-full md:text-[40px] text-[35px] text-center xl:text-[60px]">
             SELECT A BACKDROP
           </h1>
-          <Selector />
+          <Selector backdropData={selectedBackdropData} />
           <Menu backdrop={selectedBackdropData} />
         </div>
       </WidthWrapper>
-    </>
+    </div>
   );
 }
