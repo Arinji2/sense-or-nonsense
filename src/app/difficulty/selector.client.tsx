@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { EncryptGameDataAction } from "../../../utils/game-data";
 import { DifficultyList } from "./difficully";
 
@@ -16,6 +17,7 @@ export default function Selector() {
               key: "difficulty",
               value: difficulty.id.toString(),
             });
+            toast.success("Difficulty selected successfully!");
 
             router.push("/fighters");
           }}

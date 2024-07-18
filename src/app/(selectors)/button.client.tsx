@@ -2,6 +2,7 @@
 
 import { GamesList } from "@/app/games";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { EncryptGameDataAction } from "../../../utils/game-data";
 
 export default function PlayNowButton({
@@ -18,6 +19,7 @@ export default function PlayNowButton({
           value: gameData.id.toString(),
           reset: true,
         });
+        toast.success("Game selected successfully!");
 
         router.push("/difficulty");
       }}
