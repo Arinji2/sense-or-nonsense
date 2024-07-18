@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { EncryptGameDataAction } from "../../../utils/game-data";
 import { DifficultyList } from "./difficully";
 
 export default function Selector() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   return (
     <>
       {DifficultyList.map((difficulty) => (
@@ -18,8 +19,10 @@ export default function Selector() {
               value: difficulty.id.toString(),
             });
             toast.success("Difficulty selected successfully!");
-
-            router.push("/fighters");
+            const isRedirected = searchParams.get("redirected");
+            if (isRedirected && isRedirected === "true") {
+              router.replace("/pregame");
+            } else router.push("/fighters");
           }}
           key={difficulty.id}
           className="h-[300px] group xl:h-[450px] w-full xl:w-[300px] bg-transparent relative overflow-hidden rounded-md flex gap-5 flex-col items-center  justify-center px-3"

@@ -2,7 +2,7 @@
 
 import { ChevronUpCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { cn } from "../../../utils/cn";
 import { EncryptGameDataAction } from "../../../utils/game-data";
@@ -16,9 +16,30 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
   const params = new URLSearchParams(searchParams);
   const pathname = usePathname();
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const closeOpenMenus = (e: any) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsActive(false);
+      }
+    };
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        setIsActive(false);
+      }
+    });
+
+    window.addEventListener("mousedown", closeOpenMenus);
+    return () => {
+      window.removeEventListener("mousedown", closeOpenMenus);
+    };
+  }, []);
 
   return (
     <div
+      ref={containerRef}
       className={cn({
         "w-full h-[15svh] xl:h-[20svh] py-4 translate-y-[calc(100%-50px)] gap-5 bg-black fixed bottom-0 left-0 z-50 flex flex-col items-center justify-start  transition-all ease-in-out duration-500":
           true,
@@ -29,7 +50,7 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
         onClick={() => {
           setIsActive((prev) => !prev);
         }}
-        className="px-3"
+        className="px-3 outline-none"
       >
         <ChevronUpCircle
           size={24}
@@ -65,7 +86,10 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
             });
 
             toast.success("Backdrop selected successfully!");
-            router.push("/pregame");
+            const isRedirected = searchParams.get("redirected");
+            if (isRedirected && isRedirected === "true") {
+              router.replace("/pregame");
+            } else router.push("/pregame");
           }}
           className="w-fit px-6 disabled:bg-gray-500  shrink-0 h-fit will-change-transform text-[10px] xl:text-[15px] enabled:hover:scale-100  scale-105 transition-transform ease-in-out duration-200  bg-green-500 text-white rounded-md p-2 flex flex-col items-center justify-center"
         >

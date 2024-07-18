@@ -3,7 +3,7 @@
 import { FightersList } from "@/app/fighters/fighters";
 import { X } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
@@ -23,6 +23,7 @@ export default function FighterFinalize({
     GameFighterSchemaType[] | null
   >(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const closeOpenMenus = useCallback(
     async (e: any, override?: boolean) => {
@@ -166,7 +167,10 @@ export default function FighterFinalize({
             <button
               onClick={async () => {
                 Animate.setQueue(false);
-                router.push("/backdrop");
+                const isRedirected = searchParams.get("redirected");
+                if (isRedirected && isRedirected === "true") {
+                  router.replace("/pregame");
+                } else router.push("/backdrop");
               }}
               className="xl:w-fit  w-full shrink-0 h-fit will-change-transform text-[15px] xl:text-[20px] hover:scale-100 scale-105 transition-transform ease-in-out duration-200  bg-green-500 text-white rounded-md p-2 xl:p-4 flex flex-col items-center justify-center"
             >
