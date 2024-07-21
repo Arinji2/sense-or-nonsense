@@ -167,6 +167,11 @@ export default function FighterFinalize({
             <button
               onClick={async () => {
                 Animate.setQueue(false);
+                await EncryptGameDataAction({
+                  key: "game",
+                  deleteKey: true,
+                  value: "",
+                });
                 const isRedirected = searchParams.get("redirected");
                 if (isRedirected && isRedirected === "true") {
                   router.replace("/pregame");

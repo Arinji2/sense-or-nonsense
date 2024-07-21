@@ -15,8 +15,13 @@ export default function Selector() {
         <button
           onClick={async () => {
             await EncryptGameDataAction({
+              key: "game",
+              deleteKey: true,
+              value: "",
+            });
+            await EncryptGameDataAction({
               key: "difficulty",
-              value: difficulty.id.toString(),
+              value: difficulty.level.toString(),
             });
             toast.success("Difficulty selected successfully!");
             const isRedirected = searchParams.get("redirected");

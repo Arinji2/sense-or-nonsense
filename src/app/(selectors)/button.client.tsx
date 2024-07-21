@@ -16,6 +16,11 @@ export default function PlayNowButton({
     <button
       onClick={async () => {
         await EncryptGameDataAction({
+          key: "game",
+          deleteKey: true,
+          value: "",
+        });
+        await EncryptGameDataAction({
           key: "game_id",
           value: gameData.id.toString(),
           reset: true,

@@ -1,5 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
+/**
+ * Custom hook to animate components. Use to render Modals
+ * @param animationDuration Duration of the animation
+ * @returns Object with showComponent, actualState, setQueue, queue
+ */
 export default function useAnimate(animationDuration: number) {
   const [queue, setQueue] = useState(false);
   const [showComponent, setShowComponent] = useState(false);

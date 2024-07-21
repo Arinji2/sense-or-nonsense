@@ -1,8 +1,15 @@
 import z from "zod";
-import { GameFighterSchemaType } from "./types";
+import { GameFighterSchemaType, RoundsSchemaType } from "./types";
 export const GameFighterSchema = z.object({
   fighter_id: z.string(),
   fighter_name: z.string(),
+});
+
+export const RoundsSchema = z.object({
+  round: z.number(),
+  playerIndex: z.number(),
+  recordID: z.string(),
+  isCorrect: z.boolean(),
 });
 
 export const GameDataSchema = z.object({
@@ -29,4 +36,23 @@ export const GameDataSchema = z.object({
     }),
   difficulty: z.string().optional(),
   backdrop: z.string().optional(),
+  game: z
+    .string()
+    .or(z.array(RoundsSchema))
+    .optional()
+    .transform((val) => {
+      if (typeof val === "string") {
+        return JSON.parse(val) as GameFighterSchemaType[];
+      } else if (Array.isArray(val)) {
+        return val as RoundsSchemaType[];
+      }
+    }),
+});
+
+export const WordSchema = z.object({
+  word: z.string(),
+  definition: z.string(),
+  id: z.string(),
+  difficulty: z.string(),
+  isFake: z.boolean(),
 });
