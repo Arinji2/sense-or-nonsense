@@ -12,5 +12,5 @@ export default async function Page() {
   if (!data.fighter_data) Redirection("/fighters");
   if (!data.backdrop) Redirection("/backdrop");
 
-  return <div className="w-full h-[100svh]"></div>;
+  redirect("/game");
 }
