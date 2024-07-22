@@ -90,7 +90,7 @@ export default function Controls({
       setTimer(10);
       setLoading(false);
     },
-    [previousGames, gameData.isMultiplayer, data.id, refresh, gameData]
+    [previousGames, data.id, refresh, gameData]
   );
 
   useEffect(() => {
