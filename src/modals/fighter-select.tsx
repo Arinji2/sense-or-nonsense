@@ -61,25 +61,25 @@ export default function FighterModal({
     <>
       {createPortal(
         <FighterFinalize Animate={finalizeAnimate} />,
-        document.body
+        document.body,
       )}
       {Animate.actualState && (
         <div
           className={`${
-            Animate.showComponent ? "opacity-100 " : " opacity-0 "
-          } w-full h-[100svh]  transition-all duration-700 ease-in-out fixed top-0  z-[1500] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm`}
+            Animate.showComponent ? "opacity-100" : "opacity-0"
+          } fixed top-0 z-[1500] flex h-[100svh] w-full items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm transition-all duration-700 ease-in-out`}
         >
           <div
             ref={containerRef}
-            className="w-[70%] md:w-[50%] max-w-[1280px] xl:w-[80%] md:h-[80%] h-[80%] flex flex-col group xl:flex-row items-center justify-start gap-5 xl:h-[400px] bg-custom-black overflow-hidden rounded-md "
+            className="group flex h-[80%] w-[70%] max-w-[1280px] flex-col items-center justify-start gap-5 overflow-hidden rounded-md bg-custom-black md:h-[80%] md:w-[50%] xl:h-[400px] xl:w-[80%] xl:flex-row"
           >
-            <div className="w-full xl:w-[30%] xl:h-full h-[40%] relative overflow-hidden">
+            <div className="relative h-[40%] w-full overflow-hidden xl:h-full xl:w-[30%]">
               <button
                 aria-label="Close Modal"
                 onClick={() => {
                   Animate.setQueue(false);
                 }}
-                className="absolute xl:hidden block p-2 bg-black/30 z-20 rounded-sm top-8 right-8"
+                className="absolute right-8 top-8 z-20 block rounded-sm bg-black/30 p-2 xl:hidden"
               >
                 <X className="size-5 text-white" />
               </button>
@@ -90,7 +90,7 @@ export default function FighterModal({
                     ?.image!
                 }
                 alt="Login Image"
-                className="xl:object-cover w-full h-full brightness-[.3] object-cover md:object-contain group-hover:brightness-75 group-hover:scale-110 transition-all duration-500 ease-in-out"
+                className="h-full w-full object-cover brightness-[.3] transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:brightness-75 md:object-contain xl:object-cover"
                 sizes="(min-width: 1280px) 500px, 80%"
                 priority
               />
@@ -152,41 +152,41 @@ export default function FighterModal({
 
                 setName("");
               }}
-              className="w-full relative xl:w-[70%] xl:h-full h-fit flex flex-col items-center justify-center  xl:py-20  gap-10  p-6 "
+              className="relative flex h-fit w-full flex-col items-center justify-center gap-10 p-6 xl:h-full xl:w-[70%] xl:py-20"
             >
               <button
                 aria-label="Close Modal"
                 onClick={() => {
                   Animate.setQueue(false);
                 }}
-                className="absolute xl:block hidden top-8 right-8"
+                className="absolute right-8 top-8 hidden xl:block"
               >
                 <X className="size-10 text-white" />
               </button>
-              <h4 className="font-bold text-[20px] md:text-[35px] text-center tracking-subtitle  text-green-500">
+              <h4 className="text-center text-[20px] font-bold tracking-subtitle text-green-500 md:text-[35px]">
                 {" "}
                 SETUP FIGHTER FOR PLAYER {multiplayerSupport.currentPlayer}
               </h4>
-              <div className="w-full max-w-[400px] h-fit flex flex-col items-start justify-center gap-2">
+              <div className="flex h-fit w-full max-w-[400px] flex-col items-start justify-center gap-2">
                 <p className="text-[15px] font-medium text-white">NAME:</p>
                 <input
                   type="text"
                   maxLength={15}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full py-2 rounded-sm outline-none h-10 bg-transparent border-b-2 border-white/50 text-white"
+                  className="h-10 w-full rounded-sm border-b-2 border-white/50 bg-transparent py-2 text-white outline-none"
                 />
               </div>
-              <div className="w-fit h-fit flex flex-wrap flex-row items-center justify-center gap-5 xl:gap-10 ">
+              <div className="flex h-fit w-fit flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
                 <button
                   type="submit"
                   disabled={name.length === 0}
                   className={cn(
                     {
-                      "xl:w-fit  w-full shrink-0 h-fit text-[15px] opacity-100 xl:text-[20px] hover:scale-100 scale-105 transition-all ease-in-out duration-200  bg-blue-500 text-white rounded-md p-2 xl:p-4 flex flex-col items-center justify-center":
+                      "flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-blue-500 p-2 text-[15px] text-white opacity-100 transition-all duration-200 ease-in-out hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]":
                         true,
                     },
-                    { "opacity-0": name.length === 0 }
+                    { "opacity-0": name.length === 0 },
                   )}
                 >
                   Create {name}

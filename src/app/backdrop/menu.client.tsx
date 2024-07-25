@@ -41,7 +41,7 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
     <div
       ref={containerRef}
       className={cn({
-        "w-full h-[15svh] xl:h-[20svh] py-4 translate-y-[calc(100%-50px)] gap-5 bg-black fixed bottom-0 left-0 z-50 flex flex-col items-center justify-start  transition-all ease-in-out duration-500":
+        "fixed bottom-0 left-0 z-50 flex h-[15svh] w-full translate-y-[calc(100%-50px)] flex-col items-center justify-start gap-5 bg-black py-4 transition-all duration-500 ease-in-out xl:h-[20svh]":
           true,
         "translate-y-0": isActive,
       })}
@@ -56,13 +56,13 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
           size={24}
           strokeWidth={3}
           className={cn({
-            "text-white transition-all ease-in-out duration-500 rotate-0": true,
+            "rotate-0 text-white transition-all duration-500 ease-in-out": true,
             "rotate-180": isActive,
             "animate-bounce": backdrop.verified && !isActive,
           })}
         />
       </button>
-      <div className="w-full h-fit flex mt-auto flex-row items-center gap-5 xl:gap-10 flex-wrap justify-center">
+      <div className="mt-auto flex h-fit w-full flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
         <button
           disabled={!backdrop.verified}
           onClick={() => {
@@ -73,7 +73,7 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
               scroll: false,
             });
           }}
-          className="w-fit px-6 disabled:bg-gray-500  shrink-0 h-fit will-change-transform text-[10px] xl:text-[15px] enabled:hover:scale-100  scale-105 transition-transform ease-in-out duration-200  bg-red-500 text-white rounded-md p-2 flex flex-col items-center justify-center"
+          className="flex h-fit w-fit shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-red-500 p-2 px-6 text-[10px] text-white transition-transform duration-200 ease-in-out will-change-transform enabled:hover:scale-100 disabled:bg-gray-500 xl:text-[15px]"
         >
           RESET
         </button>
@@ -91,7 +91,7 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
               router.replace("/pregame");
             } else router.push("/pregame");
           }}
-          className="w-fit px-6 disabled:bg-gray-500  shrink-0 h-fit will-change-transform text-[10px] xl:text-[15px] enabled:hover:scale-100  scale-105 transition-transform ease-in-out duration-200  bg-green-500 text-white rounded-md p-2 flex flex-col items-center justify-center"
+          className="flex h-fit w-fit shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 px-6 text-[10px] text-white transition-transform duration-200 ease-in-out will-change-transform enabled:hover:scale-100 disabled:bg-gray-500 xl:text-[15px]"
         >
           LETS GO!
         </button>
@@ -101,7 +101,7 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
             setRandomSelected(true);
             params.set(
               "selected",
-              Math.floor(Math.random() * BackdropsList.length).toString()
+              Math.floor(Math.random() * BackdropsList.length).toString(),
             );
             window.history.pushState(null, "", `?${params.toString()}`);
 
@@ -110,7 +110,7 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
             });
             setRandomSelected(false);
           }}
-          className="w-fit px-6 disabled:bg-gray-500  shrink-0 h-fit will-change-transform text-[10px] xl:text-[15px] enabled:hover:scale-100  scale-105 transition-transform ease-in-out duration-200  bg-purple-500 text-white rounded-md p-2 flex flex-col items-center justify-center"
+          className="flex h-fit w-fit shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-purple-500 p-2 px-6 text-[10px] text-white transition-transform duration-200 ease-in-out will-change-transform enabled:hover:scale-100 disabled:bg-gray-500 xl:text-[15px]"
         >
           RANDOM
         </button>

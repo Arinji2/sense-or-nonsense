@@ -10,6 +10,7 @@ export const RoundsSchema = z.object({
   playerIndex: z.number(),
   recordID: z.string(),
   isCorrect: z.boolean(),
+  timeElapsed: z.number(),
 });
 
 export const GameDataSchema = z.object({

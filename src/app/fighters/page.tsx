@@ -4,10 +4,10 @@ import Selector from "./selector.client";
 export default async function Page() {
   return (
     <WidthWrapper>
-      <div className="w-full h-[100svh] relative flex flex-col xl:flex-row gap-10 items-center xl:justify-between justify-start">
-        <h1 className=" font-bold tracking-subtitle xl:leading-[100px] text-red-500 px-2   w-full md:text-[40px] text-[35px] text-center xl:text-[60px]">
-          SELECT <span className="xl:block inline">YOUR</span>{" "}
-          <span className="xl:block inline">FIGHTER</span>
+      <div className="relative flex h-[100svh] w-full flex-col items-center justify-start gap-10 xl:flex-row xl:justify-between">
+        <h1 className="w-full px-2 text-center text-[35px] font-bold tracking-subtitle text-red-500 md:text-[40px] xl:text-[60px] xl:leading-[100px]">
+          SELECT <span className="inline xl:block">YOUR</span>{" "}
+          <span className="inline xl:block">FIGHTER</span>
         </h1>
         <Selector />
       </div>

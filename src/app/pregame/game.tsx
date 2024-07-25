@@ -5,23 +5,23 @@ import EditButton from "./edit.client";
 export default function Game({ gameID }: { gameID: string }) {
   const game = GamesList.find((game) => game.id === Number.parseInt(gameID))!;
   return (
-    <div className="w-full h-fit flex flex-col items-start justify-center gap-4">
-      <div className="w-fit h-fit flex flex-row items-center justify-center gap-6">
-        <p className="text-2xl md:text-3xl text-white font-medium tracking-text">
+    <div className="flex h-fit w-full flex-col items-start justify-center gap-4">
+      <div className="flex h-fit w-fit flex-row items-center justify-center gap-6">
+        <p className="text-2xl font-medium tracking-text text-white md:text-3xl">
           <span className="text-yellow-500">1. </span>GAME
         </p>
         <EditButton objKey="game_id" reset />
       </div>
-      <button className="xl:w-[300px] w-full aspect-video rounded-md overflow-hidden flex flex-col items-start justify-end  relative">
+      <button className="relative flex aspect-video w-full flex-col items-start justify-end overflow-hidden rounded-md xl:w-[300px]">
         <Image
           src={game.image}
           alt={`${game.title}`}
           fill
           sizes="(min-width: 1280px) 25%, 90%"
-          className="object-cover absolute brightness-50 group-hover:brightness-100 transition-all ease-in-out duration-200"
+          className="absolute object-cover brightness-50 transition-all duration-200 ease-in-out group-hover:brightness-100"
         />
-        <div className="w-full line-clamp-2 bg-black/60 backdrop-blur-[1px] h-fit px-4 py-3">
-          <p className="text-white font-medium text-[15px] xl:text-[20px] text-left ">
+        <div className="line-clamp-2 h-fit w-full bg-black/60 px-4 py-3 backdrop-blur-[1px]">
+          <p className="text-left text-[15px] font-medium text-white xl:text-[20px]">
             {game.title}
           </p>
         </div>

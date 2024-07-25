@@ -23,7 +23,7 @@ export default function EditButton({
 
         router.refresh();
       }}
-      className="py-1 px-4 rounded-sm bg-red-500 inline text-white text-lg"
+      className="inline rounded-sm bg-red-500 px-4 py-1 text-lg text-white"
     >
       EDIT
     </button>

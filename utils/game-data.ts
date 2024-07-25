@@ -115,7 +115,7 @@ export async function DecryptGameDataAction() {
 export async function ValidateGameDataAction(data: GameDataSchemaType) {
   if (data.game_id) {
     const game = GamesList.find(
-      (game) => game.id === Number.parseInt(data.game_id!)
+      (game) => game.id === Number.parseInt(data.game_id!),
     );
     if (!game) {
       return false;
@@ -125,7 +125,7 @@ export async function ValidateGameDataAction(data: GameDataSchemaType) {
   if (data.fighter_data) {
     data.fighter_data.forEach((player) => {
       const fighterData = FightersList.find(
-        (fighter) => fighter.id === Number.parseInt(player.fighter_id)
+        (fighter) => fighter.id === Number.parseInt(player.fighter_id),
       );
       if (!fighterData) {
         return false;

@@ -33,7 +33,7 @@ export default function RootLayout({
             },
           }}
         />
-        <main className="w-full h-fit  bg-gradient-bg  flex flex-col items-center justify-start">
+        <main className="flex h-fit w-full flex-col items-center justify-start bg-gradient-bg">
           {children}
         </main>
       </body>

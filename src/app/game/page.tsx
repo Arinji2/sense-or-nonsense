@@ -25,15 +25,15 @@ export default async function Page() {
 
   const pb = await ConnectPBAdmin();
   const SelectedGame = GamesList.find(
-    (game) => game.id === Number.parseInt(game_id)
+    (game) => game.id === Number.parseInt(game_id),
   )!;
 
   const currentPlayer = SelectedGame.isMultiplayer
     ? games.length === 0
       ? "0"
       : games[games.length - 1].playerIndex.toString() === "0"
-      ? "1"
-      : "0"
+        ? "1"
+        : "0"
     : "0";
 
   const filteredIDs = (() => {
@@ -51,10 +51,10 @@ export default async function Page() {
   });
 
   const SelectedBackdrop = BackdropsList.find(
-    (backdrops) => backdrops.id === Number.parseInt(backdrop)
+    (backdrops) => backdrops.id === Number.parseInt(backdrop),
   )!;
   const SelectedDifficulty = DifficultyList.find(
-    (difficulties) => difficulties.level === Number.parseInt(difficulty)
+    (difficulties) => difficulties.level === Number.parseInt(difficulty),
   )!;
   const SelectedPlayer = fighter_data[Number.parseInt(currentPlayer)];
 
@@ -76,31 +76,31 @@ export default async function Page() {
     wordData.word.slice(0, 1).toUpperCase() + wordData.word.slice(1);
 
   return (
-    <div className="w-full h-[100svh] flex flex-col items-center  justify-center">
-      <div className="w-full h-full absolute left-0 top-0">
+    <div className="flex h-[100svh] w-full flex-col items-center justify-center">
+      <div className="absolute left-0 top-0 h-full w-full">
         <Image
           src={SelectedBackdrop.image}
           alt={SelectedBackdrop.name}
           fill
-          className="object-cover brightness-[.3] "
+          className="object-cover brightness-[.3]"
           quality={50}
           priority
         />
-        <div className="w-full h-full bg-gradient-to-b backdrop-blur-[2px]  from-[#2C282830] to-[#2c282890] from-0% to-60% relative z-20"></div>
+        <div className="relative z-20 h-full w-full bg-gradient-to-b from-[#2C282830] from-0% to-[#2c282890] to-60% backdrop-blur-[2px]"></div>
       </div>
-      <div className="fixed top-5 xl:right-5 z-20 bg-black px-3 py-2 flex flex-row items-center rounded-md justify-center gap-2">
+      <div className="fixed top-5 z-20 flex flex-row items-center justify-center gap-2 rounded-md bg-black px-3 py-2 xl:right-5">
         <span className="text-lg font-medium text-green-500">SENSE</span>
         <span className="text-lg font-medium text-white">OR</span>
         <span className="text-lg font-medium text-red-500">NONSENSE</span>
       </div>
 
-      <div className="w-full h-full flex flex-col z-20  relative justify-end">
-        <div className="w-full h-[80%] md:h-[60%] pb-5 flex flex-col items-center  justify-start gap-10 ">
-          <h1 className=" font-medium text-[25px] md:text-[40px] text-white text-center line-clamp-2 md:truncate max-w-[800px] p-2 tracking-subtitle">
+      <div className="relative z-20 flex h-full w-full flex-col justify-end">
+        <div className="flex h-[80%] w-full flex-col items-center justify-start gap-10 pb-5 md:h-[60%]">
+          <h1 className="line-clamp-2 max-w-[800px] p-2 text-center text-[25px] font-medium tracking-subtitle text-white md:truncate md:text-[40px]">
             {wordData.word.toUpperCase()}
           </h1>
-          <div className="relative flex flex-col items-center  justify-center w-fit max-w-[80%] bg-[#FCAB3A] rounded-md p-3">
-            <p className="tracking-text line-clamp-4 md:line-clamp-2  text-center text-[15px] md:text-[20px] text-black">
+          <div className="relative flex w-fit max-w-[80%] flex-col items-center justify-center rounded-md bg-[#FCAB3A] p-3">
+            <p className="line-clamp-4 text-center text-[15px] tracking-text text-black md:line-clamp-2 md:text-[20px]">
               {wordData.definition}
             </p>
             <Report />
@@ -116,7 +116,7 @@ export default async function Page() {
             }
             playerName={SelectedPlayer.fighter_name}
           />
-          <div className="mt-auto md:flex hidden  flex-row items-center  justify-center gap-20">
+          <div className="mt-auto hidden flex-row items-center justify-center gap-20 md:flex">
             <RenderStats
               {...{
                 CurrentRound,
@@ -130,7 +130,7 @@ export default async function Page() {
           </div>
           <Report isStatic />
           <Menu>
-            <div className="flex w-[80%] flex-col items-start gap-6  justify-start">
+            <div className="flex w-[80%] flex-col items-start justify-start gap-6">
               <RenderStats
                 {...{
                   CurrentRound,

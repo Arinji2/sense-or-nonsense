@@ -9,15 +9,15 @@ export default async function Home() {
 
   return (
     <WidthWrapper>
-      <div className="gap-10 xl:h-screen-svh  py-6  md:gap-4 flex flex-col items-center justify-center w-full h-full">
-        <h1 className="font-bold tracking-title  text-white md:text-[40px] text-[30px] text-center xl:text-[80px]">
-          <span className="text-green-500 md:inline block">SENSE</span> OR{" "}
+      <div className="flex h-full w-full flex-col items-center justify-center gap-10 py-6 md:gap-4 xl:h-screen-svh">
+        <h1 className="text-center text-[30px] font-bold tracking-title text-white md:text-[40px] xl:text-[80px]">
+          <span className="block text-green-500 md:inline">SENSE</span> OR{" "}
           <span className="text-red-500">NONSENSE</span>
         </h1>
-        <p className="text-white tracking-text text-[20px] text-center xl:text-[30px]">
+        <p className="text-center text-[20px] tracking-text text-white xl:text-[30px]">
           "Mandela Effect on basic English Words amplified"
         </p>
-        <div className="mt-auto w-full h-full flex flex-row items-end justify-center flex-wrap xl:flex-nowrap gap-10">
+        <div className="mt-auto flex h-full w-full flex-row flex-wrap items-end justify-center gap-10 xl:flex-nowrap">
           <GamemodeSelector
             title="SINGLE PLAYER"
             description="Try and beat your own high scores"

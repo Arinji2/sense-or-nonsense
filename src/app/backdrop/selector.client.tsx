@@ -21,7 +21,7 @@ function Backdrop({
   const router = useRouter();
   const isSelected = useMemo(
     () => backdropData.verified && backdropData.id === data.id,
-    [backdropData, data]
+    [backdropData, data],
   );
 
   useEffect(() => {
@@ -46,7 +46,7 @@ function Backdrop({
         });
       }}
       className={cn({
-        "w-full xl:w-[25%] group h-[200px] rounded-md overflow-hidden flex flex-col items-start justify-end  shrink-0 relative":
+        "group relative flex h-[200px] w-full shrink-0 flex-col items-start justify-end overflow-hidden rounded-md xl:w-[25%]":
           true,
         "shadow-xl shadow-white/10": isSelected,
       })}
@@ -57,14 +57,14 @@ function Backdrop({
         fill
         sizes="(min-width: 1280px) 25%, 90%"
         className={cn({
-          "object-cover absolute brightness-50 group-hover:brightness-100 transition-all ease-in-out duration-200":
+          "absolute object-cover brightness-50 transition-all duration-200 ease-in-out group-hover:brightness-100":
             true,
           "brightness-100": isSelected,
           "brightness-[.2]": !isSelected && backdropData.verified,
         })}
       />
-      <div className="w-full line-clamp-2 bg-black/60 backdrop-blur-[1px] h-fit px-4 py-3">
-        <p className="text-white font-medium text-[15px] xl:text-[20px] text-left ">
+      <div className="line-clamp-2 h-fit w-full bg-black/60 px-4 py-3 backdrop-blur-[1px]">
+        <p className="text-left text-[15px] font-medium text-white xl:text-[20px]">
           {data.name}
         </p>
       </div>
@@ -74,7 +74,7 @@ function Backdrop({
 
 export function Selector({ backdropData }: { backdropData: BackdropSelected }) {
   return (
-    <div className="w-[90%] z-20 xl:w-full py-10 h-fit flex flex-row items-center justify-center gap-10 flex-wrap">
+    <div className="z-20 flex h-fit w-[90%] flex-row flex-wrap items-center justify-center gap-10 py-10 xl:w-full">
       {BackdropsList.map((backdrop) => (
         <Backdrop
           key={backdrop.id}

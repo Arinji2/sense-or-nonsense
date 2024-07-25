@@ -9,11 +9,11 @@ export default async function Page({}) {
 
   return (
     <WidthWrapper>
-      <div className="w-full h-fit min-h-[100svh]  relative flex flex-col py-10  gap-10 items-center justify-start">
-        <h1 className=" z-20 font-bold tracking-subtitle xl:leading-[100px] text-white px-2   w-full md:text-[40px] text-[35px] text-center xl:text-[60px]">
+      <div className="relative flex h-fit min-h-[100svh] w-full flex-col items-center justify-start gap-10 py-10">
+        <h1 className="z-20 w-full px-2 text-center text-[35px] font-bold tracking-subtitle text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
           SELECT A DIFFICULTY
         </h1>
-        <div className="w-[95%] xl:w-full h-fit flex flex-row items-center justify-center gap-10 flex-wrap">
+        <div className="flex h-fit w-[95%] flex-row flex-wrap items-center justify-center gap-10 xl:w-full">
           <Selector />
         </div>
       </div>

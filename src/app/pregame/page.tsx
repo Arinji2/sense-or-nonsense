@@ -21,32 +21,32 @@ export default async function Page() {
   const { fighter_data, game_id, backdrop, difficulty } = data;
 
   return (
-    <div className="w-full h-full relative flex flex-col items-center justify-start">
+    <div className="relative flex h-full w-full flex-col items-center justify-start">
       <WidthWrapper>
-        <div className="w-full pb-10 xl:h-[100svh] relative flex flex-col items-center gap-12 justify-start">
-          <h1 className=" font-bold tracking-subtitle xl:leading-[100px] text-white px-2   w-full md:text-[40px] text-[35px] text-center xl:text-[60px]">
+        <div className="relative flex w-full flex-col items-center justify-start gap-12 pb-10 xl:h-[100svh]">
+          <h1 className="w-full px-2 text-center text-[35px] font-bold tracking-subtitle text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
             CONFIRM YOUR SELECTIONS
           </h1>
-          <div className="w-full  h-fit flex flex-col gap-6 xl:flex-row items-center justify-center xl:gap-20">
-            <div className="xl:w-fit w-[80%] h-fit flex flex-col items-start justify-start gap-6">
+          <div className="flex h-fit w-full flex-col items-center justify-center gap-6 xl:flex-row xl:gap-20">
+            <div className="flex h-fit w-[80%] flex-col items-start justify-start gap-6 xl:w-fit">
               <Game gameID={game_id!} />
               <Fighters fighter_data={fighter_data!} />
             </div>
-            <div className="xl:w-fit w-[80%] h-fit flex flex-col items-start justify-start gap-6">
+            <div className="flex h-fit w-[80%] flex-col items-start justify-start gap-6 xl:w-fit">
               <Backdrop backdropID={backdrop!} />
               <Difficulty difficultyID={difficulty!} />
             </div>
           </div>
-          <div className="w-[80%] px-2 h-fit flex flex-row items-center  justify-center gap-6 flex-wrap">
+          <div className="flex h-fit w-[80%] flex-row flex-wrap items-center justify-center gap-6 px-2">
             <Link
               href="/game"
-              className="xl:w-fit  w-full shrink-0 h-fit will-change-transform text-[15px] xl:text-[20px] hover:scale-100 scale-105 transition-transform ease-in-out duration-200  bg-green-500 text-white rounded-md p-2 xl:p-4 flex flex-col items-center justify-center"
+              className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
             >
               START GAME{" "}
             </Link>
             <Link
               href="/pregame/instructions"
-              className="xl:w-fit  w-full shrink-0 h-fit will-change-transform text-[15px] xl:text-[20px] hover:scale-100 scale-105 transition-transform ease-in-out duration-200  bg-purple-500 text-white rounded-md p-2 xl:p-4 flex flex-col items-center justify-center"
+              className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-purple-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
             >
               HOW TO PLAY
             </Link>

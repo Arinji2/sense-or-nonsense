@@ -114,7 +114,7 @@ export async function GetWordData({
     [currentPlayer, filteredIDs],
     {
       revalidate: 5,
-    }
+    },
   )();
 
   return wordData;

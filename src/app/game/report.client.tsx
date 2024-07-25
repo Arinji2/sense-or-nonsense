@@ -22,19 +22,19 @@ export default function Report({ isStatic }: { isStatic?: boolean }) {
       onTouchEnd={() => setShowTooltip(false)}
       onFocus={() => setShowTooltip(true)}
       className={cn({
-        "shadow-white/10 group shadow-xl  absolute md:flex hidden -right-24 flex-col items-center justify-center size-10 rounded-full bg-black":
+        "group absolute -right-24 hidden size-10 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 md:flex":
           true,
-        "static -right-auto md:hidden flex": isStatic,
+        "-right-auto static flex md:hidden": isStatic,
       })}
     >
       <div
         className={cn({
-          "w-fit h-fit p-2 bg-black  group- pointer-events-none absolute -top-[150%] left-0 rounded-sm opacity-0 transition-opacity ease-in-out duration-300":
+          "group- pointer-events-none absolute -top-[150%] left-0 h-fit w-fit rounded-sm bg-black p-2 opacity-0 transition-opacity duration-300 ease-in-out":
             true,
-          "opacity-100 ": showTooltip,
+          "opacity-100": showTooltip,
         })}
       >
-        <p className="text-white text-xs tracking-text whitespace-nowrap text-left">
+        <p className="whitespace-nowrap text-left text-xs tracking-text text-white">
           See something broken? <br /> Report this word!
         </p>
       </div>

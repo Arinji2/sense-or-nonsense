@@ -23,7 +23,7 @@ export default async function Page({
     Number.isInteger(Number.parseInt(selected))
   ) {
     const selectedBackdrop = BackdropsList.findIndex(
-      (backdrop) => backdrop.id === Number.parseInt(selected)
+      (backdrop) => backdrop.id === Number.parseInt(selected),
     );
 
     if (selectedBackdrop !== -1) {
@@ -32,20 +32,20 @@ export default async function Page({
     }
   }
   return (
-    <div className="w-full h-fit   relative flex flex-col items-center justify-start">
+    <div className="relative flex h-fit w-full flex-col items-center justify-start">
       {selectedBackdropData.verified && (
-        <div className="w-full h-[100svh] fixed top-0 left-0">
+        <div className="fixed left-0 top-0 h-[100svh] w-full">
           <Image
             src={BackdropsList[selectedBackdropData.id].image}
             alt="Backdrop"
             fill
-            className="brightness-[.1] fixed object-cover"
+            className="fixed object-cover brightness-[.1]"
           />
         </div>
       )}
       <WidthWrapper>
-        <div className="w-full h-fit   relative flex flex-col py-10  gap-10 items-center justify-start">
-          <h1 className=" z-20 font-bold tracking-subtitle xl:leading-[100px] text-white px-2   w-full md:text-[40px] text-[35px] text-center xl:text-[60px]">
+        <div className="relative flex h-fit w-full flex-col items-center justify-start gap-10 py-10">
+          <h1 className="z-20 w-full px-2 text-center text-[35px] font-bold tracking-subtitle text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
             SELECT A BACKDROP
           </h1>
           <Selector backdropData={selectedBackdropData} />

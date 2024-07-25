@@ -27,13 +27,13 @@ export default async function Page() {
   }
 
   return (
-    <div className="w-full h-[1px] gap-2 xl:max-h-svh min-h-[100svh] relative flex flex-col items-center justify-center">
+    <div className="relative flex h-[1px] min-h-[100svh] w-full flex-col items-center justify-center gap-2 xl:max-h-svh">
       <WidthWrapper>
-        <h1 className=" absolute md:static  z-50 top-5 font-bold tracking-subtitle px-2  text-white md:text-[40px] text-[25px] text-center xl:text-[60px]">
+        <h1 className="absolute top-5 z-50 px-2 text-center text-[25px] font-bold tracking-subtitle text-white md:static md:text-[40px] xl:text-[60px]">
           CHOOSE A GAME MODE
         </h1>
 
-        <div className="w-full md:h-full h-full flex flex-row  justify-start items-stretch xl:items-center overflow-x-scroll snap-x snap-mandatory  ">
+        <div className="flex h-full w-full snap-x snap-mandatory flex-row items-stretch justify-start overflow-x-scroll md:h-full xl:items-center">
           {GamesList.map((game) => {
             if (!game.isMultiplayer) return null;
             return (

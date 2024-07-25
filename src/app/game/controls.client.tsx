@@ -15,7 +15,7 @@ import { GamesList } from "../games";
 function GetRoundsAndPlayers(
   gameData: (typeof GamesList)[0],
   previousGames: RoundsSchemaType[],
-  previousGame: RoundsSchemaType
+  previousGame: RoundsSchemaType,
 ) {
   let roundNumber, indexNumber;
 
@@ -64,7 +64,7 @@ export default function Controls({
       const { indexNumber, roundNumber } = GetRoundsAndPlayers(
         gameData,
         previousGames,
-        previousGame
+        previousGame,
       );
 
       const roundData = {
@@ -72,6 +72,7 @@ export default function Controls({
         playerIndex: indexNumber,
         isCorrect: correct,
         recordID: data.id,
+        timeElapsed: 10 - timer,
       } as RoundsSchemaType;
 
       previousGames.push(roundData);
@@ -90,7 +91,7 @@ export default function Controls({
       setTimer(10);
       setLoading(false);
     },
-    [previousGames, data.id, refresh, gameData]
+    [previousGames, data.id, refresh, gameData],
   );
 
   useEffect(() => {
@@ -118,12 +119,12 @@ export default function Controls({
     return loading ? (
       <Loader2 className="size-[40px] animate-spin text-black" />
     ) : (
-      <p className="text-black text-[40px] font-bold">{timer}</p>
+      <p className="text-[40px] font-bold text-black">{timer}</p>
     );
   }, [loading, timer]);
 
   return (
-    <div className="w-full h-fit flex flex-row items-center justify-center xl:gap-20 gap-10">
+    <div className="flex h-fit w-full flex-row items-center justify-center gap-10 xl:gap-20">
       <button
         disabled={loading}
         onClick={() => {
@@ -143,17 +144,17 @@ export default function Controls({
             answerSubmitted(true);
           }
         }}
-        className="shadow-white/10 group shadow-xl flex flex-col items-center justify-center size-20 rounded-full bg-black"
+        className="group flex size-20 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10"
       >
         <Image
           src={"/game/real.png"}
-          className="group-hover:-translate-y-1 transition-all ease-in-out duration-300"
+          className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
           alt="Real"
           width={40}
           height={40}
         />
       </button>
-      <div className="shadow-white/10 shadow-xl flex flex-col items-center justify-center size-20 rounded-full bg-[#FCAB3A]">
+      <div className="flex size-20 flex-col items-center justify-center rounded-full bg-[#FCAB3A] shadow-xl shadow-white/10">
         {timerDisplay}
       </div>
       <button
@@ -175,10 +176,10 @@ export default function Controls({
             answerSubmitted(true);
           }
         }}
-        className="shadow-white/10 group shadow-xl flex flex-col items-center justify-center size-20 rounded-full bg-black"
+        className="group flex size-20 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10"
       >
         <Image
-          className="group-hover:-translate-y-1 transition-all ease-in-out duration-300"
+          className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
           src={"/game/fake.png"}
           alt="Fake"
           width={40}

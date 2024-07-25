@@ -31,7 +31,7 @@ export default function PlayNowButton({
           router.replace("/pregame");
         } else router.push("/difficulty");
       }}
-      className="text-white text-[15px] shrink-0 bg-green-500 p-2 px-4 rounded-sm"
+      className="shrink-0 rounded-sm bg-green-500 p-2 px-4 text-[15px] text-white"
     >
       PLAY NOW
     </button>

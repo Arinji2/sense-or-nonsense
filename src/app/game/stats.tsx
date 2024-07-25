@@ -61,13 +61,13 @@ function Stat({
   updatedTitle =
     updatedTitle.length > 20 ? updatedTitle.slice(0, 20) + "..." : updatedTitle;
   return (
-    <div className="w-fit h-fit xl:max-w-[150px] flex flex-row items-center gap-2 min-w-0 max-w-full justify-start">
-      <p className="text-[#FCAB3A] text-2xl font-bold">{id}.</p>
-      <div className="w-full h-fit flex flex-col items-start justify-center ">
-        <p className="text-[#FCAB3A] text-2xl font-bold truncate w-full">
+    <div className="flex h-fit w-fit min-w-0 max-w-full flex-row items-center justify-start gap-2 xl:max-w-[150px]">
+      <p className="text-2xl font-bold text-[#FCAB3A]">{id}.</p>
+      <div className="flex h-fit w-full flex-col items-start justify-center">
+        <p className="w-full truncate text-2xl font-bold text-[#FCAB3A]">
           {title}
         </p>
-        <p className="text-white text-2xl font-bold -mt-2 truncate w-full ">
+        <p className="-mt-2 w-full truncate text-2xl font-bold text-white">
           {value}
         </p>
       </div>

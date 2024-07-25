@@ -10,7 +10,7 @@ export function useRouterRefresh() {
   const [isPending, startTransition] = useTransition();
 
   const [resolve, setResolve] = useState<((value: unknown) => void) | null>(
-    null
+    null,
   );
   const [isTriggered, setIsTriggered] = useState(false);
 
