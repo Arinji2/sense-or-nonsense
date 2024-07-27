@@ -14,7 +14,7 @@ export default function Backdrop({ backdropID }: { backdropID: string }) {
         </p>
         <EditButton objKey="backdrop" reset />
       </div>
-      <button className="relative flex aspect-video w-full flex-col items-start justify-end overflow-hidden rounded-md xl:w-[300px]">
+      <div className="relative flex aspect-video w-full flex-col items-start justify-end overflow-hidden rounded-md xl:w-[300px]">
         <Image
           src={backdrop.image}
           alt={`${backdrop.name}`}
@@ -27,7 +27,7 @@ export default function Backdrop({ backdropID }: { backdropID: string }) {
             {backdrop.name}
           </p>
         </div>
-      </button>
+      </div>
     </div>
   );
 }

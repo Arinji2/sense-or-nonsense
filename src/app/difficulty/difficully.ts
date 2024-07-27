@@ -9,7 +9,7 @@ export const DifficultyList = [
     image: EasyImage,
     color: "#22c55e",
     level: 1,
-    rounds: 10,
+    rounds: 5,
   },
   {
     id: 1,
