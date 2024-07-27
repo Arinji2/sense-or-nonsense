@@ -9,7 +9,8 @@ export default async function Page() {
 
   const { backdrop, difficulty, fighter_data, game, game_id } = data;
 
-  console.log(data);
+  console.log(game);
+
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-start">
       <WidthWrapper>

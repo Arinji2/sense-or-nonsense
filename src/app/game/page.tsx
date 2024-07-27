@@ -2,7 +2,6 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { ConnectPBAdmin } from "../../../utils/connectPB";
 import { DecryptGameDataAction } from "../../../utils/game-data";
-import { RoundsSchemaType } from "../../../validations/game-data/types";
 import { BackdropsList } from "../backdrop/backdrops";
 import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
@@ -14,27 +13,26 @@ import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
 
 export default async function Page() {
   const data = await DecryptGameDataAction();
-  if (!data.game_id || !data.difficulty || !data.fighter_data || !data.backdrop)
+  if (
+    !data.game_id ||
+    !data.difficulty ||
+    !data.fighter_data ||
+    !data.backdrop ||
+    !data.game
+  )
     redirect("/pregame");
 
   const { backdrop, difficulty, fighter_data, game, game_id } = data;
 
   const isFake = GetIsFakeSelected();
+  const games = [...game];
 
-  const games = [...(game ?? [])] as RoundsSchemaType[] | [];
+  const currentPlayer = games[games.length - 1].playerIndex;
 
   const pb = await ConnectPBAdmin();
   const SelectedGame = GamesList.find(
     (game) => game.id === Number.parseInt(game_id),
   )!;
-
-  const currentPlayer = SelectedGame.isMultiplayer
-    ? games.length === 0
-      ? "0"
-      : games[games.length - 1].playerIndex.toString() === "0"
-        ? "1"
-        : "0"
-    : "0";
 
   const filteredIDs = (() => {
     if (games.length === 0) return "";
@@ -56,17 +54,16 @@ export default async function Page() {
   const SelectedDifficulty = DifficultyList.find(
     (difficulties) => difficulties.level === Number.parseInt(difficulty),
   )!;
-  const SelectedPlayer = fighter_data[Number.parseInt(currentPlayer)];
+  const SelectedPlayer = fighter_data[currentPlayer];
 
-  const CurrentRound = games.slice(-1)[0]?.round ?? 1;
+  const CurrentRound = games[games.length - 1].round;
 
   if (CurrentRound > SelectedDifficulty.rounds) {
     redirect("/game/summary");
   }
   const CurrentStreaks = GetCurrentStreaks({
-    SelectedGame,
     games,
-    currentPlayer,
+    fighters: fighter_data,
   });
 
   wordData.definition =
@@ -109,12 +106,10 @@ export default async function Page() {
             data={wordData}
             previousGames={games}
             gameData={SelectedGame}
-            streak={
-              typeof CurrentStreaks === "number"
-                ? CurrentStreaks
-                : CurrentStreaks.currentPlayer
-            }
+            streak={CurrentStreaks[currentPlayer]}
             playerName={SelectedPlayer.fighter_name}
+            fighters={fighter_data}
+            maxRounds={SelectedDifficulty.rounds}
           />
           <div className="mt-auto hidden flex-row items-center justify-center gap-20 md:flex">
             <RenderStats

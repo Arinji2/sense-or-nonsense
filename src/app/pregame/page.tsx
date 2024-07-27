@@ -6,6 +6,7 @@ import Backdrop from "./backdrop";
 import Difficulty from "./difficulty";
 import Fighters from "./fighters";
 import Game from "./game";
+import GameSetup from "./game-setup.client";
 
 export default async function Page() {
   const data = await DecryptGameDataAction();
@@ -38,12 +39,7 @@ export default async function Page() {
             </div>
           </div>
           <div className="flex h-fit w-[80%] flex-row flex-wrap items-center justify-center gap-6 px-2">
-            <Link
-              href="/game"
-              className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
-            >
-              START GAME{" "}
-            </Link>
+            <GameSetup />
             <Link
               href="/pregame/instructions"
               className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-purple-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"

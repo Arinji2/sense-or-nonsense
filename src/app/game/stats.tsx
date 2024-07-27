@@ -1,5 +1,4 @@
 import { GameFighterSchemaType } from "../../../validations/game-data/types";
-import { CurrentGameStreaks } from "../../../validations/generic/types";
 import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
 
@@ -16,7 +15,7 @@ export function RenderStats({
   SelectedPlayer: GameFighterSchemaType;
   fighter_data: GameFighterSchemaType[];
   SelectedGame: (typeof GamesList)[0];
-  CurrentStreaks: CurrentGameStreaks;
+  CurrentStreaks: { [key: number]: number };
 }) {
   return (
     <>
@@ -27,21 +26,19 @@ export function RenderStats({
       />
       <Stat title="Difficulty" value={SelectedDifficulty.name} id={2} />
       <Stat title="Player" value={SelectedPlayer.fighter_name} id={3} />
-      {SelectedGame.isMultiplayer && typeof CurrentStreaks !== "number" ? (
+      {SelectedGame.isMultiplayer ? (
         <>
-          <Stat
-            title={`${fighter_data[0].fighter_name} Streak`}
-            value={CurrentStreaks.player1.toString()}
-            id={4}
-          />
-          <Stat
-            title={`${fighter_data[1].fighter_name} Streak`}
-            value={CurrentStreaks.player2.toString()}
-            id={5}
-          />
+          {fighter_data.map((fighter, index) => (
+            <Stat
+              key={index}
+              title={`${fighter.fighter_name} Streak`}
+              value={CurrentStreaks[index].toString()}
+              id={index + 4}
+            />
+          ))}
         </>
       ) : (
-        <Stat title="Streak" value={CurrentStreaks.toString()} id={4} />
+        <Stat title="Streak" value={CurrentStreaks[0].toString()} id={4} />
       )}
     </>
   );

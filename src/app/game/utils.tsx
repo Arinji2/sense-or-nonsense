@@ -1,69 +1,48 @@
 import { unstable_cache } from "next/cache";
 import Client from "pocketbase";
 import {
+  GameFighterSchemaType,
   RoundsSchemaType,
   WordSchemaType,
 } from "../../../validations/game-data/types";
-import { CurrentGameStreaks } from "../../../validations/generic/types";
-import { GamesList } from "../games";
-//SelectedGame: typeof GamesList[0]
 
 export function GetCurrentStreaks({
-  SelectedGame,
   games,
-  currentPlayer,
+  fighters,
 }: {
-  SelectedGame: (typeof GamesList)[0];
   games: RoundsSchemaType[];
-  currentPlayer: "0" | "1";
-}): CurrentGameStreaks {
-  if (SelectedGame.isMultiplayer) {
-    const streaks = { player1: 0, player2: 0 };
+  fighters: GameFighterSchemaType[];
+}) {
+  const streaks: { [key: number]: number | string } = {};
 
-    const player1Rounds = games.filter((game) => game.playerIndex === 0);
-    for (let i = player1Rounds.length - 1; i >= 0; i--) {
-      const game = player1Rounds[i];
-      if (!game.isCorrect && i === player1Rounds.length - 1) {
-        streaks.player1 = 0;
-        break;
-      } else if (game.isCorrect) {
-        streaks.player1++;
-      } else if (!game.isCorrect) {
-        break;
-      }
-    }
-
-    const player2Rounds = games.filter((game) => game.playerIndex === 1);
-    for (let i = player2Rounds.length - 1; i >= 0; i--) {
-      const game = player2Rounds[i];
-      if (!game.isCorrect && i === player2Rounds.length - 1) {
-        streaks.player2 = 0;
-        break;
-      } else if (game.isCorrect) {
-        streaks.player2++;
-      } else if (!game.isCorrect) {
-        break;
-      }
-    }
-    return {
-      player1: streaks.player1,
-      player2: streaks.player2,
-      currentPlayer:
-        streaks[
-          `player${Number.parseInt(currentPlayer) + 1}` as "player1" | "player2"
-        ],
-    };
-  } else {
-    let streak = 0;
-    for (let i = games.length - 1; i >= 0; i--) {
-      if (games[i].isCorrect) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    return streak;
+  for (let i = 0; i < fighters.length; i++) {
+    streaks[i] = 0;
   }
+
+  const reversedGames = [...games].reverse();
+  const filteredGames = reversedGames.filter((game) => game.recordID !== "");
+
+  for (let i = 0; i < filteredGames.length; i++) {
+    const game = filteredGames[i];
+    const playerIndex = game.playerIndex;
+
+    if (typeof streaks[playerIndex] === "string") continue;
+
+    if (game.isCorrect) {
+      streaks[playerIndex] = streaks[playerIndex] + 1;
+    } else {
+      streaks[playerIndex] = streaks[playerIndex].toString();
+    }
+  }
+
+  for (let i = 0; i < fighters.length; i++) {
+    if (typeof streaks[i] === "string") {
+      const streak = streaks[i] as string;
+      streaks[i] = Number.parseInt(streak);
+    }
+  }
+
+  return streaks as { [key: number]: number };
 }
 
 export async function GetWordData({
@@ -76,7 +55,7 @@ export async function GetWordData({
   isFake: boolean;
   difficulty: number;
   filteredIDs: string;
-  currentPlayer: string;
+  currentPlayer: number;
   pb: Client;
 }) {
   const wordData = await unstable_cache(
@@ -111,7 +90,7 @@ export async function GetWordData({
       }
       return wordData;
     },
-    [currentPlayer, filteredIDs],
+    [currentPlayer.toString(), filteredIDs],
     {
       revalidate: 5,
     },

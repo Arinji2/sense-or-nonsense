@@ -2,42 +2,51 @@
 
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { EncryptGameDataAction } from "../../../utils/game-data";
 import { useRouterRefresh } from "../../../utils/useRouterRefresh";
 import {
+  GameFighterSchemaType,
   RoundsSchemaType,
   WordSchemaType,
 } from "../../../validations/game-data/types";
 import { GamesList } from "../games";
 
-function GetRoundsAndPlayers(
-  gameData: (typeof GamesList)[0],
-  previousGames: RoundsSchemaType[],
-  previousGame: RoundsSchemaType,
-) {
-  let roundNumber, indexNumber;
+function GetRoundChange({
+  previousGames,
+  fighters,
+}: {
+  previousGames: RoundsSchemaType[];
+  fighters: GameFighterSchemaType[];
+}) {
+  const hasPlayed = new Set<number>();
+  let goToNextRound = true;
+  let previousRound = previousGames[previousGames.length - 1].round;
 
-  if (gameData.isMultiplayer) {
-    if (previousGames && previousGame) {
-      if (previousGame.playerIndex === 1) {
-        roundNumber = previousGame.round + 1;
-      } else {
-        roundNumber = previousGame.round;
-      }
-    } else {
-      roundNumber = 1;
+  if (previousGames.length < fighters.length) return false;
+
+  for (let i = previousGames.length - 1; i >= 0; i--) {
+    if (hasPlayed.size === fighters.length) break;
+    const game = previousGames[i];
+
+    const round = game.round;
+    const player = game.playerIndex;
+
+    if (hasPlayed.has(player)) continue;
+
+    hasPlayed.add(player);
+
+    if (round !== previousRound) {
+      goToNextRound = false;
+
+      break;
     }
-
-    indexNumber = previousGame ? (previousGame.playerIndex === 1 ? 0 : 1) : 0;
-  } else {
-    roundNumber = previousGame ? previousGame.round + 1 : 1;
-
-    indexNumber = 0;
+    previousRound = round;
   }
 
-  return { roundNumber, indexNumber };
+  return goToNextRound;
 }
 
 export default function Controls({
@@ -46,36 +55,73 @@ export default function Controls({
   gameData,
   streak,
   playerName,
+  fighters,
+  maxRounds,
 }: {
   data: WordSchemaType;
   previousGames: RoundsSchemaType[];
   gameData: (typeof GamesList)[0];
   streak: number;
   playerName: string;
+  fighters: GameFighterSchemaType[];
+  maxRounds: number;
 }) {
   const [timer, setTimer] = useState(10);
   const [loading, setLoading] = useState(false);
   const refresh = useRouterRefresh();
+  const router = useRouter();
 
   const answerSubmitted = useCallback(
     async (correct?: boolean) => {
       const previousGame = previousGames[previousGames.length - 1];
 
-      const { indexNumber, roundNumber } = GetRoundsAndPlayers(
-        gameData,
-        previousGames,
-        previousGame,
-      );
-
-      const roundData = {
-        round: roundNumber,
-        playerIndex: indexNumber,
+      const currentRoundData = {
+        round: previousGame.round,
+        playerIndex: previousGame.playerIndex,
         isCorrect: correct,
         recordID: data.id,
         timeElapsed: 10 - timer,
       } as RoundsSchemaType;
 
-      previousGames.push(roundData);
+      const goToNextRound = GetRoundChange({
+        previousGames,
+        fighters,
+      });
+
+      const newPlayerIndex = goToNextRound
+        ? 0
+        : currentRoundData.playerIndex + 1;
+
+      const nextRoundData = {
+        round: goToNextRound
+          ? currentRoundData.round + 1
+          : currentRoundData.round,
+        playerIndex: newPlayerIndex,
+        isCorrect: false,
+        recordID: "",
+        timeElapsed: 10,
+      } as RoundsSchemaType;
+
+      previousGames.pop();
+
+      if (nextRoundData.round > maxRounds) {
+        previousGames.push(currentRoundData);
+        await EncryptGameDataAction({
+          key: "game",
+          deleteKey: true,
+          value: "",
+        });
+
+        await EncryptGameDataAction({
+          key: "game",
+          value: JSON.stringify(previousGames),
+        });
+        router.push("/game/summary");
+        return;
+      }
+
+      previousGames.push(currentRoundData, nextRoundData);
+
       await EncryptGameDataAction({
         key: "game",
         deleteKey: true,
@@ -91,7 +137,16 @@ export default function Controls({
       setTimer(10);
       setLoading(false);
     },
-    [previousGames, data.id, refresh, gameData],
+    [
+      previousGames,
+      data.id,
+      refresh,
+      gameData,
+      maxRounds,
+      timer,
+      fighters,
+      router,
+    ],
   );
 
   useEffect(() => {
