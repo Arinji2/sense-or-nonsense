@@ -81,6 +81,7 @@ export default function Controls({
         isCorrect: correct,
         recordID: data.id,
         timeElapsed: 10 - timer,
+        isFake: data.isFake,
       } as RoundsSchemaType;
 
       const goToNextRound = GetRoundChange({
@@ -100,6 +101,7 @@ export default function Controls({
         isCorrect: false,
         recordID: "",
         timeElapsed: 10,
+        isFake: false,
       } as RoundsSchemaType;
 
       previousGames.pop();

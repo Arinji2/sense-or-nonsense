@@ -2,9 +2,9 @@ import WidthWrapper from "@/wrappers/width-wrapper";
 
 import { ConnectPBAdmin } from "@/../utils/connectPB";
 import { GetUserMode } from "@/../utils/getMode";
-import { ScoreSchema } from "@/../validations/scores/schema";
-import { ScoresSchemaType } from "@/../validations/scores/types";
 import { GamesList } from "@/app/games";
+import { ScoreSchema } from "../../../../validations/stored-word/schema";
+import { ScoresSchemaType } from "../../../../validations/stored-word/types";
 import { GameComponent } from "../GameComponent";
 
 export default async function Page() {

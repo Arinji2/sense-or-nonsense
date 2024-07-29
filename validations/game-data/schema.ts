@@ -11,6 +11,7 @@ export const RoundsSchema = z.object({
   recordID: z.string(),
   isCorrect: z.boolean(),
   timeElapsed: z.number(),
+  isFake: z.boolean(),
 });
 
 export const GameDataSchema = z.object({

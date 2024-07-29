@@ -101,7 +101,7 @@ export function GameInfo({
       <div className="flex h-fit w-full flex-col items-center justify-center gap-2 xl:w-fit xl:opacity-50">
         <div
           key={fighterData.additional.id + index}
-          className="flex h-fit w-full min-w-[250px] max-w-[500px] flex-col items-center justify-center rounded-sm bg-gradient-to-r from-[--fighterColor] from-[60%] to-[--fighterColorOpaque] p-4 xl:max-w-[500px]"
+          className="flex h-fit w-full max-w-[500px] flex-col items-center justify-center rounded-sm bg-gradient-to-r from-[--fighterColor] from-[60%] to-[--fighterColorOpaque] p-4 xl:min-w-[250px] xl:max-w-[500px]"
         >
           <div className="flex h-full w-full flex-row items-end justify-between xl:pr-10">
             <div className="flex size-[25px] shrink-0 flex-col items-start justify-center gap-2 xl:size-[50px]">

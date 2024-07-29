@@ -64,7 +64,7 @@ export async function GetWordData({
       if (isFake) {
         const data = await pb
           .collection("fake_words")
-          .getFirstListItem(`level="${difficulty}"${filteredIDs}`, {
+          .getFirstListItem(`level="${difficulty}"${filteredIDs}&&deleted=false`, {
             sort: "@random",
           });
         wordData = {
@@ -77,9 +77,12 @@ export async function GetWordData({
       } else {
         const data = await pb
           .collection("real_words")
-          .getFirstListItem(`level="${difficulty}"${filteredIDs}`, {
-            sort: "@random",
-          });
+          .getFirstListItem(
+            `level="${difficulty}"${filteredIDs}&&deleted=false`,
+            {
+              sort: "@random",
+            },
+          );
         wordData = {
           word: data.word,
           definition: data.definition,

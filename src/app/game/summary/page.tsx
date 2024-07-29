@@ -5,18 +5,29 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { DecryptGameDataAction } from "../../../../utils/game-data";
 import {
+  StringSearchParamType,
   SummaryData,
   SummaryGraphPoints,
 } from "../../../../validations/generic/types";
 import { AccuracyGraph, TimeGraph } from "./graph";
 import { GameInfo, GameStats } from "./stats";
 
+import RoundStats from "./round";
+
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { player: string | string[] | undefined };
+  searchParams: {
+    player: StringSearchParamType;
+    round: StringSearchParamType;
+    word: StringSearchParamType;
+
+    correct: StringSearchParamType;
+    timeleft: StringSearchParamType;
+  };
 }) {
   const data = await DecryptGameDataAction();
+
   if (
     !data.game_id ||
     !data.difficulty ||
@@ -60,7 +71,7 @@ export default async function Page({
       graphPoints: [] as SummaryGraphPoints[],
       maxAccuracy: 0,
       maxTimeLeft: 0,
-      minTimeLeft: Infinity as number, // Initialize to Infinity
+      minTimeLeft: Infinity as number,
       maxStreak: {
         value: 0,
         round: 0,
@@ -99,7 +110,6 @@ export default async function Page({
         timeTakenForRound,
       );
 
-      // Update minTimeLeft
       playerData.minTimeLeft = Math.min(
         playerData.minTimeLeft,
         timeTakenForRound,
@@ -120,7 +130,6 @@ export default async function Page({
       ...playerData.graphPoints.map((point) => point.accuracy),
     );
 
-    // Ensure minTimeLeft is not Infinity if no data was processed
     if (playerData.minTimeLeft === Infinity) playerData.minTimeLeft = 0;
 
     players.push(playerData as SummaryData);
@@ -221,6 +230,12 @@ export default async function Page({
               />
             </div>
           </div>
+
+          <RoundStats
+            currentPlayerIndex={currentPlayerIndex}
+            game={game}
+            searchParams={searchParams}
+          />
         </div>
       </WidthWrapper>
     </div>

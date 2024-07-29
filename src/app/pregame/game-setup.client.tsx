@@ -15,6 +15,7 @@ export default function GameSetup() {
           isCorrect: false,
           recordID: "",
           timeElapsed: 10,
+          isFake: false,
         } as RoundsSchemaType;
 
         await EncryptGameDataAction({

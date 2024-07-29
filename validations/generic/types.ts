@@ -36,3 +36,5 @@ export type SummaryData = {
   maxTimeLeft: number;
   minTimeLeft: number;
 };
+
+export type StringSearchParamType = string | string[] | undefined;

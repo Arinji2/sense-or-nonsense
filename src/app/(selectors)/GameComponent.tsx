@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "../../../utils/cn";
 import { FormatDate1 } from "../../../utils/formatDate";
-import { ScoreSchemaType } from "../../../validations/scores/types";
+import { ScoreSchemaType } from "../../../validations/stored-word/types";
 import PlayNowButton from "./button.client";
 
 const modes: Array<"easy" | "medium" | "hard"> = ["easy", "medium", "hard"];
