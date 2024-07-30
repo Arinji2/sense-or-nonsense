@@ -55,6 +55,5 @@ export const WordSchema = z.object({
   word: z.string(),
   definition: z.string(),
   id: z.string(),
-  difficulty: z.string(),
   isFake: z.boolean(),
 });
