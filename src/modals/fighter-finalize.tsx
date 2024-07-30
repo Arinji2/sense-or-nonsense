@@ -74,7 +74,7 @@ export default function FighterFinalize({
     if (!Animate.queue) return;
 
     (async () => {
-      const gameData = await DecryptGameDataAction();
+      const gameData = await DecryptGameDataAction({});
 
       if (!gameData.fighter_data || !Array.isArray(gameData.fighter_data)) {
         return router.push("/fighters");

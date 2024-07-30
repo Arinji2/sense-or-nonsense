@@ -1,12 +1,6 @@
 import { LucideCheckCircle2, LucideXCircle } from "lucide-react";
-import { unstable_cache } from "next/cache";
-import { ConnectPBAdmin } from "../../../../utils/connectPB";
-import {
-  RoundsSchemaType,
-  RoundsSchemaTypeWithWords,
-} from "../../../../validations/game-data/types";
-import { StringSearchParamType } from "../../../../validations/generic/types";
-import { StoredWordSchema } from "../../../../validations/stored-word/schema";
+import { RoundsSchemaTypeWithWords } from "../../../../../validations/game-data/types";
+import { StringSearchParamType } from "../../../../../validations/generic/types";
 import { RoundSummaryHeaders } from "./round-summary.client";
 
 export default async function RoundStats({
@@ -14,7 +8,7 @@ export default async function RoundStats({
   searchParams,
   currentPlayerIndex,
 }: {
-  game: RoundsSchemaType[];
+  game: RoundsSchemaTypeWithWords[];
   currentPlayerIndex: number;
   searchParams: {
     round: StringSearchParamType;
@@ -24,29 +18,7 @@ export default async function RoundStats({
     timeleft: StringSearchParamType;
   };
 }) {
-  const pb = await ConnectPBAdmin();
-
-  let gamesWithWords = (await Promise.all(
-    game.map(async (data) => {
-      const word = await unstable_cache(
-        async () =>
-          await pb
-            .collection(data.isFake ? "fake_words" : "real_words")
-            .getOne(data.recordID),
-        [data.recordID],
-      )();
-      const parsedWord = StoredWordSchema.safeParse(word);
-      if (!parsedWord.success)
-        return {
-          ...data,
-          word: "Unknown",
-        };
-      return {
-        ...data,
-        word: parsedWord.data.word,
-      };
-    }),
-  )) as RoundsSchemaTypeWithWords[];
+  let gamesWithWords = [...game];
 
   if (searchParams.timeleft && !Array.isArray(searchParams.timeleft)) {
     gamesWithWords = gamesWithWords.sort(

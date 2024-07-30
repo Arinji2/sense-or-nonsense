@@ -3,8 +3,8 @@ import WidthWrapper from "@/wrappers/width-wrapper";
 import { ConnectPBAdmin } from "@/../utils/connectPB";
 import { GetUserMode } from "@/../utils/getMode";
 import { GamesList } from "@/app/games";
-import { ScoreSchema } from "../../../../validations/stored-word/schema";
-import { ScoresSchemaType } from "../../../../validations/stored-word/types";
+import { ScoreSchema } from "../../../../validations/pb/schema";
+import { ScoresSchemaType } from "../../../../validations/pb/types";
 import { GameComponent } from "../GameComponent";
 
 export default async function Page() {

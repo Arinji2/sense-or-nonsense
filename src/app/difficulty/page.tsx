@@ -4,7 +4,7 @@ import { DecryptGameDataAction } from "../../../utils/game-data";
 import Selector from "./selector.client";
 
 export default async function Page({}) {
-  const data = await DecryptGameDataAction();
+  const data = await DecryptGameDataAction({});
   if (!data.game_id) redirect("/single");
 
   return (

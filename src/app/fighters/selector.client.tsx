@@ -74,7 +74,7 @@ export default function Selector() {
   useEffect(() => {
     setDocumentDefined(true);
     async function CheckMultiplayerSupport() {
-      const gameData = await DecryptGameDataAction();
+      const gameData = await DecryptGameDataAction({});
       if (!gameData.game_id) {
         router.push("/single");
       }
@@ -143,7 +143,7 @@ export default function Selector() {
           {FightersList.map((fighter) => (
             <button
               onClick={async () => {
-                const data = await DecryptGameDataAction();
+                const data = await DecryptGameDataAction({});
 
                 if (!data.game_id) {
                   router.push("/single");

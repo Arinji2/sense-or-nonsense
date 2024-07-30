@@ -14,7 +14,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { SummaryGraphPoints } from "../../../../validations/generic/types";
+import { SummaryGraphPoints } from "../../../../../validations/generic/types";
 
 type CustomTooltipProps = {
   active?: boolean;

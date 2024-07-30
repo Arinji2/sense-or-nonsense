@@ -12,7 +12,7 @@ import { RenderStats } from "./stats";
 import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
 
 export default async function Page() {
-  const data = await DecryptGameDataAction();
+  const data = await DecryptGameDataAction({});
   if (
     !data.game_id ||
     !data.difficulty ||

@@ -3,8 +3,8 @@ import { DifficultyList } from "@/app/difficulty/difficully";
 import { FightersList } from "@/app/fighters/fighters";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { GameDataSchemaType } from "../../../../validations/game-data/types";
-import { SummaryData } from "../../../../validations/generic/types";
+import { GameDataSchemaType } from "../../../../../validations/game-data/types";
+import { SummaryData } from "../../../../../validations/generic/types";
 
 export function GameStats({ data }: { data: SummaryData }) {
   return (

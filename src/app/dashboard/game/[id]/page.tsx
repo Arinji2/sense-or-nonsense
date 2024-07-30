@@ -3,19 +3,54 @@ import WidthWrapper from "@/wrappers/width-wrapper";
 import { ChevronLeftCircle, ChevronRightCircle } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { DecryptGameDataAction } from "../../../../utils/game-data";
 import {
   StringSearchParamType,
   SummaryData,
   SummaryGraphPoints,
-} from "../../../../validations/generic/types";
+} from "../../../../../validations/generic/types";
 import { AccuracyGraph, TimeGraph } from "./graph";
 import { GameInfo, GameStats } from "./stats";
 
+import Client from "pocketbase";
+import { ConnectPBAdmin, ConnectPBUser } from "../../../../../utils/connectPB";
+import { GetUserMode } from "../../../../../utils/getMode";
+import { GameDataSchemaTypeWithWords } from "../../../../../validations/game-data/types";
+import { StoredGameSchema } from "../../../../../validations/pb/schema";
 import RoundStats from "./round";
+
+async function GetGameData({
+  pb,
+  gameID,
+  userID,
+}: {
+  pb: Client;
+  gameID: string;
+  userID: string;
+}) {
+  try {
+    const pbGameData = await pb
+      .collection("games")
+      .getFirstListItem(`id="${gameID}"&&user="${userID}"`);
+    const gameData = {
+      id: pbGameData.id,
+      data: pbGameData.data,
+      user: pbGameData.user,
+    };
+    const parsedData = StoredGameSchema.safeParse(gameData);
+
+    if (!parsedData.success) {
+      redirect("/dashboard");
+    }
+
+    return parsedData.data;
+  } catch (e) {
+    redirect("/dashboard");
+  }
+}
 
 export default async function Page({
   searchParams,
+  params,
 }: {
   searchParams: {
     player: StringSearchParamType;
@@ -25,8 +60,43 @@ export default async function Page({
     correct: StringSearchParamType;
     timeleft: StringSearchParamType;
   };
+  params: {
+    id: string;
+  };
 }) {
-  const data = await DecryptGameDataAction();
+  const user = await GetUserMode();
+  if (!user.userID) redirect("/");
+
+  let jwtData: GameDataSchemaTypeWithWords | null = null;
+
+  if (user.mode === "user") {
+    const pb = await ConnectPBUser();
+    const data = await GetGameData({
+      pb,
+      gameID: params.id,
+      userID: user.userID,
+    });
+
+    jwtData = data.data;
+  }
+
+  if (user.mode === "guest") {
+    const pb = await ConnectPBAdmin();
+
+    const data = await GetGameData({
+      pb,
+      gameID: params.id,
+      userID: user.userID,
+    });
+
+    jwtData = data.data;
+  }
+
+  if (!jwtData) {
+    redirect("/dashboard");
+  }
+
+  const data = jwtData;
 
   if (
     !data.game_id ||
@@ -148,8 +218,8 @@ export default async function Page({
                 scroll={false}
                 href={
                   previousPlayerExists
-                    ? `/game/summary?player=${currentPlayerIndex - 1}`
-                    : `/game/summary?player=${fighter_data.length - 1}`
+                    ? `/dashboard/game/${params.id}?player=${currentPlayerIndex - 1}`
+                    : `/dashboard/game/${params.id}?player=${fighter_data.length - 1}`
                 }
               >
                 <ChevronLeftCircle className="h-6 w-6 text-white" />
@@ -165,8 +235,8 @@ export default async function Page({
                 scroll={false}
                 href={
                   nextPlayerExists
-                    ? `/game/summary?player=${currentPlayerIndex + 1}`
-                    : `/game/summary?player=${0}`
+                    ? `/dashboard/game/${params.id}?player=${currentPlayerIndex + 1}`
+                    : `/dashboard/game/${params.id}?player=${0}`
                 }
               >
                 <ChevronRightCircle className="h-6 w-6 text-white" />

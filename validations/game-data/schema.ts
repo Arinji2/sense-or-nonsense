@@ -14,6 +14,10 @@ export const RoundsSchema = z.object({
   isFake: z.boolean(),
 });
 
+export const RoundsSchemaWithWords = RoundsSchema.extend({
+  word: z.string(),
+});
+
 export const GameDataSchema = z.object({
   game_id: z
     .string()
@@ -51,6 +55,9 @@ export const GameDataSchema = z.object({
     }),
 });
 
+export const GameDataSchemaWithWords = GameDataSchema.extend({
+  game: z.array(RoundsSchemaWithWords),
+});
 export const WordSchema = z.object({
   word: z.string(),
   definition: z.string(),

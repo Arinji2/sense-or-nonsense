@@ -73,12 +73,13 @@ export async function EncryptGameDataAction({
       .sign(secret);
 
     cookies().set("game-data", JWT, cookieProps);
+    return JWT;
   }
 }
-export async function DecryptGameDataAction() {
+export async function DecryptGameDataAction({ jwt }: { jwt?: string }) {
   const secret = new TextEncoder().encode(process.env.SECRET_KEY!);
   const cookieStore = cookies();
-  const gameData = cookieStore.get("game-data")?.value!;
+  const gameData = jwt ?? cookieStore.get("game-data")?.value!;
 
   try {
     const verified = await jwtVerify(gameData, secret, {

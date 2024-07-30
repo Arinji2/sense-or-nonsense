@@ -1,5 +1,6 @@
 "use client";
 
+import PushNewGameAction from "@/actions/PushNewGame";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -73,6 +74,8 @@ export default function Controls({
 
   const answerSubmitted = useCallback(
     async (correct?: boolean) => {
+      if (loading) return;
+      setLoading(true);
       const previousGame = previousGames[previousGames.length - 1];
 
       const currentRoundData = {
@@ -108,6 +111,23 @@ export default function Controls({
 
       if (nextRoundData.round > maxRounds) {
         previousGames.push(currentRoundData);
+
+        const ID = await PushNewGameAction({
+          previousGames,
+        });
+
+        await EncryptGameDataAction({
+          key: "game",
+          value: "",
+          deleteKey: true,
+        });
+
+        router.push(`/dashboard/game/${ID}`);
+
+        return;
+      } else {
+        previousGames.push(currentRoundData, nextRoundData);
+
         await EncryptGameDataAction({
           key: "game",
           deleteKey: true,
@@ -118,25 +138,10 @@ export default function Controls({
           key: "game",
           value: JSON.stringify(previousGames),
         });
-        router.push("/game/summary");
-        return;
+
+        await refresh();
+        setTimer(10);
       }
-
-      previousGames.push(currentRoundData, nextRoundData);
-
-      await EncryptGameDataAction({
-        key: "game",
-        deleteKey: true,
-        value: "",
-      });
-
-      await EncryptGameDataAction({
-        key: "game",
-        value: JSON.stringify(previousGames),
-      });
-
-      await refresh();
-      setTimer(10);
       setLoading(false);
     },
     [
@@ -152,20 +157,19 @@ export default function Controls({
   );
 
   useEffect(() => {
-    if (timer === 3 && !loading) {
+    if (loading) return;
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+
+    if (timer === 3) {
       toast.success("3 seconds left!");
     }
-    if (timer === 0 && !loading) {
-      setLoading(true);
+    if (timer === 0) {
+      clearInterval(interval);
       toast.error("Time's Up! The Word Was " + (data.isFake ? "Fake" : "Real"));
       answerSubmitted(false);
     }
-    const interval =
-      timer > 0 && !loading
-        ? setInterval(() => {
-            setTimer((prev) => prev - 1);
-          }, 1000)
-        : null;
 
     return () => {
       if (interval) clearInterval(interval);
@@ -185,6 +189,7 @@ export default function Controls({
       <button
         disabled={loading}
         onClick={() => {
+          if (loading) return;
           if (data.isFake) {
             toast.error("Incorrect, The Word Is Fake!");
             if (streak > 0) {
@@ -217,6 +222,7 @@ export default function Controls({
       <button
         disabled={loading}
         onClick={() => {
+          if (loading) return;
           if (!data.isFake) {
             toast.error("Incorrect, The Word Is Real!");
             if (streak > 0) {

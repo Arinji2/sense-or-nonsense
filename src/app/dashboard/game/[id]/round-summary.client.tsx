@@ -4,7 +4,7 @@ import { ChevronDown } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useTransition } from "react";
 import toast from "react-hot-toast";
-import { cn } from "../../../../utils/cn";
+import { cn } from "../../../../../utils/cn";
 
 export function RoundSummaryHeaders({ word }: { word: string }) {
   const searchParams = useSearchParams();

@@ -118,7 +118,7 @@ export default function FighterModal({
                     });
                     return;
                   } else {
-                    const data = await DecryptGameDataAction();
+                    const data = await DecryptGameDataAction({});
                     if (
                       !data.fighter_data ||
                       !Array.isArray(data.fighter_data)

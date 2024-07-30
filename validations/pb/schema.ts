@@ -1,4 +1,5 @@
 import z from "zod";
+import { GameDataSchemaWithWords } from "../game-data/schema";
 export const ScoreSchema = z.object({
   id: z.string(),
   easy: z.number(),
@@ -16,7 +17,13 @@ export const StoredWordSchema = z.object({
   level: z.number(),
   word: z.string(),
   definition: z.string(),
-  deleted: z.boolean(),
+
   created: z.string().transform((val) => new Date(val)),
   id: z.string(),
+});
+
+export const StoredGameSchema = z.object({
+  id: z.string(),
+  data: GameDataSchemaWithWords,
+  user: z.string(),
 });

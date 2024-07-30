@@ -9,7 +9,7 @@ import Game from "./game";
 import GameSetup from "./game-setup.client";
 
 export default async function Page() {
-  const data = await DecryptGameDataAction();
+  const data = await DecryptGameDataAction({});
   function Redirection(path: string) {
     redirect(`${path}?redirected=true`);
   }
