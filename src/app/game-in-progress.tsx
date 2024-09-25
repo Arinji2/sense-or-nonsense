@@ -16,7 +16,7 @@ export default function GameInProgress() {
       setShowModal(true);
       animate.setQueue(true);
     }
-  }, []);
+  }, [animate, pathname]);
 
   return (
     <>
