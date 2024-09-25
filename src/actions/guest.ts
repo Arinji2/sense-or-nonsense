@@ -1,5 +1,6 @@
 "use server";
 
+import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ConnectPBAdmin } from "../../utils/connectPB";
@@ -45,14 +46,31 @@ export async function GuestToUser() {
     throw new Error("No guest session found");
   }
   try {
-    const guestRecord = await pbAdmin
-      .collection("guests")
-      .getFirstListItem(`session_id="${sessionID.value}"`);
+    const { guestID, userID } = await unstable_cache(
+      async (sessionID: string) => {
+        const record = await pbAdmin
+          .collection("guests")
+          .getFirstListItem(`session_id="${sessionID}"`);
 
-    const guestData = await pbAdmin
-      .collection("users")
-      .getFirstListItem(`guest_data="${guestRecord.id}"`);
-    return guestData.id;
+        const data = await pbAdmin
+          .collection("users")
+          .getFirstListItem(`guest_data="${record.id}"`);
+
+        return {
+          userID: data.id,
+          guestID: record.id,
+        };
+      },
+      [],
+      {
+        revalidate: 60 * 5,
+      },
+    )(sessionID.value);
+
+    return {
+      userID: userID,
+      guestID: guestID,
+    };
   } catch (e) {
     if (process.env.MODE === "development") {
       throw new Error("Guest record not found");
