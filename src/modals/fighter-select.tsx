@@ -95,7 +95,7 @@ export default function FighterModal({
                 e.preventDefault();
                 if (!name) return;
                 const characterData = {
-                  fighter_id: fighterID.toString(),
+                  fighter_id: fighterID,
                   fighter_name: name,
                 } as GameFighterSchemaType;
 
