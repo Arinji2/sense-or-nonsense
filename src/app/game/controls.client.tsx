@@ -148,7 +148,6 @@ export default function Controls({
       previousGames,
       data.id,
       refresh,
-      gameData,
       maxRounds,
       timer,
       fighters,
