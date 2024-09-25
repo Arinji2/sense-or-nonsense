@@ -1,5 +1,6 @@
 import WidthWrapper from "@/wrappers/width-wrapper";
 import Image from "next/image";
+import { ValidateGameIDCookie } from "../../../utils/game-data";
 import { BackdropSelected } from "../../../validations/generic/types";
 import { BackdropsList } from "./backdrops";
 import Menu from "./menu.client";
@@ -12,6 +13,7 @@ export default async function Page({
     selected: undefined | string | string[];
   };
 }) {
+  await ValidateGameIDCookie();
   const { selected } = searchParams;
   const selectedBackdropData = {
     verified: false,

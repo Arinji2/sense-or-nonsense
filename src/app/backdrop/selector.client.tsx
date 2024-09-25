@@ -2,7 +2,9 @@
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef } from "react";
+import toast from "react-hot-toast";
 import { cn } from "../../../utils/cn";
+import { NameFormat } from "../../../utils/formatting";
 import { BackdropSelected } from "../../../validations/generic/types";
 import { BackdropsList } from "./backdrops";
 
@@ -39,6 +41,7 @@ function Backdrop({
       ref={backdropRef}
       onClick={() => {
         params.set("selected", data.id.toString());
+        toast.success(`Now Viewing ${NameFormat(data.name)} Backdrop`);
         window.history.pushState(null, "", `?${params.toString()}`);
 
         router.replace(`${pathname}?${params.toString()}`, {

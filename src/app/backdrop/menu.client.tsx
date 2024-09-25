@@ -1,11 +1,12 @@
 "use client";
 
+import { AddBackdropAction } from "@/actions/game/backdrop";
 import { ChevronUpCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { cn } from "../../../utils/cn";
-import { EncryptGameDataAction } from "../../../utils/game-data";
+import { NameFormat } from "../../../utils/formatting";
 import { BackdropSelected } from "../../../validations/generic/types";
 import { BackdropsList } from "./backdrops";
 
@@ -72,6 +73,10 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
             router.replace(`${pathname}?${params.toString()}`, {
               scroll: false,
             });
+
+            setTimeout(() => {
+              toast.success("Backdrop Reset");
+            }, 500);
           }}
           className="flex h-fit w-fit shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-red-500 p-2 px-6 text-[10px] text-white transition-transform duration-200 ease-in-out will-change-transform enabled:hover:scale-100 disabled:bg-gray-500 xl:text-[15px]"
         >
@@ -80,12 +85,11 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
         <button
           disabled={!backdrop.verified}
           onClick={async () => {
-            await EncryptGameDataAction({
-              key: "backdrop",
-              value: backdrop.id.toString(),
+            toast.promise(AddBackdropAction(backdrop.id), {
+              loading: "Selecting Backdrop",
+              success: "Backdrop Selected",
+              error: "Failed to select backdrop",
             });
-
-            toast.success("Backdrop selected successfully!");
             const isRedirected = searchParams.get("redirected");
             if (isRedirected && isRedirected === "true") {
               router.replace("/pregame");
@@ -98,16 +102,20 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
         <button
           disabled={randomSelected}
           onClick={async () => {
+            const selectedBackdrop =
+              BackdropsList[Math.floor(Math.random() * BackdropsList.length)];
             setRandomSelected(true);
-            params.set(
-              "selected",
-              Math.floor(Math.random() * BackdropsList.length).toString(),
-            );
+            params.set("selected", selectedBackdrop.id.toString());
             window.history.pushState(null, "", `?${params.toString()}`);
 
             router.replace(`${pathname}?${params.toString()}`, {
               scroll: false,
             });
+            setTimeout(() => {
+              toast.success(
+                `Now Viewing ${NameFormat(selectedBackdrop.name)} Backdrop`,
+              );
+            }, 500);
             setRandomSelected(false);
           }}
           className="flex h-fit w-fit shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-purple-500 p-2 px-6 text-[10px] text-white transition-transform duration-200 ease-in-out will-change-transform enabled:hover:scale-100 disabled:bg-gray-500 xl:text-[15px]"
