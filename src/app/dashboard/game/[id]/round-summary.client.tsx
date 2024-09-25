@@ -8,7 +8,10 @@ import { cn } from "../../../../../utils/cn";
 
 export function RoundSummaryHeaders({ word }: { word: string }) {
   const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
+  const params = useMemo(
+    () => new URLSearchParams(searchParams),
+    [searchParams],
+  );
   const pathname = usePathname();
   const router = useRouter();
 
