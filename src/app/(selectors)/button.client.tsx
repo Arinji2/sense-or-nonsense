@@ -15,11 +15,12 @@ export default function PlayNowButton({
   return (
     <button
       onClick={async () => {
-        toast.promise(SetupGameAction(gameData.id.toString()), {
+        const resolve = toast.promise(SetupGameAction(gameData.id.toString()), {
           loading: "Setting up game...",
           success: "Game selected successfully!",
           error: "Failed to select game",
         });
+        await resolve;
         const isRedirected = searchParams.get("redirected");
         if (isRedirected && isRedirected === "true") {
           router.replace("/pregame");
