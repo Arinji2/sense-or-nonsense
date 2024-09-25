@@ -34,6 +34,7 @@ export default async function Home() {
             secondary
             tag="multi"
             isLoggedin={userID !== null}
+            comingSoon
           ></GamemodeSelector>
         </div>
       </div>

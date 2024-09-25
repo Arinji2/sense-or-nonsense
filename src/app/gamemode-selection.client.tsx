@@ -15,6 +15,7 @@ export default function GamemodeSelector({
   secondary,
   tag,
   isLoggedin,
+  comingSoon,
 }: {
   title: string;
   features: string[];
@@ -23,6 +24,7 @@ export default function GamemodeSelector({
   secondary?: boolean;
   tag: "single" | "multi";
   isLoggedin: boolean;
+  comingSoon?: boolean;
 }) {
   const [documentDefined, setDocumentDefined] = useState(false);
   useEffect(() => {
@@ -35,17 +37,26 @@ export default function GamemodeSelector({
     <>
       {documentDefined &&
         !isLoggedin &&
+        !comingSoon &&
         createPortal(
           <LoginModal Animate={animate} mode={tag} />,
           document.body,
         )}
       <button
+        disabled={comingSoon}
         onClick={() => {
           if (isLoggedin) router.push(`/${tag}`);
           animate.setQueue(true);
         }}
         className="group relative flex h-[500px] w-full max-w-[610px] flex-col items-center justify-start overflow-hidden rounded-lg outline-none xl:h-full xl:max-h-[500px]"
       >
+        {comingSoon && (
+          <div className="absolute left-0 top-0 z-30 flex h-full w-full flex-col items-center justify-center bg-black/80 backdrop-blur-sm">
+            <p className="text-5xl font-bold tracking-subtitle text-white">
+              Coming Soon!
+            </p>
+          </div>
+        )}
         <Image
           src={image}
           alt={`${title}`}
