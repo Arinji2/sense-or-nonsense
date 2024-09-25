@@ -153,6 +153,8 @@ export default function Controls({
       timer,
       fighters,
       router,
+      data.isFake,
+      loading,
     ],
   );
 
