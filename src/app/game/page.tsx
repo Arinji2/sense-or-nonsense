@@ -16,7 +16,7 @@ export default async function Page() {
   const data = await ValidateGameIDCookie({
     expandFields: true,
   });
-  console.log(data);
+
   if (
     !data.isValidated ||
     typeof data.expand === "undefined" ||
@@ -29,7 +29,6 @@ export default async function Page() {
 
   const isFake = GetIsFakeSelected();
   const games = [...game];
-  console.log(games);
 
   const currentPlayer = games[games.length - 1].player_index;
 

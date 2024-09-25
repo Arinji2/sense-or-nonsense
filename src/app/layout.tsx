@@ -28,7 +28,7 @@ export default async function RootLayout({
 
     showGameModal = true;
   } catch (error) {}
-  console.log(showGameModal);
+
   return (
     <html lang="en">
       <body className={pixelifySans.className}>

@@ -9,7 +9,7 @@ import { RoundSchemaType } from "../../../validations/pb/types";
 export async function CreateNewRound(nextRoundData?: RoundSchemaType) {
   const gameData = await ValidateGameIDCookie();
   const { pb, userID } = await GetUserMode();
-  console.log(nextRoundData?.round_number);
+
   const roundData = nextRoundData ?? {
     round_number: 1,
     player_index: 0,

@@ -26,7 +26,6 @@ function GetRoundChange({
   const hasPlayed = new Set<number>();
   let goToNextRound = true;
   let previousRound = previousGames[previousGames.length - 1];
-  console.log(previousGames.length, fighters.length);
 
   if (previousGames.length < fighters.length) return false;
 
@@ -40,7 +39,6 @@ function GetRoundChange({
     if (hasPlayed.has(player)) continue;
 
     hasPlayed.add(player);
-    console.log(hasPlayed, round, previousRound);
 
     if (round.round_number !== previousRound.round_number) {
       goToNextRound = false;
@@ -49,7 +47,6 @@ function GetRoundChange({
     }
     previousRound = round;
   }
-  console.log(goToNextRound);
 
   return goToNextRound;
 }
