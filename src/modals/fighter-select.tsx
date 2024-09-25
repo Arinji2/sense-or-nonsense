@@ -32,6 +32,9 @@ export default function FighterModal({
     }
 
     document.addEventListener("mousedown", closeOpenMenus);
+    return () => {
+      document.removeEventListener("mousedown", closeOpenMenus);
+    };
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Animate.showComponent]);
 
