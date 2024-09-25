@@ -12,7 +12,7 @@ export async function AddFighterAction(fighterData: GameFighterSchemaType) {
   const gameData = await ValidateGameIDCookie();
 
   const isValid = FightersList.find(
-    (fighter) => fighter.id === Number.parseInt(fighterData.fighter_id),
+    (fighter) => fighter.id === fighterData.fighter_id,
   );
   if (!isValid) {
     throw new Error("Invalid difficulty level");
