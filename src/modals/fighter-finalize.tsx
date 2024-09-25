@@ -55,7 +55,7 @@ export default function FighterFinalize({
 
     const data = fighterData.map((fighter) => {
       const fighterData = FightersList.find(
-        (fighterList) => fighterList.id === Number.parseInt(fighter.fighter_id),
+        (fighterList) => fighterList.id === fighter.fighter_id,
       )!;
 
       return fighterData;
