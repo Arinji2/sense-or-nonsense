@@ -8,7 +8,7 @@ export async function GetUserMode() {
   const cookieStore = cookies();
   let globalUserID: string | null = null;
   let mode: "guest" | "user" | null = null;
-  let pb: Client | null = null;
+  let pb: Client = {} as Client;
   if (cookieStore.get("user") !== undefined) {
     const pbUser = await ConnectPBUser();
     if (pbUser.pb.authStore.isValid) {
@@ -27,7 +27,7 @@ export async function GetUserMode() {
     return {
       userID: null,
       mode: null,
-      pb: null,
+      pb: pb,
     };
   }
 
