@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { ConnectPBAdmin } from "../../../utils/connectPB";
-import { DecryptGameDataAction } from "../../../utils/game-data";
+
+import { ValidateGameIDCookie } from "../../../utils/game-data";
 import { BackdropsList } from "../backdrop/backdrops";
 import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
@@ -12,31 +13,34 @@ import { RenderStats } from "./stats";
 import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
 
 export default async function Page() {
-  const data = await DecryptGameDataAction({});
+  const data = await ValidateGameIDCookie({
+    expandFields: true,
+  });
+  console.log(data);
   if (
-    !data.game_id ||
-    !data.difficulty ||
-    !data.fighter_data ||
-    !data.backdrop ||
-    !data.game
+    !data.isValidated ||
+    typeof data.expand === "undefined" ||
+    typeof data.playerData === "boolean"
   )
-    redirect("/pregame");
+    throw new Error("Game not found");
 
-  const { backdrop, difficulty, fighter_data, game, game_id } = data;
+  const { backdrop, difficulty, playerData, gameID } = data;
+  const game = data.expand.rounds;
 
   const isFake = GetIsFakeSelected();
   const games = [...game];
+  console.log(games);
 
-  const currentPlayer = games[games.length - 1].playerIndex;
+  const currentPlayer = games[games.length - 1].player_index;
 
   const pb = await ConnectPBAdmin();
   const SelectedGame = GamesList.find(
-    (game) => game.id === Number.parseInt(game_id),
+    (game) => game.id === Number.parseInt(gameID),
   )!;
 
   const filteredIDs = (() => {
     if (games.length === 0) return "";
-    const ids = games.map((game) => `id!="${game.recordID}"`);
+    const ids = games.map((game) => `id!="${game.id}"`);
     return "&&".concat(ids.join("&&"));
   })();
 
@@ -54,16 +58,16 @@ export default async function Page() {
   const SelectedDifficulty = DifficultyList.find(
     (difficulties) => difficulties.level === Number.parseInt(difficulty),
   )!;
-  const SelectedPlayer = fighter_data[currentPlayer];
+  const SelectedPlayer = playerData;
 
-  const CurrentRound = games[games.length - 1].round;
+  const CurrentRound = games[games.length - 1].round_number;
 
   if (CurrentRound > SelectedDifficulty.rounds) {
     redirect("/game/summary");
   }
   const CurrentStreaks = GetCurrentStreaks({
     games,
-    fighters: fighter_data,
+    fighters: [playerData],
   });
 
   wordData.definition =
@@ -108,7 +112,7 @@ export default async function Page() {
             gameData={SelectedGame}
             streak={CurrentStreaks[currentPlayer]}
             playerName={SelectedPlayer.fighter_name}
-            fighters={fighter_data}
+            fighters={[playerData]}
             maxRounds={SelectedDifficulty.rounds}
           />
           <div className="mt-auto hidden flex-row items-center justify-center gap-20 md:flex">
@@ -117,7 +121,7 @@ export default async function Page() {
                 CurrentRound,
                 SelectedDifficulty,
                 SelectedPlayer,
-                fighter_data,
+                fighter_data: [playerData],
                 SelectedGame,
                 CurrentStreaks,
               }}
@@ -131,7 +135,7 @@ export default async function Page() {
                   CurrentRound,
                   SelectedDifficulty,
                   SelectedPlayer,
-                  fighter_data,
+                  fighter_data: [playerData],
                   SelectedGame,
                   CurrentStreaks,
                 }}

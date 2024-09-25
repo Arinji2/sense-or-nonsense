@@ -12,10 +12,8 @@ import { AccuracyGraph, TimeGraph } from "./graph";
 import { GameInfo, GameStats } from "./stats";
 
 import Client from "pocketbase";
-import { ConnectPBAdmin, ConnectPBUser } from "../../../../../utils/connectPB";
 import { GetUserMode } from "../../../../../utils/getMode";
-import { GameDataSchemaTypeWithWords } from "../../../../../validations/game-data/types";
-import { StoredGameSchema } from "../../../../../validations/pb/schema";
+import { GameSchema } from "../../../../../validations/pb/schema";
 import RoundStats from "./round";
 
 async function GetGameData({
@@ -30,13 +28,11 @@ async function GetGameData({
   try {
     const pbGameData = await pb
       .collection("games")
-      .getFirstListItem(`id="${gameID}"&&user="${userID}"`);
-    const gameData = {
-      id: pbGameData.id,
-      data: pbGameData.data,
-      user: pbGameData.user,
-    };
-    const parsedData = StoredGameSchema.safeParse(gameData);
+      .getFirstListItem(`id="${gameID}"&&user="${userID}"`, {
+        expand: "rounds,rounds.fake_word,rounds.real_word",
+      });
+
+    const parsedData = GameSchema.safeParse(pbGameData);
 
     if (!parsedData.success) {
       redirect("/dashboard");
@@ -64,53 +60,24 @@ export default async function Page({
     id: string;
   };
 }) {
-  const user = await GetUserMode();
-  if (!user.userID) redirect("/");
+  const { pb, userID } = await GetUserMode();
 
-  let jwtData: GameDataSchemaTypeWithWords | null = null;
+  const data = await GetGameData({
+    pb,
+    gameID: params.id,
+    userID: userID!,
+  });
 
-  if (user.mode === "user") {
-    const pb = await ConnectPBUser();
-    const data = await GetGameData({
-      pb,
-      gameID: params.id,
-      userID: user.userID,
-    });
+  if (!data.isValidated) redirect("/pregame");
 
-    jwtData = data.data;
-  }
+  let { playerData, gameID } = data;
+  if (typeof playerData === "boolean") redirect("/pregame");
 
-  if (user.mode === "guest") {
-    const pb = await ConnectPBAdmin();
-
-    const data = await GetGameData({
-      pb,
-      gameID: params.id,
-      userID: user.userID,
-    });
-
-    jwtData = data.data;
-  }
-
-  if (!jwtData) {
-    redirect("/dashboard");
-  }
-
-  const data = jwtData;
-
-  if (
-    !data.game_id ||
-    !data.difficulty ||
-    !data.fighter_data ||
-    !data.backdrop ||
-    !data.game
-  )
-    redirect("/pregame");
-
-  const { fighter_data, game, game_id } = data;
+  const rounds = data.expand?.rounds;
+  if (rounds === undefined) redirect("/pregame");
 
   const gameIsMultiplayer = GamesList.find(
-    (game) => game.id === Number.parseInt(game_id),
+    (game) => game.id === Number.parseInt(gameID),
   )!.isMultiplayer;
   let currentPlayerIndex = 0;
   let nextPlayerExists = false;
@@ -120,20 +87,20 @@ export default async function Page({
     {
       if (searchParams.player && !Array.isArray(searchParams.player)) {
         const searchPlayer = Number.parseInt(searchParams.player);
-        if (typeof fighter_data[searchPlayer] === "undefined")
+        if (typeof playerData[searchPlayer] === "undefined")
           currentPlayerIndex = 0;
         else currentPlayerIndex = searchPlayer;
       }
     }
 
     nextPlayerExists =
-      typeof fighter_data[currentPlayerIndex + 1] !== "undefined";
+      typeof playerData[currentPlayerIndex + 1] !== "undefined";
     previousPlayerExists =
-      typeof fighter_data[currentPlayerIndex - 1] !== "undefined";
+      typeof playerData[currentPlayerIndex - 1] !== "undefined";
   }
 
   const players: SummaryData[] = [];
-  fighter_data.forEach((_, index) => {
+  playerData.forEach((_, index) => {
     let playerData = {
       correct: 0,
       incorrect: 0,
@@ -149,12 +116,12 @@ export default async function Page({
     };
     let playerStreak = 0;
 
-    game.forEach((data) => {
-      if (data.playerIndex !== index) return;
+    rounds.forEach((round) => {
+      if (round.player_index !== index) return;
 
       let localStreak = playerStreak;
 
-      if (data.isCorrect) {
+      if (round.correct) {
         playerData.correct += 1;
         localStreak = playerStreak + 1;
       } else {
@@ -162,12 +129,12 @@ export default async function Page({
         localStreak = 0;
       }
 
-      const timeTakenForRound = 10 - data.timeElapsed;
+      const timeTakenForRound = 10 - round.time_elapsed;
 
-      playerData.timePlayed += data.timeElapsed;
+      playerData.timePlayed += round.time_elapsed;
 
       playerData.graphPoints.push({
-        x: data.round,
+        x: round.round_number,
         y: timeTakenForRound,
         accuracy: Math.round(
           (playerData.correct / (playerData.correct + playerData.incorrect)) *
@@ -189,7 +156,7 @@ export default async function Page({
 
       if (localMaxStreak !== playerData.maxStreak.value) {
         playerData.maxStreak.value = localMaxStreak;
-        playerData.maxStreak.round = data.round;
+        playerData.maxStreak.round = round.round_number;
       }
 
       playerStreak = localStreak;
@@ -219,7 +186,7 @@ export default async function Page({
                 href={
                   previousPlayerExists
                     ? `/dashboard/game/${params.id}?player=${currentPlayerIndex - 1}`
-                    : `/dashboard/game/${params.id}?player=${fighter_data.length - 1}`
+                    : `/dashboard/game/${params.id}?player=${playerData.length - 1}`
                 }
               >
                 <ChevronLeftCircle className="h-6 w-6 text-white" />
@@ -229,7 +196,7 @@ export default async function Page({
                   Currently Viewing
                 </span>{" "}
                 <span className="text-white/50">Player</span>{" "}
-                {fighter_data[currentPlayerIndex].fighter_name}
+                {playerData[currentPlayerIndex].fighter_name}
               </p>
               <Link
                 scroll={false}
@@ -303,7 +270,7 @@ export default async function Page({
 
           <RoundStats
             currentPlayerIndex={currentPlayerIndex}
-            game={game}
+            game={rounds}
             searchParams={searchParams}
           />
         </div>

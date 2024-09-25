@@ -3,8 +3,8 @@ import { DifficultyList } from "@/app/difficulty/difficully";
 import { FightersList } from "@/app/fighters/fighters";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { GameDataSchemaType } from "../../../../../validations/game-data/types";
 import { SummaryData } from "../../../../../validations/generic/types";
+import { GameSchemaType } from "../../../../../validations/pb/types";
 
 export function GameStats({ data }: { data: SummaryData }) {
   return (
@@ -57,24 +57,17 @@ export function GameInfo({
   gameData,
   index,
 }: {
-  gameData: GameDataSchemaType;
+  gameData: GameSchemaType;
   index: number;
 }) {
-  if (
-    !gameData.game_id ||
-    !gameData.difficulty ||
-    !gameData.fighter_data ||
-    !gameData.backdrop
-  )
-    redirect("/pregame");
-
-  const { backdrop, difficulty, fighter_data } = gameData;
+  if (!gameData.isValidated) redirect("/pregame");
+  const { backdrop, difficulty, playerData } = gameData;
+  if (typeof playerData === "boolean") redirect("/pregame");
 
   const fighterData = {
-    user: fighter_data[index],
+    user: playerData[index],
     additional: FightersList.find(
-      (fighter) =>
-        fighter.id === Number.parseInt(fighter_data[index].fighter_id),
+      (fighter) => fighter.id === playerData[index].fighter_id,
     )!,
   };
 

@@ -2,15 +2,15 @@ import { unstable_cache } from "next/cache";
 import Client from "pocketbase";
 import {
   GameFighterSchemaType,
-  RoundsSchemaType,
   WordSchemaType,
 } from "../../../validations/game-data/types";
+import { RoundSchemaType } from "../../../validations/pb/types";
 
 export function GetCurrentStreaks({
   games,
   fighters,
 }: {
-  games: RoundsSchemaType[];
+  games: RoundSchemaType[];
   fighters: GameFighterSchemaType[];
 }) {
   const streaks: { [key: number]: number | string } = {};
@@ -20,15 +20,15 @@ export function GetCurrentStreaks({
   }
 
   const reversedGames = [...games].reverse();
-  const filteredGames = reversedGames.filter((game) => game.recordID !== "");
+  const filteredGames = reversedGames.filter((game) => game.id !== "");
 
   for (let i = 0; i < filteredGames.length; i++) {
     const game = filteredGames[i];
-    const playerIndex = game.playerIndex;
+    const playerIndex = game.player_index;
 
     if (typeof streaks[playerIndex] === "string") continue;
 
-    if (game.isCorrect) {
+    if (game.correct) {
       streaks[playerIndex] = streaks[playerIndex] + 1;
     } else {
       streaks[playerIndex] = streaks[playerIndex].toString();

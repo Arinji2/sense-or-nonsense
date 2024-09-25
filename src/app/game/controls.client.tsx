@@ -1,30 +1,32 @@
 "use client";
 
-import PushNewGameAction from "@/actions/PushNewGame";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { EncryptGameDataAction } from "../../../utils/game-data";
+
+import { CreateNewRound, UpdateRound } from "@/actions/game/rounds";
+import { FinishGameAction } from "@/actions/game/setup";
 import { useRouterRefresh } from "../../../utils/useRouterRefresh";
 import {
   GameFighterSchemaType,
-  RoundsSchemaType,
   WordSchemaType,
 } from "../../../validations/game-data/types";
+import { RoundSchemaType } from "../../../validations/pb/types";
 import { GamesList } from "../games";
 
 function GetRoundChange({
   previousGames,
   fighters,
 }: {
-  previousGames: RoundsSchemaType[];
+  previousGames: RoundSchemaType[];
   fighters: GameFighterSchemaType[];
 }) {
   const hasPlayed = new Set<number>();
   let goToNextRound = true;
-  let previousRound = previousGames[previousGames.length - 1].round;
+  let previousRound = previousGames[previousGames.length - 1];
+  console.log(previousGames.length, fighters.length);
 
   if (previousGames.length < fighters.length) return false;
 
@@ -32,20 +34,22 @@ function GetRoundChange({
     if (hasPlayed.size === fighters.length) break;
     const game = previousGames[i];
 
-    const round = game.round;
-    const player = game.playerIndex;
+    const round = game;
+    const player = game.player_index;
 
     if (hasPlayed.has(player)) continue;
 
     hasPlayed.add(player);
+    console.log(hasPlayed, round, previousRound);
 
-    if (round !== previousRound) {
+    if (round.round_number !== previousRound.round_number) {
       goToNextRound = false;
 
       break;
     }
     previousRound = round;
   }
+  console.log(goToNextRound);
 
   return goToNextRound;
 }
@@ -60,7 +64,7 @@ export default function Controls({
   maxRounds,
 }: {
   data: WordSchemaType;
-  previousGames: RoundsSchemaType[];
+  previousGames: RoundSchemaType[];
   gameData: (typeof GamesList)[0];
   streak: number;
   playerName: string;
@@ -78,14 +82,27 @@ export default function Controls({
       setLoading(true);
       const previousGame = previousGames[previousGames.length - 1];
 
+      let fakeWord = "";
+      let realWord = "";
+
+      if (data.isFake) {
+        fakeWord = data.id;
+      } else {
+        realWord = data.id;
+      }
       const currentRoundData = {
-        round: previousGame.round,
-        playerIndex: previousGame.playerIndex,
-        isCorrect: correct,
-        recordID: data.id,
-        timeElapsed: 10 - timer,
-        isFake: data.isFake,
-      } as RoundsSchemaType;
+        round_number: previousGame.round_number,
+        player_index: previousGame.player_index,
+        is_correct: correct,
+        is_fake: data.isFake,
+        time_elapsed: 10 - timer,
+        fake_word: fakeWord,
+        real_word: realWord,
+        correct: correct,
+        id: previousGame.id,
+        created: new Date(),
+        updated: new Date(),
+      } as RoundSchemaType;
 
       const goToNextRound = GetRoundChange({
         previousGames,
@@ -94,51 +111,37 @@ export default function Controls({
 
       const newPlayerIndex = goToNextRound
         ? 0
-        : currentRoundData.playerIndex + 1;
+        : currentRoundData.player_index + 1;
 
       const nextRoundData = {
-        round: goToNextRound
-          ? currentRoundData.round + 1
-          : currentRoundData.round,
-        playerIndex: newPlayerIndex,
-        isCorrect: false,
-        recordID: "",
-        timeElapsed: 10,
-        isFake: false,
-      } as RoundsSchemaType;
+        round_number: goToNextRound
+          ? currentRoundData.round_number + 1
+          : currentRoundData.round_number,
+        player_index: newPlayerIndex,
+        correct: false,
+        id: "",
+        time_elapsed: 10,
+        is_fake: false,
+        fake_word: "",
+        real_word: "",
+      } as RoundSchemaType;
 
       previousGames.pop();
 
-      if (nextRoundData.round > maxRounds) {
-        previousGames.push(currentRoundData);
-
-        const ID = await PushNewGameAction({
-          previousGames,
+      if (nextRoundData.round_number > maxRounds) {
+        toast.promise(UpdateRound(currentRoundData), {
+          loading: "Finishing game...",
+          success: "Game Finished Successfully",
+          error: "Failed to finish game",
         });
 
-        await EncryptGameDataAction({
-          key: "game",
-          value: "",
-          deleteKey: true,
-        });
-
+        const ID = await FinishGameAction();
         router.push(`/dashboard/game/${ID}`);
 
         return;
       } else {
-        previousGames.push(currentRoundData, nextRoundData);
-
-        await EncryptGameDataAction({
-          key: "game",
-          deleteKey: true,
-          value: "",
-        });
-
-        await EncryptGameDataAction({
-          key: "game",
-          value: JSON.stringify(previousGames),
-        });
-
+        UpdateRound(currentRoundData);
+        CreateNewRound(nextRoundData);
         await refresh();
         setTimer(10);
       }

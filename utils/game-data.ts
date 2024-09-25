@@ -7,16 +7,36 @@ import { GameSchema } from "../validations/pb/schema";
 import { GameSchemaType } from "../validations/pb/types";
 import { GetUserMode } from "./getMode";
 
-export async function ValidateGameIDCookie(): Promise<GameSchemaType> {
+export async function ValidateGameIDCookie(
+  {
+    expandFields,
+    disableRedirect,
+  }: {
+    expandFields?: boolean;
+    disableRedirect?: boolean;
+  } = {
+    expandFields: false,
+    disableRedirect: false,
+  },
+): Promise<GameSchemaType> {
   const { pb, userID } = await GetUserMode();
   const gameID = cookies().get("game-id")?.value;
-  if (!gameID) {
-    redirect("/single");
+  if (!gameID && !disableRedirect) {
+    console.log("HERE");
+    redirect("/uuu");
+  } else if (disableRedirect) {
+    throw new Error("Exiting before redirect");
+  }
+  if (!expandFields) {
+    expandFields = false;
   }
   return await unstable_cache(
-    async (id: string, user: string) => {
+    async (id: string, user: string, expandFields: boolean) => {
       try {
-        const gameRecord = await pb?.collection("games").getOne(id);
+        const gameRecord = await pb?.collection("games").getOne(id, {
+          expand: expandFields ? "rounds" : undefined,
+        });
+        if (expandFields) console.log(gameRecord);
         const parsedGame = GameSchema.parse(gameRecord);
         if (parsedGame.user !== user) {
           throw new Error();
@@ -24,6 +44,7 @@ export async function ValidateGameIDCookie(): Promise<GameSchemaType> {
 
         return parsedGame;
       } catch (e: any) {
+        console.log(e);
         redirect("/unauthorized");
       }
     },
@@ -31,5 +52,5 @@ export async function ValidateGameIDCookie(): Promise<GameSchemaType> {
     {
       tags: [`${CACHED_TAGS.game_data}-${userID}-${gameID}`],
     },
-  )(gameID, userID!);
+  )(gameID!, userID!, expandFields);
 }

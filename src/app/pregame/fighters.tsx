@@ -15,6 +15,7 @@ export default function Fighters({
 
     return fighterData;
   });
+
   return (
     <div className="flex h-fit w-full flex-col items-start justify-center gap-4">
       <div className="flex h-fit w-fit flex-row items-center justify-center gap-6">

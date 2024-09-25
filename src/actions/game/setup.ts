@@ -36,3 +36,9 @@ export async function RemoveGameAction() {
   revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
   cookies().delete("game-id");
 }
+
+export async function FinishGameAction() {
+  const gameData = await ValidateGameIDCookie();
+  cookies().delete("game-id");
+  return gameData.id;
+}

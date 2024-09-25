@@ -22,9 +22,13 @@ export default async function RootLayout({
 }>) {
   let showGameModal = false;
   try {
-    const game = await ValidateGameIDCookie();
+    const game = await ValidateGameIDCookie({
+      disableRedirect: true,
+    });
+
     showGameModal = true;
   } catch (error) {}
+  console.log(showGameModal);
   return (
     <html lang="en">
       <body className={pixelifySans.className}>

@@ -23,8 +23,8 @@ export default async function Page() {
   const { playerData, gameID, backdrop, difficulty } = data;
   const fighterData: GameFighterSchemaType[] = [
     {
-      fighter_id: playerData.playerID,
-      fighter_name: playerData.playerName,
+      fighter_id: playerData.fighter_id,
+      fighter_name: playerData.fighter_name,
     },
   ];
 
