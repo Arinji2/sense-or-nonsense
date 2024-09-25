@@ -1,7 +1,7 @@
 import z from "zod";
 import { GameFighterSchemaType, RoundsSchemaType } from "./types";
 export const GameFighterSchema = z.object({
-  fighter_id: z.string(),
+  fighter_id: z.number(),
   fighter_name: z.string(),
 });
 
