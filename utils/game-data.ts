@@ -22,7 +22,7 @@ export async function ValidateGameIDCookie(
   const { pb, userID } = await GetUserMode();
   const gameID = cookies().get("game-id")?.value;
   if (!gameID && !disableRedirect) {
-    redirect("/uuu");
+    redirect("/single");
   } else if (disableRedirect) {
     throw new Error("Exiting before redirect");
   }
@@ -35,13 +35,15 @@ export async function ValidateGameIDCookie(
         const gameRecord = await pb?.collection("games").getOne(id, {
           expand: expandFields ? "rounds" : undefined,
         });
-        if (expandFields) const parsedGame = GameSchema.parse(gameRecord);
+
+        const parsedGame = GameSchema.parse(gameRecord);
         if (parsedGame.user !== user) {
           throw new Error();
         }
 
         return parsedGame;
       } catch (e: any) {
+        console.log(e);
         redirect("/unauthorized");
       }
     },
