@@ -1,31 +1,12 @@
 import WidthWrapper from "@/wrappers/width-wrapper";
 
-import { ConnectPBAdmin } from "@/../utils/connectPB";
 import { GetUserMode } from "@/../utils/getMode";
 import { GamesList } from "@/app/games";
-import { ScoreSchema } from "../../../../validations/pb/schema";
-import { ScoresSchemaType } from "../../../../validations/pb/types";
+
 import { GameComponent } from "../GameComponent";
 
 export default async function Page() {
-  const { mode, userID } = await GetUserMode();
-  let scores = [] as ScoresSchemaType;
-  if (mode === "guest") {
-    const pbAdmin = await ConnectPBAdmin();
-
-    const pbScores = await pbAdmin.collection("scores").getFullList({
-      filter: `user="${userID}"`,
-    });
-
-    pbScores.forEach((score) => {
-      const parse = ScoreSchema.safeParse(score);
-
-      if (parse.success) {
-        scores.push(parse.data);
-      }
-    });
-  }
-
+  const { mode, userID, pb } = await GetUserMode();
   return (
     <div className="relative flex h-[1px] min-h-[100svh] w-full flex-col items-center justify-center gap-2 xl:max-h-svh">
       <WidthWrapper>
@@ -40,7 +21,8 @@ export default async function Page() {
               <GameComponent
                 key={game.id}
                 GameData={game}
-                scoreData={scores.find((score) => score.game_id === game.id)}
+                userID={userID!}
+                pb={pb!}
               />
             );
           })}

@@ -1,9 +1,9 @@
 "use client";
 
+import { SetupGameAction } from "@/actions/game/setup";
 import { GamesList } from "@/app/games";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import { EncryptGameDataAction } from "../../../utils/game-data";
 
 export default function PlayNowButton({
   gameData,
@@ -15,17 +15,11 @@ export default function PlayNowButton({
   return (
     <button
       onClick={async () => {
-        await EncryptGameDataAction({
-          key: "game",
-          deleteKey: true,
-          value: "",
+        toast.promise(SetupGameAction(gameData.id.toString()), {
+          loading: "Setting up game...",
+          success: "Game selected successfully!",
+          error: "Failed to select game",
         });
-        await EncryptGameDataAction({
-          key: "game_id",
-          value: gameData.id.toString(),
-          reset: true,
-        });
-        toast.success("Game selected successfully!");
         const isRedirected = searchParams.get("redirected");
         if (isRedirected && isRedirected === "true") {
           router.replace("/pregame");

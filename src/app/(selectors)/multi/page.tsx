@@ -1,52 +1,31 @@
-import WidthWrapper from "@/wrappers/width-wrapper";
-
-import { ConnectPBAdmin } from "@/../utils/connectPB";
-import { GetUserMode } from "@/../utils/getMode";
-import { GamesList } from "@/app/games";
-import { ScoreSchema } from "../../../../validations/pb/schema";
-import { ScoresSchemaType } from "../../../../validations/pb/types";
-import { GameComponent } from "../GameComponent";
+import { notFound } from "next/navigation";
 
 export default async function Page() {
-  const { mode, userID } = await GetUserMode();
-  let scores = [] as ScoresSchemaType;
-  if (mode === "guest") {
-    const pbAdmin = await ConnectPBAdmin();
+  notFound();
 
-    const pbScores = await pbAdmin.collection("scores").getFullList({
-      filter: `user="${userID}"`,
-    });
+  // const { mode, userID, pb } = await GetUserMode();
+  // return (
+  //   <div className="relative flex h-[1px] min-h-[100svh] w-full flex-col items-center justify-center gap-2 xl:max-h-svh">
+  //     <WidthWrapper>
+  //       <h1 className="absolute top-5 z-50 px-2 text-center text-[25px] font-bold tracking-subtitle text-white md:static md:text-[40px] xl:text-[60px]">
+  //         CHOOSE A GAME MODE
+  //       </h1>
 
-    pbScores.forEach((score) => {
-      const parse = ScoreSchema.safeParse(score);
-
-      if (parse.success) {
-        scores.push(parse.data);
-      }
-    });
-  }
-
-  return (
-    <div className="relative flex h-[1px] min-h-[100svh] w-full flex-col items-center justify-center gap-2 xl:max-h-svh">
-      <WidthWrapper>
-        <h1 className="absolute top-5 z-50 px-2 text-center text-[25px] font-bold tracking-subtitle text-white md:static md:text-[40px] xl:text-[60px]">
-          CHOOSE A GAME MODE
-        </h1>
-
-        <div className="flex h-full w-full snap-x snap-mandatory flex-row items-stretch justify-start overflow-x-scroll md:h-full xl:items-center">
-          {GamesList.map((game) => {
-            if (!game.isMultiplayer) return null;
-            return (
-              <GameComponent
-                multi
-                key={game.id}
-                GameData={game}
-                scoreData={scores.find((score) => score.game_id === game.id)}
-              />
-            );
-          })}
-        </div>
-      </WidthWrapper>
-    </div>
-  );
+  //       <div className="flex h-full w-full snap-x snap-mandatory flex-row items-stretch justify-start overflow-x-scroll md:h-full xl:items-center">
+  //         {GamesList.map((game) => {
+  //           if (!game.isMultiplayer) return null;
+  //           return (
+  //             <GameComponent
+  //               multi
+  //               key={game.id}
+  //               GameData={game}
+  //               userID={userID!}
+  //               pb={pb!}
+  //             />
+  //           );
+  //         })}
+  //       </div>
+  //     </WidthWrapper>
+  //   </div>
+  // );
 }
