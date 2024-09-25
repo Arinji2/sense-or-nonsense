@@ -21,12 +21,12 @@ export default async function Page() {
   if (!data.backdrop) Redirection("/backdrop");
 
   const { playerData, gameID, backdrop, difficulty } = data;
-  const fighterData: GameFighterSchemaType[] = [
-    {
-      fighter_id: playerData.fighter_id,
-      fighter_name: playerData.fighter_name,
-    },
-  ];
+  const fighterData: GameFighterSchemaType[] = playerData.map((player) => {
+    return {
+      fighter_id: player.fighter_id,
+      fighter_name: player.fighter_name,
+    };
+  });
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-start">
