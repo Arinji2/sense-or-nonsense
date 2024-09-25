@@ -8,27 +8,18 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import { cn } from "../../utils/cn";
-import {
-  DecryptGameDataAction,
-  EncryptGameDataAction,
-} from "../../utils/game-data";
+
+import { AddFighterAction } from "@/actions/game/fighters";
 import useAnimate from "../../utils/useAnimate";
 import { GameFighterSchemaType } from "../../validations/game-data/types";
-import { COOPSupportForFighterSelect } from "../../validations/generic/types";
 import FighterFinalize from "./fighter-finalize";
 
 export default function FighterModal({
   Animate,
   fighterID,
-  multiplayerSupport,
-  setMultiplayerSupport,
 }: {
   Animate: ReturnType<typeof useAnimate>;
   fighterID: number;
-  multiplayerSupport: COOPSupportForFighterSelect;
-  setMultiplayerSupport: React.Dispatch<
-    React.SetStateAction<COOPSupportForFighterSelect>
-  >;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [name, setName] = useState("");
@@ -56,11 +47,12 @@ export default function FighterModal({
 
   const router = useRouter();
   const finalizeAnimate = useAnimate(800);
+  const [fighterData, setFighterData] = useState<GameFighterSchemaType[]>([]);
 
   return (
     <>
       {createPortal(
-        <FighterFinalize Animate={finalizeAnimate} />,
+        <FighterFinalize Animate={finalizeAnimate} fighterData={fighterData} />,
         document.body,
       )}
       {Animate.actualState && (
@@ -103,50 +95,10 @@ export default function FighterModal({
                   fighter_id: fighterID.toString(),
                   fighter_name: name,
                 } as GameFighterSchemaType;
-                if (multiplayerSupport.supported) {
-                  if (multiplayerSupport.currentPlayer === 1) {
-                    await EncryptGameDataAction({
-                      key: "fighter_data",
-                      value: JSON.stringify([characterData]),
-                    });
-                    toast.success("Player 1 Created");
-                    Animate.setQueue(false);
-                    setName("");
-                    setMultiplayerSupport({
-                      supported: true,
-                      currentPlayer: 2,
-                    });
-                    return;
-                  } else {
-                    const data = await DecryptGameDataAction({});
-                    if (
-                      !data.fighter_data ||
-                      !Array.isArray(data.fighter_data)
-                    ) {
-                      router.push("/fighters");
-                      return;
-                    }
-                    await EncryptGameDataAction({
-                      key: "fighter_data",
-                      value: JSON.stringify([
-                        ...data.fighter_data,
-                        characterData,
-                      ]),
-                    });
-                    finalizeAnimate.setQueue(true);
-                    Animate.setQueue(false);
-                    toast.success("Player 2 Created");
-                    setName("");
 
-                    return;
-                  }
-                }
-
-                await EncryptGameDataAction({
-                  key: "fighter_data",
-                  value: JSON.stringify([characterData]),
-                });
-                toast.success("Player Created");
+                toast.success("Fighter Selected");
+                setFighterData([...fighterData, characterData]);
+                await AddFighterAction(characterData);
                 finalizeAnimate.setQueue(true);
                 Animate.setQueue(false);
 
@@ -165,7 +117,7 @@ export default function FighterModal({
               </button>
               <h4 className="text-center text-[20px] font-bold tracking-subtitle text-green-500 md:text-[35px]">
                 {" "}
-                SETUP FIGHTER FOR PLAYER {multiplayerSupport.currentPlayer}
+                SETUP FIGHTER FOR PLAYER 1
               </h4>
               <div className="flex h-fit w-full max-w-[400px] flex-col items-start justify-center gap-2">
                 <p className="text-[15px] font-medium text-white">NAME:</p>

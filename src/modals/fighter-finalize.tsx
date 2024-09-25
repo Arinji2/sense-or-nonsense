@@ -4,24 +4,22 @@ import { FightersList } from "@/app/fighters/fighters";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
-import {
-  DecryptGameDataAction,
-  EncryptGameDataAction,
-} from "../../utils/game-data";
+
+import { RemoveFighterAction } from "@/actions/game/fighters";
 import useAnimate from "../../utils/useAnimate";
 import { GameFighterSchemaType } from "../../validations/game-data/types";
 
 export default function FighterFinalize({
   Animate,
+  fighterData,
 }: {
   Animate: ReturnType<typeof useAnimate>;
+  fighterData: GameFighterSchemaType[];
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [fighterData, setFighterData] = useState<
-    GameFighterSchemaType[] | null
-  >(null);
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -39,12 +37,8 @@ export default function FighterFinalize({
           );
 
         if (confirmation) {
+          await RemoveFighterAction();
           toast.error("Fighter Selection Cancelled");
-          await EncryptGameDataAction({
-            key: "fighter_data",
-            value: "",
-            deleteKey: true,
-          });
 
           Animate.setQueue(false);
           window.location.reload();
@@ -70,19 +64,6 @@ export default function FighterFinalize({
     return data;
   }, [fighterData]);
 
-  useEffect(() => {
-    if (!Animate.queue) return;
-
-    (async () => {
-      const gameData = await DecryptGameDataAction({});
-
-      if (!gameData.fighter_data || !Array.isArray(gameData.fighter_data)) {
-        return router.push("/fighters");
-      }
-
-      setFighterData(gameData.fighter_data!);
-    })();
-  }, [Animate.queue, router]);
   useEffect(() => {
     if (Animate.showComponent) {
       document.body.style.overflow = "hidden";
@@ -167,11 +148,6 @@ export default function FighterFinalize({
             <button
               onClick={async () => {
                 Animate.setQueue(false);
-                await EncryptGameDataAction({
-                  key: "game",
-                  deleteKey: true,
-                  value: "",
-                });
                 const isRedirected = searchParams.get("redirected");
                 if (isRedirected && isRedirected === "true") {
                   router.replace("/pregame");

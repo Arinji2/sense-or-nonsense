@@ -6,10 +6,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { DecryptGameDataAction } from "../../../utils/game-data";
+
 import useAnimate from "../../../utils/useAnimate";
-import { COOPSupportForFighterSelect } from "../../../validations/generic/types";
-import { GamesList } from "../games";
 import { FightersList } from "./fighters";
 const scroll = 400;
 
@@ -56,7 +54,7 @@ function Scroll(
   }, 500);
 }
 
-export default function Selector() {
+export default function Selector({}) {
   const scrollingDiv = useRef<HTMLDivElement | null>(null);
   const [clicked, setClicked] = useState(false);
   const router = useRouter();
@@ -66,50 +64,17 @@ export default function Selector() {
   const [selectedFighterID, setSelectedFighterID] = useState<number | null>(
     null,
   );
-  const [multiplayerSupport, setMultiplayerSupport] =
-    useState<COOPSupportForFighterSelect>({
-      supported: false,
-      currentPlayer: 1,
-    });
+
   useEffect(() => {
     setDocumentDefined(true);
-    async function CheckMultiplayerSupport() {
-      const gameData = await DecryptGameDataAction({});
-      if (!gameData.game_id) {
-        router.push("/single");
-      }
-
-      const isMuliplayerSupported =
-        GamesList.find((game) => game.id === Number.parseInt(gameData.game_id!))
-          ?.isMultiplayer || false;
-
-      let currentPlayer = 1;
-
-      if (isMuliplayerSupported) {
-        if (Array.isArray(gameData.fighter_data)) {
-          currentPlayer = gameData.fighter_data.length + 1;
-        }
-      }
-
-      setMultiplayerSupport({
-        supported: isMuliplayerSupported,
-        currentPlayer,
-      });
-    }
-    CheckMultiplayerSupport().then();
-  }, [router]);
+  }, []);
 
   return (
     <>
       {documentDefined &&
         Number.isInteger(selectedFighterID) &&
         createPortal(
-          <FighterModal
-            Animate={animate}
-            fighterID={selectedFighterID!}
-            multiplayerSupport={multiplayerSupport}
-            setMultiplayerSupport={setMultiplayerSupport}
-          />,
+          <FighterModal Animate={animate} fighterID={selectedFighterID!} />,
           document.body,
         )}
 
@@ -143,12 +108,6 @@ export default function Selector() {
           {FightersList.map((fighter) => (
             <button
               onClick={async () => {
-                const data = await DecryptGameDataAction({});
-
-                if (!data.game_id) {
-                  router.push("/single");
-                }
-
                 setSelectedFighterID(fighter.id);
                 animate.setQueue(true);
               }}
