@@ -1,6 +1,8 @@
 "use server";
 
 import { FightersList } from "@/app/fighters/fighters";
+import { revalidateTag } from "next/cache";
+import { CACHED_TAGS } from "../../../constants/tags";
 import { ValidateGameIDCookie } from "../../../utils/game-data";
 import { GetUserMode } from "../../../utils/getMode";
 import { GameFighterSchemaType } from "../../../validations/game-data/types";
@@ -23,6 +25,8 @@ export async function AddFighterAction(fighterData: GameFighterSchemaType) {
   if (!parsedGame.success) {
     throw new Error("Game not found");
   }
+
+  revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
 }
 
 export async function RemoveFighterAction() {
@@ -37,4 +41,6 @@ export async function RemoveFighterAction() {
   if (!parsedGame.success) {
     throw new Error("Game not found");
   }
+
+  revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
 }

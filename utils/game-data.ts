@@ -1,6 +1,8 @@
 "use server";
+import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { CACHED_TAGS } from "../constants/tags";
 import { GameSchema } from "../validations/pb/schema";
 import { GameSchemaType } from "../validations/pb/types";
 import { GetUserMode } from "./getMode";
@@ -11,15 +13,23 @@ export async function ValidateGameIDCookie(): Promise<GameSchemaType> {
   if (!gameID) {
     redirect("/single");
   }
-  try {
-    const gameRecord = await pb?.collection("games").getOne(gameID);
-    const parsedGame = GameSchema.parse(gameRecord);
-    if (parsedGame.user !== userID) {
-      throw new Error();
-    }
+  return await unstable_cache(
+    async (id: string, user: string) => {
+      try {
+        const gameRecord = await pb?.collection("games").getOne(id);
+        const parsedGame = GameSchema.parse(gameRecord);
+        if (parsedGame.user !== user) {
+          throw new Error();
+        }
 
-    return parsedGame;
-  } catch (e: any) {
-    redirect("/unauthorized");
-  }
+        return parsedGame;
+      } catch (e: any) {
+        redirect("/unauthorized");
+      }
+    },
+    [],
+    {
+      tags: [`${CACHED_TAGS.game_data}-${userID}-${gameID}`],
+    },
+  )(gameID, userID!);
 }
