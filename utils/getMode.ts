@@ -35,8 +35,6 @@ export async function GetUserMode() {
     throw new Error("User not logged in");
   }
 
-  pb.autoCancellation(false);
-
   return {
     userID: globalUserID,
     mode,
