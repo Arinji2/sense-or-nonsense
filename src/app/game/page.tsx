@@ -57,7 +57,7 @@ export default async function Page() {
   const SelectedDifficulty = DifficultyList.find(
     (difficulties) => difficulties.level === Number.parseInt(difficulty),
   )!;
-  const SelectedPlayer = playerData;
+  const SelectedPlayer = playerData[currentPlayer];
 
   const CurrentRound = games[games.length - 1].round_number;
 
@@ -66,7 +66,7 @@ export default async function Page() {
   }
   const CurrentStreaks = GetCurrentStreaks({
     games,
-    fighters: [playerData],
+    fighters: playerData,
   });
 
   wordData.definition =
@@ -110,8 +110,8 @@ export default async function Page() {
             previousGames={games}
             gameData={SelectedGame}
             streak={CurrentStreaks[currentPlayer]}
-            playerName={SelectedPlayer.fighter_name}
-            fighters={[playerData]}
+            playerName={SelectedPlayer.fighter_name!}
+            fighters={playerData}
             maxRounds={SelectedDifficulty.rounds}
           />
           <div className="mt-auto hidden flex-row items-center justify-center gap-20 md:flex">
@@ -120,7 +120,7 @@ export default async function Page() {
                 CurrentRound,
                 SelectedDifficulty,
                 SelectedPlayer,
-                fighter_data: [playerData],
+                fighter_data: playerData,
                 SelectedGame,
                 CurrentStreaks,
               }}
@@ -134,7 +134,7 @@ export default async function Page() {
                   CurrentRound,
                   SelectedDifficulty,
                   SelectedPlayer,
-                  fighter_data: [playerData],
+                  fighter_data: playerData,
                   SelectedGame,
                   CurrentStreaks,
                 }}
