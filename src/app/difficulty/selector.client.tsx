@@ -3,10 +3,11 @@
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
-import { EncryptGameDataAction } from "../../../utils/game-data";
+
+import { AddDifficultyAction } from "@/actions/game/difficulty";
 import { DifficultyList } from "./difficully";
 
-export default function Selector() {
+export default function Selector({ gameID }: { gameID: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   return (
@@ -14,16 +15,17 @@ export default function Selector() {
       {DifficultyList.map((difficulty) => (
         <button
           onClick={async () => {
-            await EncryptGameDataAction({
-              key: "game",
-              deleteKey: true,
-              value: "",
-            });
-            await EncryptGameDataAction({
-              key: "difficulty",
-              value: difficulty.level.toString(),
-            });
-            toast.success("Difficulty selected successfully!");
+            const resolve = toast.promise(
+              AddDifficultyAction(gameID, difficulty.level),
+              {
+                loading: "Setting difficulty...",
+                success: "Difficulty selected successfully!",
+                error: "Failed to select difficulty",
+              },
+            );
+
+            await resolve;
+
             const isRedirected = searchParams.get("redirected");
             if (isRedirected && isRedirected === "true") {
               router.replace("/pregame");

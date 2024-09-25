@@ -1,11 +1,34 @@
 import WidthWrapper from "@/wrappers/width-wrapper";
 import { redirect } from "next/navigation";
-import { DecryptGameDataAction } from "../../../utils/game-data";
+
+import { cookies } from "next/headers";
+import { GetUserMode } from "../../../utils/getMode";
+import { GameSchema } from "../../../validations/pb/schema";
+import { GamesList } from "../games";
 import Selector from "./selector.client";
 
 export default async function Page({}) {
-  const data = await DecryptGameDataAction({});
-  if (!data.game_id) redirect("/single");
+  const { pb, userID } = await GetUserMode();
+  const gameID = cookies().get("game-id")?.value;
+  if (!gameID) {
+    redirect("/single");
+  }
+  try {
+    const gameRecord = await pb?.collection("games").getOne(gameID);
+    const parsedGame = GameSchema.parse(gameRecord);
+    if (parsedGame.user !== userID) {
+      throw new Error();
+    }
+    if (
+      GamesList.find(
+        (game) => game.id === Number.parseInt(parsedGame.gameID),
+      ) === undefined
+    ) {
+      throw new Error();
+    }
+  } catch (e) {
+    redirect("/unauthorized");
+  }
 
   return (
     <WidthWrapper>
@@ -14,7 +37,7 @@ export default async function Page({}) {
           SELECT A DIFFICULTY
         </h1>
         <div className="flex h-fit w-[95%] flex-row flex-wrap items-center justify-center gap-10 xl:w-full">
-          <Selector />
+          <Selector gameID={gameID} />
         </div>
       </div>
     </WidthWrapper>
