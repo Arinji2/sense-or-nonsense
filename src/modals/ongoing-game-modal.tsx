@@ -15,7 +15,7 @@ export default function OngoingGame({
   Animate: ReturnType<typeof useAnimate>;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-
+  const router = useRouter();
   useEffect(() => {
     if (Animate.showComponent) {
       document.body.style.overflow = "hidden";
@@ -56,10 +56,8 @@ export default function OngoingGame({
         }
       }
     },
-    [Animate, containerRef],
+    [Animate, containerRef, router],
   );
-
-  const router = useRouter();
 
   return (
     Animate.actualState && (
