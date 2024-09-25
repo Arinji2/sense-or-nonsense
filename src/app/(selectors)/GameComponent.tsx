@@ -5,7 +5,7 @@ import { cn } from "../../../utils/cn";
 import { unstable_cache } from "next/cache";
 import Client from "pocketbase";
 import { CACHED_TAGS } from "../../../constants/tags";
-import { FormatDate1 } from "../../../utils/formatDate";
+import { FormatDate1 } from "../../../utils/formatting";
 import { GameSchema } from "../../../validations/pb/schema";
 import { GameSchemaType } from "../../../validations/pb/types";
 import { DifficultyList } from "../difficulty/difficully";
