@@ -10,7 +10,7 @@ export default function Fighters({
 }) {
   const fighters = fighter_data!.map((fighter) => {
     const fighterData = FightersList.find(
-      (fighterList) => fighterList.id === Number.parseInt(fighter.fighter_id),
+      (fighterList) => fighterList.id === fighter.fighter_id,
     )!;
 
     return fighterData;
