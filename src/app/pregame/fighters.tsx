@@ -21,7 +21,7 @@ export default function Fighters({
         <p className="text-2xl font-medium tracking-text text-white md:text-3xl">
           <span className="text-yellow-500">2. </span>FIGHTERS
         </p>
-        <EditButton objKey="fighter_data" />
+        <EditButton objKey="playerData" />
       </div>
       <div className="no-scrollbar flex h-fit w-full min-w-0 max-w-[300px] flex-row flex-wrap items-center justify-center gap-4 overflow-x-auto xl:flex-nowrap xl:justify-start">
         {fighters.map((fighter, index) => (

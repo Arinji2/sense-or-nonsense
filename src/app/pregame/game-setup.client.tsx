@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { EncryptGameDataAction } from "../../../utils/game-data";
+
 import { RoundsSchemaType } from "../../../validations/game-data/types";
 
 export default function GameSetup() {
@@ -17,17 +17,6 @@ export default function GameSetup() {
           timeElapsed: 10,
           isFake: false,
         } as RoundsSchemaType;
-
-        await EncryptGameDataAction({
-          key: "game",
-          value: "",
-          deleteKey: true,
-        });
-
-        await EncryptGameDataAction({
-          key: "game",
-          value: JSON.stringify([initialRoundData]),
-        });
 
         router.push("/game");
       }}

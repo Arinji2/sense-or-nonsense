@@ -10,7 +10,7 @@ export default function Game({ gameID }: { gameID: string }) {
         <p className="text-2xl font-medium tracking-text text-white md:text-3xl">
           <span className="text-yellow-500">1. </span>GAME
         </p>
-        <EditButton objKey="game_id" reset />
+        <EditButton objKey="game" />
       </div>
       <button className="relative flex aspect-video w-full flex-col items-start justify-end overflow-hidden rounded-md xl:w-[300px]">
         <Image

@@ -3,6 +3,7 @@
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { CACHED_TAGS } from "../../../constants/tags";
+import { ValidateGameIDCookie } from "../../../utils/game-data";
 import { GetUserMode } from "../../../utils/getMode";
 import { GameSchema } from "../../../validations/pb/schema";
 export async function SetupGameAction(gameID: string) {
@@ -26,4 +27,12 @@ export async function SetupGameAction(gameID: string) {
   });
 
   revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${parsedGame.data.id}`);
+}
+
+export async function RemoveGameAction() {
+  const { pb, userID } = await GetUserMode();
+  const gameData = await ValidateGameIDCookie();
+  await pb!.collection("games").delete(gameData.id);
+  revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
+  cookies().delete("game-id");
 }

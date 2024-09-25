@@ -30,3 +30,19 @@ export async function AddDifficultyAction(
 
   revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
 }
+
+export async function RemoveDifficultyAction() {
+  const gameData = await ValidateGameIDCookie();
+  const { pb, userID, mode } = await GetUserMode();
+
+  const game = await pb!.collection("games").update(gameData.id, {
+    difficulty: "",
+  });
+
+  const parsedGame = GameSchema.safeParse(game);
+  if (!parsedGame.success) {
+    throw new Error("Game not found");
+  }
+
+  revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
+}

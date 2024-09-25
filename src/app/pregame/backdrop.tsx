@@ -12,7 +12,7 @@ export default function Backdrop({ backdropID }: { backdropID: string }) {
         <p className="text-2xl font-medium tracking-text text-white md:text-3xl">
           <span className="text-yellow-500">3. </span>BACKDROP
         </p>
-        <EditButton objKey="backdrop" reset />
+        <EditButton objKey="backdrop" />
       </div>
       <div className="relative flex aspect-video w-full flex-col items-start justify-end overflow-hidden rounded-md xl:w-[300px]">
         <Image

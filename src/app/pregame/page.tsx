@@ -1,7 +1,8 @@
 import WidthWrapper from "@/wrappers/width-wrapper";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { DecryptGameDataAction } from "../../../utils/game-data";
+import { ValidateGameIDCookie } from "../../../utils/game-data";
+import { GameFighterSchemaType } from "../../../validations/game-data/types";
 import Backdrop from "./backdrop";
 import Difficulty from "./difficulty";
 import Fighters from "./fighters";
@@ -9,17 +10,23 @@ import Game from "./game";
 import GameSetup from "./game-setup.client";
 
 export default async function Page() {
-  const data = await DecryptGameDataAction({});
+  const data = await ValidateGameIDCookie();
   function Redirection(path: string) {
     redirect(`${path}?redirected=true`);
   }
 
-  if (!data.game_id) Redirection("/single");
+  if (!data.gameID) Redirection("/single");
   if (!data.difficulty) Redirection("/difficulty");
-  if (!data.fighter_data) Redirection("/fighters");
+  if (typeof data.playerData === "boolean") return Redirection("/fighters");
   if (!data.backdrop) Redirection("/backdrop");
 
-  const { fighter_data, game_id, backdrop, difficulty } = data;
+  const { playerData, gameID, backdrop, difficulty } = data;
+  const fighterData: GameFighterSchemaType[] = [
+    {
+      fighter_id: playerData.playerID,
+      fighter_name: playerData.playerName,
+    },
+  ];
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-start">
@@ -30,8 +37,8 @@ export default async function Page() {
           </h1>
           <div className="flex h-fit w-full flex-col items-center justify-center gap-6 xl:flex-row xl:gap-20">
             <div className="flex h-fit w-[80%] flex-col items-start justify-start gap-6 xl:w-fit">
-              <Game gameID={game_id!} />
-              <Fighters fighter_data={fighter_data!} />
+              <Game gameID={gameID!} />
+              <Fighters fighter_data={fighterData!} />
             </div>
             <div className="flex h-fit w-[80%] flex-col items-start justify-start gap-6 xl:w-fit">
               <Backdrop backdropID={backdrop!} />

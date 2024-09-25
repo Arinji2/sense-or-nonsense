@@ -11,7 +11,7 @@ export default function Difficulty({ difficultyID }: { difficultyID: string }) {
         <p className="text-2xl font-medium tracking-text text-white md:text-3xl">
           <span className="text-yellow-500">4. </span>DIFFICULTY
         </p>
-        <EditButton objKey="difficulty" reset />
+        <EditButton objKey="difficulty" />
       </div>
       <button
         style={
