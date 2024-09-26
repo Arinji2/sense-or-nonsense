@@ -11,38 +11,9 @@ import {
 import { AccuracyGraph, TimeGraph } from "./graph";
 import { GameInfo, GameStats } from "./stats";
 
-import Client from "pocketbase";
+import { GetGameData } from "../../../../../utils/game-data";
 import { GetUserMode } from "../../../../../utils/getMode";
-import { GameSchema } from "../../../../../validations/pb/schema";
 import RoundStats from "./round";
-
-async function GetGameData({
-  pb,
-  gameID,
-  userID,
-}: {
-  pb: Client;
-  gameID: string;
-  userID: string;
-}) {
-  try {
-    const pbGameData = await pb
-      .collection("games")
-      .getFirstListItem(`id="${gameID}"&&user="${userID}"`, {
-        expand: "rounds,rounds.fake_word,rounds.real_word",
-      });
-
-    const parsedData = GameSchema.safeParse(pbGameData);
-
-    if (!parsedData.success) {
-      redirect("/dashboard");
-    }
-
-    return parsedData.data;
-  } catch (e) {
-    redirect("/dashboard");
-  }
-}
 
 export default async function Page({
   searchParams,
@@ -62,19 +33,12 @@ export default async function Page({
 }) {
   const { pb, userID } = await GetUserMode();
 
-  const data = await GetGameData({
-    pb,
-    gameID: params.id,
-    userID: userID!,
-  });
+  const { gameData, rounds } = await GetGameData(pb, params.id, userID!);
 
-  if (!data.isValidated) redirect("/pregame");
+  if (!gameData.isValidated) redirect("/pregame");
 
-  let { playerData, gameID } = data;
+  let { playerData, gameID } = gameData;
   if (typeof playerData === "boolean") redirect("/pregame");
-
-  const rounds = data.expand?.rounds;
-  if (rounds === undefined) redirect("/pregame");
 
   const gameIsMultiplayer = GamesList.find(
     (game) => game.id === Number.parseInt(gameID),
@@ -229,7 +193,7 @@ export default async function Page({
               />
             </div>
             <div className="rounded-sm bg-green-500/10 p-5">
-              <GameInfo gameData={data} index={currentPlayerIndex} />
+              <GameInfo gameData={gameData} index={currentPlayerIndex} />
             </div>
             <div className="rounded-sm bg-yellow-500/10 p-5">
               <AccuracyGraph
@@ -250,7 +214,7 @@ export default async function Page({
               <GameStats data={players[currentPlayerIndex]} />
             </div>
             <div className="w-full rounded-sm bg-green-500/10 p-5">
-              <GameInfo gameData={data} index={currentPlayerIndex} />
+              <GameInfo gameData={gameData} index={currentPlayerIndex} />
             </div>
             <div className="w-full rounded-sm bg-blue-500/10 p-5">
               <TimeGraph

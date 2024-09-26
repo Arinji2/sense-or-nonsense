@@ -19,29 +19,23 @@ export default async function RoundStats({
     timeleft: StringSearchParamType;
   };
 }) {
-  let gamesWithWords = [...game];
-
   if (searchParams.timeleft && !Array.isArray(searchParams.timeleft)) {
-    gamesWithWords = gamesWithWords.sort(
-      (a, b) => b.time_elapsed - a.time_elapsed,
-    );
+    game = game.sort((a, b) => b.time_elapsed - a.time_elapsed);
   }
 
   if (searchParams.round && !Array.isArray(searchParams.round))
-    gamesWithWords = gamesWithWords.sort(
-      (a, b) => b.round_number - a.round_number,
-    );
+    game = game.sort((a, b) => b.round_number - a.round_number);
 
   if (searchParams.correct) {
     if (Array.isArray(searchParams.correct)) return;
-    const correct = gamesWithWords.filter((data) => data.correct);
-    const incorrect = gamesWithWords.filter((data) => !data.correct);
+    const correct = game.filter((data) => data.correct);
+    const incorrect = game.filter((data) => !data.correct);
 
-    gamesWithWords = [...correct, ...incorrect];
+    game = [...correct, ...incorrect];
   }
 
   if (searchParams.word && !Array.isArray(searchParams.word))
-    gamesWithWords = gamesWithWords.sort((a, b) => {
+    game = game.sort((a, b) => {
       const aWord = (a.expand?.fake_word?.word ?? a.real_word)!;
       const bWord = (b.expand?.fake_word?.word ?? b.real_word)!;
       return bWord.localeCompare(aWord);
@@ -65,7 +59,7 @@ export default async function RoundStats({
             </tr>
           </thead>
           <tbody>
-            {gamesWithWords.map((data, index) => {
+            {game.map((data, index) => {
               if (data.player_index !== currentPlayerIndex) return;
               const word = (data.expand?.fake_word?.word ??
                 data.expand?.real_word!.word)!;
