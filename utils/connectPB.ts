@@ -16,7 +16,7 @@ export async function ConnectPBAdmin() {
     },
     [],
     {
-      revalidate: 60 * 5, // 5 minutes
+      revalidate: 60 * 2, // 2 minutes
       tags: [CACHED_TAGS.guest_client],
     },
   )(email, password);
@@ -43,7 +43,7 @@ export async function ConnectPBUser() {
     },
     [],
     {
-      revalidate: 60 * 5, // 5 minutes
+      revalidate: 60 * 2, // 2 minutes
       tags: [CACHED_TAGS.user_client],
     },
   )(userCookie.value);
