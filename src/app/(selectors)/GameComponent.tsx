@@ -6,8 +6,8 @@ import { unstable_cache } from "next/cache";
 import Client from "pocketbase";
 import { CACHED_TAGS } from "../../../constants/tags";
 import { FormatDate1 } from "../../../utils/formatting";
-import { GameSchema } from "../../../validations/pb/schema";
-import { GameSchemaType } from "../../../validations/pb/types";
+import { RoundsSchema } from "../../../validations/pb/schema";
+import { RoundSchemaType } from "../../../validations/pb/types";
 import { DifficultyList } from "../difficulty/difficully";
 import PlayNowButton from "./button.client";
 
@@ -26,22 +26,18 @@ export async function GameComponent({
 }) {
   const results = await unstable_cache(
     async (userID: string, id: number) => {
-      const parsedRecords: GameSchemaType[] = [];
-      const gameRecords = await pb.collection("games").getFullList({
-        filter: `user="${userID}" && gameID="${id}"`,
-        expand: "rounds,rounds.fake_word,rounds.real_word",
+      const roundRecords = await pb.collection("rounds").getFullList({
+        filter: `game="${id}"`,
+        expand: "game,fake_word,real_word",
         sort: "-created",
       });
 
-      gameRecords.forEach((record) => {
-        const parse = GameSchema.safeParse(record);
-        if (!parse.success) {
-          return;
-        }
-        parsedRecords.push(parse.data);
-      });
+      const parsedRecords = RoundsSchema.safeParse(roundRecords);
+      if (!parsedRecords.success) {
+        throw new Error("Game not found");
+      }
 
-      return parsedRecords;
+      return parsedRecords.data;
     },
     [],
     {
@@ -94,17 +90,15 @@ export async function GameComponent({
 
                 let total = 0;
 
-                results.forEach((record) => {
-                  if (record.rounds.length === 0) return;
-                  const round = record.expand?.rounds.find(
-                    (round) =>
-                      round.expand?.fake_word?.level ===
-                        selectedDifficulty.level ||
-                      round.expand?.real_word?.level ===
-                        selectedDifficulty.level,
-                  );
-                  if (!round) return;
-                  total += round.correct ? 1 : 0;
+                results.forEach((record: RoundSchemaType) => {
+                  if (
+                    record.game.length === 0 ||
+                    record.expand?.game!.difficulty === undefined ||
+                    record.expand?.game!.difficulty !==
+                      selectedDifficulty.level.toString()
+                  )
+                    return;
+                  total += record.correct ? 1 : 0;
                 });
 
                 return (
