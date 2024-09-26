@@ -10,13 +10,14 @@ import ScarletImage from "@/../public/fighters/scarlet.png";
 
 import AlexanderTransparentImage from "@/../public/fighters/transparent/alexander.png";
 import BillyTransparentImage from "@/../public/fighters/transparent/billy.png";
+import MollyTransparentImage from "@/../public/fighters/transparent/molly.png";
 
 export const FightersList = [
   {
     id: 0,
     name: "Molly",
     image: MollyImage,
-
+    transparentImage: MollyTransparentImage,
     description: "A very cool lore here about Molly :D i love",
     color: "#FFAD3B",
   },
