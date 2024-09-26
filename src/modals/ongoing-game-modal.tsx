@@ -112,8 +112,8 @@ export default function OngoingGame({
             <div className="flex h-fit w-fit flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
               <button
                 onClick={async () => {
-                  router.push("/pregame");
                   Animate.setQueue(false);
+                  router.push("/pregame");
                 }}
                 className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-purple-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
               >
