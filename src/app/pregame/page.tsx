@@ -17,7 +17,7 @@ export default async function Page() {
 
   if (!gameData.gameID) Redirection("/single");
   if (!gameData.difficulty) Redirection("/difficulty");
-  if (typeof gameData.playerData === "boolean") return Redirection("/fighters");
+  if (gameData.playerData.length === 0) return Redirection("/fighters");
   if (!gameData.backdrop) Redirection("/backdrop");
 
   const { playerData, gameID, backdrop, difficulty } = gameData;
