@@ -15,6 +15,9 @@ export default function GameInProgress() {
     if (!GAME_ROUTES.includes(pathname)) {
       setShowModal(true);
       animate.setQueue(true);
+    } else {
+      setShowModal(false);
+      animate.setQueue(false);
     }
   }, [animate, pathname]);
 
