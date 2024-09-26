@@ -10,11 +10,12 @@ export default function GameSetup() {
   return (
     <button
       onClick={async () => {
-        toast.promise(CreateNewRound(), {
+        const resolve = toast.promise(CreateNewRound(), {
           loading: "Setting up game...",
           success: "Game created successfully",
           error: "Failed to create game",
         });
+        await resolve;
 
         router.push("/game");
       }}
