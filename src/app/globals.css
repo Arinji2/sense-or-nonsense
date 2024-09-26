@@ -42,3 +42,7 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.small-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}

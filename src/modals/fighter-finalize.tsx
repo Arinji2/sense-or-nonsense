@@ -104,12 +104,18 @@ export default function FighterFinalize({
             {" "}
             FINALIZE FIGHTER SELECTION
           </h4>
-          <div className="flex h-full w-full flex-row flex-wrap items-center justify-center gap-10 px-10">
+          <div
+            style={{
+              justifyContent:
+                generatedFighters!.length > 2 ? "start" : "center",
+            }}
+            className="no-scrollbar flex h-[200px] w-full flex-row items-center justify-center gap-10 overflow-x-auto overflow-y-hidden px-10"
+          >
             {generatedFighters &&
               generatedFighters.map((fighter, index) => (
                 <div
                   key={fighter.id + index}
-                  className="flex h-fit w-fit max-w-[400px] flex-col items-center justify-center rounded-sm bg-gradient-to-r from-[--fighterColor] from-[60%] to-[--fighterColorOpaque] px-4 py-6"
+                  className="flex h-fit w-[80%] shrink-0 flex-col items-center justify-center rounded-sm bg-gradient-to-r from-[--fighterColor] from-[60%] to-[--fighterColorOpaque] px-4 py-6 xl:w-[350px]"
                   style={
                     {
                       "--fighterColor": fighter.color,
@@ -129,9 +135,9 @@ export default function FighterFinalize({
                         />
                       </div>
                     </div>
-                    <div className="flex h-full w-full min-w-0 flex-col items-start justify-end gap-4">
-                      <h4 className="w-full truncate text-left text-[15px] font-bold text-white md:text-[20px]">
-                        {fighterData![index].fighter_name}{" "}
+                    <div className="flex h-full w-full min-w-0 flex-col items-end justify-end gap-4">
+                      <h4 className="w-full truncate text-right text-[15px] font-bold text-white md:text-[20px]">
+                        {fighterData![index].fighter_name}
                       </h4>
                       <p className="text-[15px] text-white">
                         PLAYER {index + 1}
