@@ -8,6 +8,7 @@ import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
 import Controls from "./controls.client";
 import Menu from "./menu.client";
+import PlayerView from "./player-view";
 import Report from "./report.client";
 import { RenderStats } from "./stats";
 import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
@@ -68,8 +69,8 @@ export default async function Page() {
     wordData.word.slice(0, 1).toUpperCase() + wordData.word.slice(1);
 
   return (
-    <div className="flex h-[100svh] w-full flex-col items-center justify-center">
-      <div className="absolute left-0 top-0 h-full w-full">
+    <div className="flex h-fit w-full flex-col items-center justify-center gap-10 py-10 pb-20 md:h-[100svh] md:gap-0 md:py-0 md:pb-0">
+      <div className="fixed left-0 top-0 h-[100svh] w-full">
         <Image
           src={SelectedBackdrop.image}
           alt={SelectedBackdrop.name}
@@ -80,7 +81,13 @@ export default async function Page() {
         />
         <div className="relative z-20 h-full w-full bg-gradient-to-b from-[#2C282830] from-0% to-[#2c282890] to-60% backdrop-blur-[2px]"></div>
       </div>
-      <div className="fixed top-5 z-20 flex flex-row items-center justify-center gap-2 rounded-md bg-black px-3 py-2 xl:right-5">
+      <PlayerView
+        playerData={playerData}
+        CurrentStreaks={CurrentStreaks}
+        currentPlayer={currentPlayer}
+        className="hidden md:flex"
+      />
+      <div className="top-5 z-20 flex flex-row items-center justify-center gap-2 rounded-md bg-black px-3 py-2 md:fixed xl:right-5">
         <span className="text-lg font-medium text-green-500">SENSE</span>
         <span className="text-lg font-medium text-white">OR</span>
         <span className="text-lg font-medium text-red-500">NONSENSE</span>
@@ -106,29 +113,30 @@ export default async function Page() {
             fighters={playerData}
             maxRounds={SelectedDifficulty.rounds}
           />
+
           <div className="mt-auto hidden flex-row items-center justify-center gap-20 md:flex">
             <RenderStats
               {...{
                 CurrentRound,
                 SelectedDifficulty,
-                SelectedPlayer,
-                fighter_data: playerData,
                 SelectedGame,
-                CurrentStreaks,
               }}
             />
           </div>
           <Report isStatic />
+          <PlayerView
+            playerData={playerData}
+            CurrentStreaks={CurrentStreaks}
+            currentPlayer={currentPlayer}
+            className="static flex md:hidden"
+          />
           <Menu>
             <div className="flex w-[80%] flex-col items-start justify-start gap-6">
               <RenderStats
                 {...{
                   CurrentRound,
                   SelectedDifficulty,
-                  SelectedPlayer,
-                  fighter_data: playerData,
                   SelectedGame,
-                  CurrentStreaks,
                 }}
               />
             </div>
