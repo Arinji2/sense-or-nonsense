@@ -162,14 +162,16 @@ export default function FighterFinalize({
             >
               LETS GO!
             </button>
-            <button
-              onClick={async () => {
-                Animate.setQueue(false);
-              }}
-              className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
-            >
-              CREATE PLAYER {fighterData.length + 1}
-            </button>
+            {isMultiplayer && (
+              <button
+                onClick={async () => {
+                  Animate.setQueue(false);
+                }}
+                className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
+              >
+                CREATE PLAYER {fighterData.length + 1}
+              </button>
+            )}
           </div>
         </div>
       </div>
