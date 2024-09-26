@@ -10,17 +10,17 @@ import Game from "./game";
 import GameSetup from "./game-setup.client";
 
 export default async function Page() {
-  const data = await ValidateGameIDCookie();
+  const { gameData } = await ValidateGameIDCookie();
   function Redirection(path: string) {
     redirect(`${path}?redirected=true`);
   }
 
-  if (!data.gameID) Redirection("/single");
-  if (!data.difficulty) Redirection("/difficulty");
-  if (typeof data.playerData === "boolean") return Redirection("/fighters");
-  if (!data.backdrop) Redirection("/backdrop");
+  if (!gameData.gameID) Redirection("/single");
+  if (!gameData.difficulty) Redirection("/difficulty");
+  if (typeof gameData.playerData === "boolean") return Redirection("/fighters");
+  if (!gameData.backdrop) Redirection("/backdrop");
 
-  const { playerData, gameID, backdrop, difficulty } = data;
+  const { playerData, gameID, backdrop, difficulty } = gameData;
   const fighterData: GameFighterSchemaType[] = playerData.map((player) => {
     return {
       fighter_id: player.fighter_id,
