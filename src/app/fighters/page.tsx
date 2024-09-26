@@ -10,7 +10,7 @@ import Selector from "./selector.client";
 
 export default async function Page() {
   const { pb, userID } = await GetUserMode();
-  const gameData = await ValidateGameIDCookie();
+  const { gameData, rounds } = await ValidateGameIDCookie();
   let isMultiplayer = false;
   try {
     const selectedGame = GamesList.find(
