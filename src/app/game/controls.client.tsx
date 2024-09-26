@@ -99,6 +99,7 @@ export default function Controls({
         id: previousGame.id,
         created: new Date(),
         updated: new Date(),
+        game: "",
       } as RoundSchemaType;
 
       const goToNextRound = GetRoundChange({

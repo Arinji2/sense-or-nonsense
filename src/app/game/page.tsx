@@ -13,24 +13,16 @@ import { RenderStats } from "./stats";
 import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
 
 export default async function Page() {
-  const data = await ValidateGameIDCookie({
-    expandFields: true,
-  });
+  const { gameData, rounds } = await ValidateGameIDCookie();
 
-  if (
-    !data.isValidated ||
-    typeof data.expand === "undefined" ||
-    typeof data.playerData === "boolean"
-  )
+  if (!gameData.isValidated || typeof gameData.playerData === "boolean")
     throw new Error("Game not found");
 
-  const { backdrop, difficulty, playerData, gameID } = data;
-  const game = data.expand.rounds;
+  const { backdrop, difficulty, playerData, gameID } = gameData;
 
   const isFake = GetIsFakeSelected();
-  const games = [...game];
 
-  const currentPlayer = games[games.length - 1].player_index;
+  const currentPlayer = rounds[rounds.length - 1].player_index;
 
   const pb = await ConnectPBAdmin();
   const SelectedGame = GamesList.find(
@@ -38,8 +30,8 @@ export default async function Page() {
   )!;
 
   const filteredIDs = (() => {
-    if (games.length === 0) return "";
-    const ids = games.map((game) => `id!="${game.id}"`);
+    if (rounds.length === 0) return "";
+    const ids = rounds.map((game) => `id!="${game.id}"`);
     return "&&".concat(ids.join("&&"));
   })();
 
@@ -59,13 +51,13 @@ export default async function Page() {
   )!;
   const SelectedPlayer = playerData[currentPlayer];
 
-  const CurrentRound = games[games.length - 1].round_number;
+  const CurrentRound = rounds[rounds.length - 1].round_number;
 
   if (CurrentRound > SelectedDifficulty.rounds) {
     redirect("/game/summary");
   }
   const CurrentStreaks = GetCurrentStreaks({
-    games,
+    games: rounds.slice(0, rounds.length - 1),
     fighters: playerData,
   });
 
@@ -107,7 +99,7 @@ export default async function Page() {
           </div>
           <Controls
             data={wordData}
-            previousGames={games}
+            previousGames={rounds}
             gameData={SelectedGame}
             streak={CurrentStreaks[currentPlayer]}
             playerName={SelectedPlayer.fighter_name!}
