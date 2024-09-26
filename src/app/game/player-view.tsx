@@ -39,11 +39,10 @@ export default function PlayerView({
         } as React.CSSProperties
       }
       className={cn(
-        "absolute bottom-4 z-30 flex h-[100px] w-[250px] flex-col items-center justify-start rounded-md bg-[#1E1E1E] px-4 py-2 shadow-md shadow-black md:left-10 md:top-10 md:h-[150px]",
+        "absolute bottom-4 z-30 flex h-[100px] w-[250px] flex-col items-center justify-start rounded-md bg-[#1E1E1E] px-4 py-2 shadow-md shadow-black xl:left-10 xl:top-10 xl:h-[150px]",
         className,
       )}
     >
-      {/* Current player view remains the same */}
       <div className="flex h-[40px] w-full shrink-0 flex-row items-center justify-between">
         <h1 className="text-center text-[15px] font-bold tracking-text text-white">
           Currently Playing
@@ -53,7 +52,7 @@ export default function PlayerView({
         </p>
       </div>
       <div className="flex h-full w-full flex-row items-start justify-end gap-4">
-        <div className="relative size-[40px] shrink-0 md:size-[80px]">
+        <div className="shrink-0x:size-[80px] relative z-20 size-[40px]">
           <Image
             alt={FightersList[playerData[currentPlayer].fighter_id].name}
             src={
@@ -78,7 +77,7 @@ export default function PlayerView({
       </div>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="absolute bottom-2 right-2 hidden w-fit flex-row items-center justify-center gap-1 md:flex"
+        className="absolute bottom-2 right-2 hidden w-fit flex-row items-center justify-center gap-1 xl:flex"
       >
         <p className="text-[10px] tracking-wide text-white">View All Players</p>
         <ChevronDown
@@ -119,7 +118,7 @@ export default function PlayerView({
                       FightersList[player.fighter_id].color + "40",
                   } as React.CSSProperties
                 }
-                className="bottom-4 z-30 flex h-[100px] w-full shrink-0 flex-col items-center justify-start gap-6 rounded-md bg-[--lighterInnerPlayerColor] p-4 md:h-[150px]"
+                className="bottom-4 z-30 flex h-[100px] w-full shrink-0 flex-col items-center justify-start gap-6 rounded-md bg-[--lighterInnerPlayerColor] p-4 xl:h-[150px]"
               >
                 <div className="flex h-[40px] w-full shrink-0 flex-row items-center justify-between">
                   <h1 className="text-left text-[15px] font-bold tracking-text text-white">
@@ -131,7 +130,7 @@ export default function PlayerView({
                   </p>
                 </div>
                 <div className="flex h-full w-full flex-row items-start justify-end gap-4">
-                  <div className="relative size-[40px] shrink-0 md:size-[60px]">
+                  <div className="relative size-[40px] shrink-0 xl:size-[60px]">
                     <Image
                       alt={FightersList[player.fighter_id].name}
                       src={FightersList[player.fighter_id].transparentImage}

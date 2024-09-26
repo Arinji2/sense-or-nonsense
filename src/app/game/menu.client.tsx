@@ -37,7 +37,7 @@ export default function Menu({
     <div
       ref={containerRef}
       className={cn({
-        "fixed bottom-0 left-0 z-50 flex h-[60%] w-full translate-y-[calc(100%-70px)] flex-col items-center justify-start gap-5 bg-black py-4 transition-all duration-500 ease-in-out md:hidden":
+        "fixed bottom-0 left-0 z-50 flex h-[60%] w-full translate-y-[calc(100%-70px)] flex-col items-center justify-start gap-5 bg-black py-4 transition-all duration-500 ease-in-out xl:hidden":
           true,
         "translate-y-0": isActive,
       })}
