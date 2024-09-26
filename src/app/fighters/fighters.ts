@@ -9,6 +9,7 @@ import SamanthaImage from "@/../public/fighters/samantha.png";
 import ScarletImage from "@/../public/fighters/scarlet.png";
 
 import AlexanderTransparentImage from "@/../public/fighters/transparent/alexander.png";
+import BillyTransparentImage from "@/../public/fighters/transparent/billy.png";
 
 export const FightersList = [
   {
@@ -31,6 +32,7 @@ export const FightersList = [
     id: 2,
     name: "Billy",
     image: BillyImage,
+    transparentImage: BillyTransparentImage,
     description: "A very cool lore here about Billy :D i love",
     color: "#264F6E",
   },
