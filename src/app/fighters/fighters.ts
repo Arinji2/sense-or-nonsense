@@ -11,6 +11,7 @@ import ScarletImage from "@/../public/fighters/scarlet.png";
 import AlexanderTransparentImage from "@/../public/fighters/transparent/alexander.png";
 import BillyTransparentImage from "@/../public/fighters/transparent/billy.png";
 import MollyTransparentImage from "@/../public/fighters/transparent/molly.png";
+import SamanthaTransparentImage from "@/../public/fighters/transparent/samantha.png";
 import ScarletTransparentImage from "@/../public/fighters/transparent/scarlet.png";
 
 export const FightersList = [
@@ -70,6 +71,7 @@ export const FightersList = [
     id: 7,
     name: "Samantha",
     image: SamanthaImage,
+    transparentImage: SamanthaTransparentImage,
     description: "A very cool lore here about Samantha :D i love",
     color: "#46275C",
   },
