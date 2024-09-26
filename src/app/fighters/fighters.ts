@@ -12,6 +12,7 @@ import AlexanderTransparentImage from "@/../public/fighters/transparent/alexande
 import BillyTransparentImage from "@/../public/fighters/transparent/billy.png";
 import DaveTransparentImage from "@/../public/fighters/transparent/dave.png";
 import FoxyTransparentImage from "@/../public/fighters/transparent/foxy.png";
+import JacobTransparentImage from "@/../public/fighters/transparent/jacob.png";
 import MollyTransparentImage from "@/../public/fighters/transparent/molly.png";
 import SamanthaTransparentImage from "@/../public/fighters/transparent/samantha.png";
 import ScarletTransparentImage from "@/../public/fighters/transparent/scarlet.png";
@@ -61,6 +62,7 @@ export const FightersList = [
     id: 5,
     name: "Jacob",
     image: JacobImage,
+    transparentImage: JacobTransparentImage,
     description: "A very cool lore here about Jacob :D i love",
     color: "#63C2C9",
   },
