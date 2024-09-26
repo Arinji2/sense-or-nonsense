@@ -11,7 +11,7 @@ export async function AddDifficultyAction(
   difficultyLevel: number,
 ) {
   const { pb, userID, mode } = await GetUserMode();
-  const gameData = await ValidateGameIDCookie();
+  const { gameData } = await ValidateGameIDCookie();
 
   const isValid = DifficultyList.find(
     (difficulty) => difficulty.level === difficultyLevel,
@@ -32,7 +32,7 @@ export async function AddDifficultyAction(
 }
 
 export async function RemoveDifficultyAction() {
-  const gameData = await ValidateGameIDCookie();
+  const { gameData, rounds } = await ValidateGameIDCookie();
   const { pb, userID, mode } = await GetUserMode();
 
   const game = await pb!.collection("games").update(gameData.id, {

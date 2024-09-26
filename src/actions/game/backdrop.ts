@@ -8,7 +8,7 @@ import { GetUserMode } from "../../../utils/getMode";
 import { GameSchema } from "../../../validations/pb/schema";
 export async function AddBackdropAction(backdropID: number) {
   const { pb, userID, mode } = await GetUserMode();
-  const gameData = await ValidateGameIDCookie();
+  const { gameData, rounds } = await ValidateGameIDCookie();
 
   const isValid = BackdropsList.find((backdrop) => backdrop.id === backdropID);
   if (!isValid) {
@@ -27,7 +27,7 @@ export async function AddBackdropAction(backdropID: number) {
 }
 
 export async function RemoveBackdropAction() {
-  const gameData = await ValidateGameIDCookie();
+  const { gameData, rounds } = await ValidateGameIDCookie();
   const { pb, userID, mode } = await GetUserMode();
 
   const game = await pb!.collection("games").update(gameData.id, {

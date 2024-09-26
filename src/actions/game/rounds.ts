@@ -7,7 +7,7 @@ import { GetUserMode } from "../../../utils/getMode";
 import { RoundSchemaType } from "../../../validations/pb/types";
 
 export async function CreateNewRound(nextRoundData?: RoundSchemaType) {
-  const gameData = await ValidateGameIDCookie();
+  const { gameData, rounds } = await ValidateGameIDCookie();
   const { pb, userID } = await GetUserMode();
 
   const roundData = nextRoundData ?? {
@@ -18,19 +18,16 @@ export async function CreateNewRound(nextRoundData?: RoundSchemaType) {
     time_elapsed: 10,
     fake_word: "",
     real_word: "",
+    game: gameData.id,
   };
+  roundData.game = gameData.id;
 
-  const record = await pb.collection("rounds").create(roundData);
-
-  pb.collection("games").update(gameData.id, {
-    rounds: [...gameData.rounds, record.id],
-  });
-
+  await pb.collection("rounds").create(roundData);
   revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
 }
 
 export async function UpdateRound(roundData: RoundSchemaType) {
-  const gameData = await ValidateGameIDCookie();
+  const { gameData, rounds } = await ValidateGameIDCookie();
   const { pb, userID } = await GetUserMode();
 
   await pb.collection("rounds").update(roundData.id, {
@@ -40,6 +37,7 @@ export async function UpdateRound(roundData: RoundSchemaType) {
     real_word: roundData.real_word,
     time_elapsed: roundData.time_elapsed,
     player_index: roundData.player_index,
+    game: gameData.id,
   });
 
   revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);

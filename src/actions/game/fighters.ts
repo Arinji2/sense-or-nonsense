@@ -9,7 +9,7 @@ import { GameFighterSchemaType } from "../../../validations/game-data/types";
 import { GameSchema } from "../../../validations/pb/schema";
 export async function AddFighterAction(fighterData: GameFighterSchemaType) {
   const { pb, userID, mode } = await GetUserMode();
-  const gameData = await ValidateGameIDCookie();
+  const { gameData, rounds } = await ValidateGameIDCookie();
 
   const isValid = FightersList.find(
     (fighter) => fighter.id === fighterData.fighter_id,
@@ -30,7 +30,7 @@ export async function AddFighterAction(fighterData: GameFighterSchemaType) {
 }
 
 export async function RemoveFighterAction() {
-  const gameData = await ValidateGameIDCookie();
+  const { gameData, rounds } = await ValidateGameIDCookie();
   const { pb, userID, mode } = await GetUserMode();
 
   const game = await pb!.collection("games").update(gameData.id, {
@@ -47,7 +47,7 @@ export async function RemoveFighterAction() {
 
 export async function UpdateFighterAction(fighterData: GameFighterSchemaType) {
   const { pb, userID, mode } = await GetUserMode();
-  const gameData = await ValidateGameIDCookie();
+  const { gameData, rounds } = await ValidateGameIDCookie();
 
   const isValid = FightersList.find(
     (fighter) => fighter.id === fighterData.fighter_id,
