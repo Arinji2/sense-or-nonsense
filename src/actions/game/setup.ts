@@ -39,6 +39,9 @@ export async function RemoveGameAction() {
 
 export async function FinishGameAction() {
   const { gameData, rounds } = await ValidateGameIDCookie();
+  const { pb, userID } = await GetUserMode();
   cookies().delete("game-id");
+  revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
+  revalidateTag(`${CACHED_TAGS.mode_select}-${userID}-${gameData.gameID}`);
   return gameData.id;
 }
