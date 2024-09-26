@@ -127,19 +127,27 @@ export default function Controls({
       previousGames.pop();
 
       if (nextRoundData.round_number > maxRounds) {
-        toast.promise(UpdateRound(currentRoundData), {
+        const resolve = toast.promise(UpdateRound(currentRoundData), {
           loading: "Finishing game...",
           success: "Game Finished Successfully",
           error: "Failed to finish game",
         });
+        await resolve;
 
         const ID = await FinishGameAction();
         router.push(`/dashboard/game/${ID}`);
 
         return;
       } else {
-        UpdateRound(currentRoundData);
-        CreateNewRound(nextRoundData);
+        try {
+          UpdateRound(currentRoundData);
+          CreateNewRound(nextRoundData);
+        } catch (e) {
+          console.log(e);
+          toast.error("Failed to update round");
+          router.refresh();
+          return;
+        }
         await refresh();
         setTimer(10);
       }
