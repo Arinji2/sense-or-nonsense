@@ -18,30 +18,11 @@ export const StoredWordSchema = z.object({
   id: z.string(),
 });
 
-export const RoundSchema = z.object({
-  id: z.string(),
-  correct: z.boolean(),
-  is_fake: z.boolean(),
-  fake_word: z.string().optional(),
-  real_word: z.string().optional(),
-  round_number: z.number(),
-  player_index: z.number(),
-  time_elapsed: z.number(),
-  expand: z.optional(
-    z.object({
-      fake_word: StoredWordSchema.optional(),
-      real_word: StoredWordSchema.optional(),
-    }),
-  ),
-  created: z.string().transform((val) => new Date(val)),
-  updated: z.string().transform((val) => new Date(val)),
-});
-
 export const GameSchema = z
   .object({
     id: z.string(),
     user: z.string(),
-    rounds: z.array(z.string()),
+
     gameID: z.string(),
     difficulty: z.string(),
     backdrop: z.string(),
@@ -63,14 +44,8 @@ export const GameSchema = z
         };
       });
 
-      // Filter out any null entries (in case of bad input)
       return players.filter((player) => player !== null);
     }),
-    expand: z.optional(
-      z.object({
-        rounds: z.array(RoundSchema),
-      }),
-    ),
     created: z.string().transform((val) => new Date(val)),
     updated: z.string().transform((val) => new Date(val)),
   })
@@ -87,3 +62,26 @@ export const GameSchema = z
       };
     }
   });
+
+export const RoundSchema = z.object({
+  id: z.string(),
+  correct: z.boolean(),
+  is_fake: z.boolean(),
+  fake_word: z.string().optional(),
+  real_word: z.string().optional(),
+  round_number: z.number(),
+  game: z.string(),
+  player_index: z.number(),
+  time_elapsed: z.number(),
+  expand: z.optional(
+    z.object({
+      fake_word: StoredWordSchema.optional(),
+      real_word: StoredWordSchema.optional(),
+      game: GameSchema.optional(),
+    }),
+  ),
+  created: z.string().transform((val) => new Date(val)),
+  updated: z.string().transform((val) => new Date(val)),
+});
+
+export const RoundsSchema = z.array(RoundSchema);
