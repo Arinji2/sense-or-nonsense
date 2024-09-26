@@ -29,16 +29,19 @@ export async function CreateNewRound(nextRoundData?: RoundSchemaType) {
 export async function UpdateRound(roundData: RoundSchemaType) {
   const { gameData, rounds } = await ValidateGameIDCookie();
   const { pb, userID } = await GetUserMode();
-
-  await pb.collection("rounds").update(roundData.id, {
-    correct: roundData.correct,
-    is_fake: roundData.is_fake,
-    fake_word: roundData.fake_word,
-    real_word: roundData.real_word,
-    time_elapsed: roundData.time_elapsed,
-    player_index: roundData.player_index,
-    game: gameData.id,
-  });
+  try {
+    await pb.collection("rounds").update(roundData.id, {
+      correct: roundData.correct,
+      is_fake: roundData.is_fake,
+      fake_word: roundData.fake_word,
+      real_word: roundData.real_word,
+      time_elapsed: roundData.time_elapsed,
+      player_index: roundData.player_index,
+      game: gameData.id,
+    });
+  } catch (e) {
+    throw new Error("Failed to update round");
+  }
 
   revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
 }
