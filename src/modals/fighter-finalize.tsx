@@ -8,6 +8,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import toast from "react-hot-toast";
 
 import { RemoveFighterAction } from "@/actions/game/fighters";
+import { useFighterContext } from "@/app/fighters/context";
 import useAnimate from "../../utils/useAnimate";
 import { GameFighterSchemaType } from "../../validations/game-data/types";
 
@@ -22,6 +23,7 @@ export default function FighterFinalize({
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { isMultiplayer } = useFighterContext();
 
   const closeOpenMenus = useCallback(
     async (e: any, override?: boolean) => {
@@ -33,7 +35,7 @@ export default function FighterFinalize({
         const confirmation =
           override ??
           window.confirm(
-            "Are you sure you want to cancel? The Selected Fighter Data will be Reset",
+            "Are you sure you want to cancel? All Selected Fighter Data will be Reset",
           );
 
         if (confirmation) {
@@ -159,6 +161,14 @@ export default function FighterFinalize({
               className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
             >
               LETS GO!
+            </button>
+            <button
+              onClick={async () => {
+                Animate.setQueue(false);
+              }}
+              className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
+            >
+              CREATE PLAYER {fighterData.length + 1}
             </button>
           </div>
         </div>

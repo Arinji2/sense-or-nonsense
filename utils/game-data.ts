@@ -43,7 +43,6 @@ export async function ValidateGameIDCookie(
 
         return parsedGame;
       } catch (e: any) {
-        console.log(e);
         redirect("/unauthorized");
       }
     },

@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import useAnimate from "../../../utils/useAnimate";
+import { useFighterContext } from "./context";
 import { FightersList } from "./fighters";
 const scroll = 400;
 
@@ -54,11 +55,12 @@ function Scroll(
   }, 500);
 }
 
-export default function Selector({}) {
+export default function Selector() {
   const scrollingDiv = useRef<HTMLDivElement | null>(null);
   const [clicked, setClicked] = useState(false);
   const router = useRouter();
   const animate = useAnimate(800);
+  const { fighterData, isMultiplayer } = useFighterContext();
 
   const [documentDefined, setDocumentDefined] = useState(false);
   const [selectedFighterID, setSelectedFighterID] = useState<number | null>(

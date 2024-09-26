@@ -44,3 +44,37 @@ export async function RemoveFighterAction() {
 
   revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
 }
+
+export async function UpdateFighterAction(fighterData: GameFighterSchemaType) {
+  const { pb, userID, mode } = await GetUserMode();
+  const gameData = await ValidateGameIDCookie();
+
+  const isValid = FightersList.find(
+    (fighter) => fighter.id === fighterData.fighter_id,
+  );
+  if (!isValid) {
+    throw new Error("Invalid difficulty level");
+  }
+  if (typeof gameData.playerData === "boolean")
+    throw new Error("Player data deformed");
+  const updatedPlayerData = [
+    ...gameData.playerData,
+    {
+      fighter_id: fighterData.fighter_id,
+      fighter_name: fighterData.fighter_name,
+    },
+  ] as GameFighterSchemaType[];
+
+  const formattedData = updatedPlayerData.map((player) => {
+    return `${player.fighter_id}:${player.fighter_name}`;
+  });
+  const game = await pb!.collection("games").update(gameData.id, {
+    playerData: formattedData.join(";"),
+  });
+  const parsedGame = GameSchema.safeParse(game);
+  if (!parsedGame.success) {
+    throw new Error("Game not found");
+  }
+
+  revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
+}

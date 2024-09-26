@@ -47,7 +47,7 @@ export const GameSchema = z
     backdrop: z.string(),
     playerData: z.string().transform((val) => {
       if (!val.includes(":")) {
-        return false;
+        return [];
       }
 
       const players = val.split(";").map((entry) => {

@@ -85,11 +85,12 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
         <button
           disabled={!backdrop.verified}
           onClick={async () => {
-            toast.promise(AddBackdropAction(backdrop.id), {
+            const resolve = toast.promise(AddBackdropAction(backdrop.id), {
               loading: "Selecting Backdrop",
               success: "Backdrop Selected",
               error: "Failed to select backdrop",
             });
+            await resolve;
             const isRedirected = searchParams.get("redirected");
             if (isRedirected && isRedirected === "true") {
               router.replace("/pregame");

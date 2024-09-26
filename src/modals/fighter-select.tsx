@@ -9,7 +9,8 @@ import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import { cn } from "../../utils/cn";
 
-import { AddFighterAction } from "@/actions/game/fighters";
+import { AddFighterAction, UpdateFighterAction } from "@/actions/game/fighters";
+import { useFighterContext } from "@/app/fighters/context";
 import useAnimate from "../../utils/useAnimate";
 import { GameFighterSchemaType } from "../../validations/game-data/types";
 import FighterFinalize from "./fighter-finalize";
@@ -23,6 +24,9 @@ export default function FighterModal({
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [name, setName] = useState("");
+  const { fighterData, isMultiplayer } = useFighterContext();
+  const [locFighterData, setLocFighterData] =
+    useState<GameFighterSchemaType[]>(fighterData);
 
   useEffect(() => {
     if (Animate.showComponent) {
@@ -50,12 +54,14 @@ export default function FighterModal({
 
   const router = useRouter();
   const finalizeAnimate = useAnimate(800);
-  const [fighterData, setFighterData] = useState<GameFighterSchemaType[]>([]);
 
   return (
     <>
       {createPortal(
-        <FighterFinalize Animate={finalizeAnimate} fighterData={fighterData} />,
+        <FighterFinalize
+          Animate={finalizeAnimate}
+          fighterData={locFighterData}
+        />,
         document.body,
       )}
       {Animate.actualState && (
@@ -100,8 +106,14 @@ export default function FighterModal({
                 } as GameFighterSchemaType;
 
                 toast.success("Fighter Selected");
-                setFighterData([...fighterData, characterData]);
-                await AddFighterAction(characterData);
+                if (locFighterData.length === 0) {
+                  await AddFighterAction(characterData);
+                } else {
+                  await UpdateFighterAction(characterData);
+                }
+
+                setLocFighterData([...locFighterData, characterData]);
+
                 finalizeAnimate.setQueue(true);
                 Animate.setQueue(false);
 
@@ -120,7 +132,8 @@ export default function FighterModal({
               </button>
               <h4 className="text-center text-[20px] font-bold tracking-subtitle text-green-500 md:text-[35px]">
                 {" "}
-                SETUP FIGHTER FOR PLAYER 1
+                SETUP FIGHTER FOR PLAYER{" "}
+                {isMultiplayer && locFighterData.length + 1}
               </h4>
               <div className="flex h-fit w-full max-w-[400px] flex-col items-start justify-center gap-2">
                 <p className="text-[15px] font-medium text-white">NAME:</p>
