@@ -8,11 +8,14 @@ import MollyImage from "@/../public/fighters/molly.png";
 import SamanthaImage from "@/../public/fighters/samantha.png";
 import ScarletImage from "@/../public/fighters/scarlet.png";
 
+import AlexanderTransparentImage from "@/../public/fighters/transparent/alexander.png";
+
 export const FightersList = [
   {
     id: 0,
     name: "Molly",
     image: MollyImage,
+    transparentImage: AlexanderTransparentImage,
     description: "A very cool lore here about Molly :D i love",
     color: "#FFAD3B",
   },
