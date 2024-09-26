@@ -6,8 +6,8 @@ import { unstable_cache } from "next/cache";
 import Client from "pocketbase";
 import { CACHED_TAGS } from "../../../constants/tags";
 import { FormatDate1 } from "../../../utils/formatting";
-import { RoundsSchema } from "../../../validations/pb/schema";
-import { RoundSchemaType } from "../../../validations/pb/types";
+import { GameSchema, RoundsSchema } from "../../../validations/pb/schema";
+import { GameSchemaType, RoundSchemaType } from "../../../validations/pb/types";
 import { DifficultyList } from "../difficulty/difficully";
 import PlayNowButton from "./button.client";
 
@@ -26,11 +26,30 @@ export async function GameComponent({
 }) {
   const results = await unstable_cache(
     async (userID: string, id: number) => {
-      const roundRecords = await pb.collection("rounds").getFullList({
-        filter: `game="${id}"`,
-        expand: "game,fake_word,real_word",
-        sort: "-created",
+      const gameRecord = await pb.collection("games").getFullList({
+        filter: `user="${userID}" && gameID="${id}"`,
       });
+
+      const parsedGame = gameRecord.map((game) => {
+        const parse = GameSchema.safeParse(game);
+        if (!parse.success) {
+          return;
+        }
+        return parse.data;
+      }) as GameSchemaType[];
+
+      const roundRecords = (
+        await Promise.all(
+          parsedGame.map(async (game) => {
+            const record = await pb.collection("rounds").getFullList({
+              filter: `game="${game.id}"`,
+              expand: "game,fake_word,real_word",
+              sort: "-created",
+            });
+            return record;
+          }),
+        )
+      ).flat();
 
       const parsedRecords = RoundsSchema.safeParse(roundRecords);
       if (!parsedRecords.success) {
@@ -87,10 +106,10 @@ export async function GameComponent({
                 const selectedDifficulty = DifficultyList.find((difficulty) => {
                   return difficulty.name.toLowerCase() === mode.toLowerCase();
                 })!;
+                const gameTotals = new Map<string, number>();
+                let max = 0;
 
-                let total = 0;
-
-                results.forEach((record: RoundSchemaType) => {
+                results.forEach((record: RoundSchemaType, index) => {
                   if (
                     record.game.length === 0 ||
                     record.expand?.game!.difficulty === undefined ||
@@ -98,7 +117,25 @@ export async function GameComponent({
                       selectedDifficulty.level.toString()
                   )
                     return;
-                  total += record.correct ? 1 : 0;
+                  if (record.correct) {
+                    if (
+                      gameTotals.has(record.game) &&
+                      gameTotals.get(record.game) !== undefined
+                    ) {
+                      gameTotals.set(
+                        record.game,
+                        gameTotals.get(record.game)! + 1,
+                      );
+                    } else {
+                      gameTotals.set(record.game, 1);
+                    }
+                  }
+                });
+
+                gameTotals.forEach((value) => {
+                  if (value > max) {
+                    max = value;
+                  }
                 });
 
                 return (
@@ -114,7 +151,7 @@ export async function GameComponent({
                         {mode.toUpperCase()}
                       </h4>
                       <p className="text-[15px] font-bold text-white md:text-[30px]">
-                        {total}
+                        {max}
                       </p>
                     </div>
                   </div>
