@@ -15,7 +15,7 @@ export const FightersList = [
     id: 0,
     name: "Molly",
     image: MollyImage,
-    transparentImage: AlexanderTransparentImage,
+
     description: "A very cool lore here about Molly :D i love",
     color: "#FFAD3B",
   },
@@ -23,6 +23,7 @@ export const FightersList = [
     id: 1,
     name: "Alexander",
     image: AlexanderImage,
+    transparentImage: AlexanderTransparentImage,
     description: "A very cool lore here about Alexander :D i love",
     color: "#DE6A38",
   },
