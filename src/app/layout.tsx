@@ -25,9 +25,13 @@ export default async function RootLayout({
     const game = await ValidateGameIDCookie({
       disableRedirect: true,
     });
-
-    showGameModal = true;
-  } catch (error) {}
+  } catch (error: any) {
+    if (error.message === "Exiting for error") {
+      showGameModal = false;
+    } else {
+      showGameModal = true;
+    }
+  }
 
   return (
     <html lang="en">
