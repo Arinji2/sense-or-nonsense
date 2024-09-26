@@ -1,39 +1,49 @@
-"use server";
 import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Client from "pocketbase";
 import { CACHED_TAGS } from "../constants/tags";
-import { GameSchema } from "../validations/pb/schema";
-import { GameSchemaType } from "../validations/pb/types";
+import { GameSchema, RoundsSchema } from "../validations/pb/schema";
+import { GameSchemaType, RoundSchemaType } from "../validations/pb/types";
 import { GetUserMode } from "./getMode";
+
+type ValidateGameIDCookieType = {
+  gameData: GameSchemaType;
+  rounds: RoundSchemaType[];
+};
 
 export async function ValidateGameIDCookie(
   {
-    expandFields,
     disableRedirect,
   }: {
-    expandFields?: boolean;
     disableRedirect?: boolean;
   } = {
-    expandFields: false,
     disableRedirect: false,
   },
-): Promise<GameSchemaType> {
+): Promise<ValidateGameIDCookieType> {
+  "use server";
   const { pb, userID } = await GetUserMode();
   const gameID = cookies().get("game-id")?.value;
   if (!gameID && !disableRedirect) {
     redirect("/single");
+  } else if (!gameID && disableRedirect) {
+    throw new Error("Exiting for error");
   } else if (disableRedirect) {
     throw new Error("Exiting before redirect");
   }
-  if (!expandFields) {
-    expandFields = false;
-  }
+
+  return await GetGameData(pb, gameID!, userID!);
+}
+
+export async function GetGameData(pb: Client, gameID: string, userID: string) {
   return await unstable_cache(
-    async (id: string, user: string, expandFields: boolean) => {
+    async (id: string, user: string) => {
       try {
-        const gameRecord = await pb?.collection("games").getOne(id, {
-          expand: expandFields ? "rounds" : undefined,
+        const gameRecord = await pb?.collection("games").getOne(id);
+        const roundRecords = await pb?.collection("rounds").getFullList({
+          filter: `game="${id}"`,
+          sort: "created",
+          expand: "game,fake_word,real_word",
         });
 
         const parsedGame = GameSchema.parse(gameRecord);
@@ -41,7 +51,15 @@ export async function ValidateGameIDCookie(
           throw new Error();
         }
 
-        return parsedGame;
+        const parsedRoundData = RoundsSchema.safeParse(roundRecords);
+        if (!parsedRoundData.success) {
+          throw new Error("Game not found");
+        }
+
+        return {
+          gameData: parsedGame,
+          rounds: parsedRoundData.data,
+        };
       } catch (e: any) {
         redirect("/unauthorized");
       }
@@ -50,5 +68,5 @@ export async function ValidateGameIDCookie(
     {
       tags: [`${CACHED_TAGS.game_data}-${userID}-${gameID}`],
     },
-  )(gameID!, userID!, expandFields);
+  )(gameID!, userID!);
 }
