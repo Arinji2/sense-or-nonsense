@@ -12,6 +12,7 @@ import Menu from "./menu.client";
 import { MusicProvider } from "./music-context";
 import PlayerView from "./player-view";
 import Report from "./report.client";
+import Settings from "./settings";
 import { RenderStats } from "./stats";
 import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
 
@@ -72,7 +73,7 @@ export default async function Page() {
 
   return (
     <MusicProvider>
-      <div className="flex h-fit min-h-[100svh] w-full flex-col items-center justify-center gap-10 py-10 pb-20 xl:h-[100svh] xl:gap-0 xl:py-0 xl:pb-0">
+      <div className="flex h-fit min-h-[100svh] w-full flex-col items-center justify-center gap-10 overflow-x-hidden py-10 pb-20 xl:h-[100svh] xl:gap-0 xl:py-0 xl:pb-0">
         <div className="fixed left-0 top-0 h-[100svh] w-full">
           <Image
             src={SelectedBackdrop.image}
@@ -90,11 +91,12 @@ export default async function Page() {
           currentPlayer={currentPlayer}
           className="hidden xl:flex"
         />
-        <div className="top-5 z-20 flex flex-row items-center justify-center gap-2 rounded-md bg-black px-3 py-2 xl:fixed xl:right-5">
+        <div className="top-5 z-30 flex flex-row items-center justify-center gap-2 rounded-md bg-black px-3 py-2 xl:fixed xl:right-5">
           <span className="text-lg font-medium text-green-500">SENSE</span>
           <span className="text-lg font-medium text-white">OR</span>
           <span className="text-lg font-medium text-red-500">NONSENSE</span>
         </div>
+        <Settings />
 
         <div className="relative z-20 flex h-full w-full flex-col justify-end">
           <div className="flex h-[80%] w-full flex-col items-center justify-start gap-10 pb-5 xl:h-[60%]">
