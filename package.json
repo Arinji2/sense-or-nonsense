@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
+    "@radix-ui/react-slider": "^1.2.0",
+    "@radix-ui/react-switch": "^1.1.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.2.12",
     "jose": "^5.6.2",

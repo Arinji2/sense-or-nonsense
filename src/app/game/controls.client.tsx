@@ -15,6 +15,7 @@ import {
 } from "../../../validations/game-data/types";
 import { RoundSchemaType } from "../../../validations/pb/types";
 import { GamesList } from "../games";
+import { useMusic } from "./music-context";
 
 function GetRoundChange({
   previousGames,
@@ -143,7 +144,6 @@ export default function Controls({
           UpdateRound(currentRoundData);
           CreateNewRound(nextRoundData);
         } catch (e) {
-          console.log(e);
           toast.error("Failed to update round");
           router.refresh();
           return;
@@ -194,6 +194,8 @@ export default function Controls({
     );
   }, [loading, timer]);
 
+  const { isCorrectAudio, isWrongAudio } = useMusic();
+
   return (
     <div className="flex h-fit w-full flex-row items-center justify-center gap-10 xl:gap-20">
       <button
@@ -202,12 +204,16 @@ export default function Controls({
           if (loading) return;
           if (data.isFake) {
             toast.error("Incorrect, The Word Is Fake!");
+
+            isWrongAudio.play();
             if (streak > 0) {
               toast.error(`${playerName} lost their streak!`);
             }
             answerSubmitted(false);
           } else {
             toast.success("Correct, The Word Is Real!");
+
+            isCorrectAudio.play();
             if (streak > 0) {
               toast.success(`${playerName} is on a ${streak + 1} word streak!`);
             } else {
@@ -235,12 +241,14 @@ export default function Controls({
           if (loading) return;
           if (!data.isFake) {
             toast.error("Incorrect, The Word Is Real!");
+            isWrongAudio.play();
             if (streak > 0) {
               toast.error(`${playerName} lost their streak!`);
             }
             answerSubmitted(false);
           } else {
             toast.success("Correct, The Word Is Fake!");
+            isCorrectAudio.play();
             if (streak > 0) {
               toast.success(`${playerName} is on a ${streak + 1} word streak!`);
             } else {

@@ -1,3 +1,7 @@
+import { z } from "zod";
+import { useAudio } from "../../utils/useAudio";
+import { SavedSoundSettingsSchema } from "./schema";
+
 export type COOPSupportForFighterSelect = {
   supported: boolean;
   currentPlayer: number;
@@ -35,3 +39,7 @@ export type SummaryData = {
 };
 
 export type StringSearchParamType = string | string[] | undefined;
+export type SavedSoundSettingsSchemaType = z.infer<
+  typeof SavedSoundSettingsSchema
+>;
+export type AudioHookReturn = ReturnType<typeof useAudio>;
