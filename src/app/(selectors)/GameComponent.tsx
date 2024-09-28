@@ -117,7 +117,7 @@ export async function GameComponent({
                       selectedDifficulty.level.toString()
                   )
                     return;
-                  if (record.correct) {
+                  if (record.correct && record.player_index === 0) {
                     if (
                       gameTotals.has(record.game) &&
                       gameTotals.get(record.game) !== undefined
