@@ -21,7 +21,6 @@ export default function PlayerView({
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Reorder players based on their upcoming turns
   const upcomingPlayers = useMemo(() => {
     const nextPlayers = playerData.slice(currentPlayer + 1);
     const wrappedPlayers = playerData.slice(0, currentPlayer);
@@ -54,9 +53,9 @@ export default function PlayerView({
       <div className="flex h-full w-full flex-row items-start justify-end gap-4">
         <div className="shrink-0x:size-[80px] relative z-20 size-[40px]">
           <Image
-            alt={FightersList[playerData[currentPlayer].fighter_uid].name}
+            alt={FightersList[playerData[currentPlayer].fighter_id].name}
             src={
-              FightersList[playerData[currentPlayer].fighter_uid]
+              FightersList[playerData[currentPlayer].fighter_id]
                 .transparentImage
             }
             fill
@@ -70,7 +69,7 @@ export default function PlayerView({
           <p className="text-[15px] font-medium text-white/60">
             Streak:{" "}
             <span className="text-[--playerColor]">
-              {CurrentStreaks[currentPlayer]}
+              {CurrentStreaks[playerData[currentPlayer].fighter_uid] ?? 0}
             </span>
           </p>
         </div>
@@ -106,17 +105,16 @@ export default function PlayerView({
         >
           {upcomingPlayers.map((player, index) => {
             const playerNumber = playerData.findIndex(
-              (p) => p.fighter_uid === player.fighter_uid,
+              (p) => p.fighter_id === player.fighter_id,
             );
             return (
               <div
-                key={player.fighter_uid}
+                key={player.fighter_id}
                 style={
                   {
-                    "--innerPlayerColor":
-                      FightersList[player.fighter_uid].color,
+                    "--innerPlayerColor": FightersList[player.fighter_id].color,
                     "--lighterInnerPlayerColor":
-                      FightersList[player.fighter_uid].color + "40",
+                      FightersList[player.fighter_id].color + "40",
                   } as React.CSSProperties
                 }
                 className="bottom-4 z-30 flex h-[100px] w-full shrink-0 flex-col items-center justify-start gap-6 rounded-md bg-[--lighterInnerPlayerColor] p-4 xl:h-[150px]"
@@ -133,8 +131,8 @@ export default function PlayerView({
                 <div className="flex h-full w-full flex-row items-start justify-end gap-4">
                   <div className="relative size-[40px] shrink-0 xl:size-[60px]">
                     <Image
-                      alt={FightersList[player.fighter_uid].name}
-                      src={FightersList[player.fighter_uid].transparentImage}
+                      alt={FightersList[player.fighter_id].name}
+                      src={FightersList[player.fighter_id].transparentImage}
                       fill
                       className="object-contain"
                     />
@@ -146,7 +144,7 @@ export default function PlayerView({
                     <p className="text-[12px] font-medium text-white/60">
                       Streak:{" "}
                       <span className="text-[--innerPlayerColor]">
-                        {CurrentStreaks[player.fighter_uid]}
+                        {CurrentStreaks[player.fighter_uid] ?? 0}
                       </span>
                     </p>
                   </div>

@@ -1,9 +1,9 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Bot, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 import { CreateNewRound, UpdateRound } from "@/actions/game/rounds";
@@ -14,7 +14,6 @@ import {
   WordSchemaType,
 } from "../../../validations/game-data/types";
 import { RoundSchemaType } from "../../../validations/pb/types";
-import { GamesList } from "../games";
 import { useMusic } from "./music-context";
 
 function GetRoundChange({
@@ -55,7 +54,7 @@ function GetRoundChange({
 export default function Controls({
   data,
   previousGames,
-  gameData,
+  level,
   streak,
   playerName,
   fighters,
@@ -63,7 +62,7 @@ export default function Controls({
 }: {
   data: WordSchemaType;
   previousGames: RoundSchemaType[];
-  gameData: (typeof GamesList)[0];
+  level: number;
   streak: number;
   playerName: string;
   fighters: GameFighterSchemaType[];
@@ -73,6 +72,9 @@ export default function Controls({
   const [loading, setLoading] = useState(false);
   const refresh = useRouterRefresh();
   const router = useRouter();
+  const [aiThinking, setAiThinking] = useState(false);
+  const trueButtonRef = useRef<HTMLButtonElement | null>(null);
+  const falseButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const answerSubmitted = useCallback(
     async (correct?: boolean) => {
@@ -151,6 +153,8 @@ export default function Controls({
         await refresh();
         setTimer(10);
       }
+
+      setAiThinking(false);
       setLoading(false);
     },
     [
@@ -163,8 +167,58 @@ export default function Controls({
       router,
       data.isFake,
       loading,
+      aiThinking,
     ],
   );
+
+  useEffect(() => {
+    if (loading || aiThinking) return;
+    if (playerName === "CPU") {
+      setAiThinking(true);
+      toast.success("CPU is thinking...");
+      setTimeout(() => {
+        let answer: boolean = false;
+
+        if (level === 1) {
+          answer = Math.random() < 0.5;
+        } else if (level === 2) {
+          const checkAnswer = Math.random() < 0.6;
+          if (checkAnswer) {
+            answer = !data.isFake;
+          } else {
+            answer = Math.random() < 0.5;
+          }
+        } else if (level === 3) {
+          const checkAnswer = Math.random() < 0.8;
+          if (checkAnswer) {
+            answer = !data.isFake;
+          } else {
+            answer = Math.random() < 0.5;
+          }
+        }
+
+        if (answer) {
+          if (data.isFake) {
+            toast.error("CPU was Incorrect, The Word Is Fake!");
+            answerSubmitted(false);
+          } else {
+            toast.success("CPU was Correct, The Word Is Real!");
+            answerSubmitted(true);
+          }
+        } else {
+          if (data.isFake) {
+            toast.success("CPU was Correct, The Word Is Fake!");
+            answerSubmitted(true);
+          } else {
+            toast.error("CPU was Incorrect, The Word Is Real!");
+            answerSubmitted(false);
+          }
+        }
+
+        setAiThinking(false);
+      }, 2000);
+    }
+  }, [loading, aiThinking, playerName, data.isFake, level, answerSubmitted]);
 
   // useEffect(() => {
   //   if (loading) return;
@@ -187,19 +241,22 @@ export default function Controls({
   // }, [timer, loading, data.isFake, answerSubmitted]);
 
   const timerDisplay = useMemo(() => {
-    return loading ? (
+    return aiThinking ? (
+      <Bot className="size-[40px] animate-pulse text-black" />
+    ) : loading ? (
       <Loader2 className="size-[40px] animate-spin text-black" />
     ) : (
       <p className="text-[40px] font-bold text-black">{timer}</p>
     );
-  }, [loading, timer]);
+  }, [loading, timer, aiThinking]);
 
   const { isCorrectAudio, isWrongAudio } = useMusic();
 
   return (
     <div className="flex h-fit w-full flex-row items-center justify-center gap-10 xl:gap-20">
       <button
-        disabled={loading}
+        ref={trueButtonRef}
+        disabled={loading || aiThinking}
         onClick={() => {
           if (loading) return;
           if (data.isFake) {
@@ -222,7 +279,7 @@ export default function Controls({
             answerSubmitted(true);
           }
         }}
-        className="group flex size-20 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10"
+        className="group flex size-20 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale"
       >
         <Image
           src={"/game/real.png"}
@@ -236,7 +293,8 @@ export default function Controls({
         {timerDisplay}
       </div>
       <button
-        disabled={loading}
+        ref={falseButtonRef}
+        disabled={loading || aiThinking}
         onClick={() => {
           if (loading) return;
           if (!data.isFake) {
@@ -257,7 +315,7 @@ export default function Controls({
             answerSubmitted(true);
           }
         }}
-        className="group flex size-20 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10"
+        className="group flex size-20 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale"
       >
         <Image
           className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"

@@ -5,10 +5,20 @@ import { CACHED_TAGS } from "../../../constants/tags";
 import { ValidateGameIDCookie } from "../../../utils/game-data";
 import { GetUserMode } from "../../../utils/getMode";
 import { RoundSchemaType } from "../../../validations/pb/types";
+import { AddCPUAction } from "./fighters";
 
 export async function CreateNewRound(nextRoundData?: RoundSchemaType) {
   const { gameData, rounds } = await ValidateGameIDCookie();
   const { pb, userID } = await GetUserMode();
+
+  if (
+    !nextRoundData &&
+    gameData.gameID === "1" &&
+    gameData.playerData.find((player) => player.fighter_name === "CPU") ===
+      undefined
+  ) {
+    await AddCPUAction();
+  }
 
   const roundData = nextRoundData ?? {
     round_number: 1,

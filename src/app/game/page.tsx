@@ -113,7 +113,7 @@ export default async function Page() {
             <Controls
               data={wordData}
               previousGames={rounds}
-              gameData={SelectedGame}
+              level={SelectedDifficulty.level}
               streak={CurrentStreaks[currentPlayer]}
               playerName={SelectedPlayer.fighter_name!}
               fighters={playerData}

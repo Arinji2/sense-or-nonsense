@@ -87,3 +87,31 @@ export async function UpdateFighterAction(fighterData: GameFighterSchemaType) {
 
   revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
 }
+
+export async function AddCPUAction() {
+  const { pb, userID, mode } = await GetUserMode();
+  const { gameData, rounds } = await ValidateGameIDCookie();
+  if (gameData.gameID !== "1") throw new Error("Invalid game ID");
+  const uid = Math.floor(Math.random() * 100000);
+
+  const updatedPlayerData = [
+    ...gameData.playerData,
+    {
+      fighter_uid: uid,
+      fighter_id: 8,
+      fighter_name: "CPU",
+    },
+  ] as GameFighterSchemaType[];
+  const formattedData = updatedPlayerData.map((player) => {
+    return `${Math.floor(Math.random() * 100000)}:${player.fighter_id}:${player.fighter_name}`;
+  });
+  const game = await pb!.collection("games").update(gameData.id, {
+    playerData: formattedData.join(";"),
+  });
+  const parsedGame = GameSchema.safeParse(game);
+  if (!parsedGame.success) {
+    throw new Error("Game not found");
+  }
+
+  revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
+}

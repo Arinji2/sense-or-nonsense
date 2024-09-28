@@ -16,7 +16,7 @@ export function GetCurrentStreaks({
   const streaks: { [key: number]: number | string } = {};
 
   for (let i = 0; i < fighters.length; i++) {
-    streaks[i] = 0;
+    streaks[fighters[i].fighter_uid] = 0;
   }
 
   const reversedGames = [...games].reverse();
@@ -25,20 +25,24 @@ export function GetCurrentStreaks({
   for (let i = 0; i < filteredGames.length; i++) {
     const game = filteredGames[i];
     const playerIndex = game.player_index;
+    const playerData = fighters[playerIndex];
 
-    if (typeof streaks[playerIndex] === "string") continue;
+    const fighterUid = playerData.fighter_uid;
+
+    if (typeof streaks[fighterUid] === "string") continue;
 
     if (game.correct) {
-      streaks[playerIndex] = streaks[playerIndex] + 1;
+      streaks[fighterUid] = (streaks[fighterUid] as number) + 1;
     } else {
-      streaks[playerIndex] = streaks[playerIndex].toString();
+      streaks[fighterUid] = streaks[fighterUid].toString();
     }
   }
 
   for (let i = 0; i < fighters.length; i++) {
-    if (typeof streaks[i] === "string") {
-      const streak = streaks[i] as string;
-      streaks[i] = Number.parseInt(streak);
+    const fighterUid = fighters[i].fighter_uid;
+    if (typeof streaks[fighterUid] === "string") {
+      const streak = streaks[fighterUid] as string;
+      streaks[fighterUid] = Number.parseInt(streak);
     }
   }
 

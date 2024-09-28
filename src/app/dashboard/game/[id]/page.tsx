@@ -40,14 +40,15 @@ export default async function Page({
   let { playerData, gameID } = gameData;
   if (typeof playerData === "boolean") redirect("/pregame");
 
-  const gameIsMultiplayer = GamesList.find(
-    (game) => game.id === Number.parseInt(gameID),
-  )!.isMultiplayer;
+  const gameIsMultiplayer =
+    gameID === "1" ||
+    GamesList.find((game) => game.id === Number.parseInt(gameID))!
+      .isMultiplayer;
   let currentPlayerIndex = 0;
   let nextPlayerExists = false;
   let previousPlayerExists = false;
 
-  if (gameIsMultiplayer) {
+  if (gameID === "1" || gameIsMultiplayer) {
     {
       if (searchParams.player && !Array.isArray(searchParams.player)) {
         const searchPlayer = Number.parseInt(searchParams.player);
