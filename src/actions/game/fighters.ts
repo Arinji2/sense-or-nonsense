@@ -17,6 +17,14 @@ export async function AddFighterAction(fighterData: GameFighterSchemaType) {
   if (!isValid) {
     throw new Error("Invalid difficulty level");
   }
+
+  if (
+    fighterData.fighter_name.toLowerCase().includes(":") ||
+    fighterData.fighter_name.toLowerCase().includes(";") ||
+    fighterData.fighter_name.toLowerCase().includes("CPU")
+  ) {
+    throw new Error("Name is invalid");
+  }
   const game = await pb!.collection("games").update(gameData.id, {
     playerData: `${fighterData.fighter_id}:${fighterData.fighter_name}`,
   });

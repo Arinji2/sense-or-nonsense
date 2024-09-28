@@ -100,6 +100,13 @@ export default function FighterModal({
               onSubmit={async (e) => {
                 e.preventDefault();
                 if (!name) return;
+                if (name.toLowerCase().includes(":")) {
+                  return toast.error("Name cannot have :");
+                } else if (name.toLowerCase().includes(";")) {
+                  return toast.error("Name cannot have ;");
+                } else if (name.toLowerCase().includes("CPU")) {
+                  return toast.error("Name cannot be CPU");
+                }
                 const characterData = {
                   fighter_id: fighterID,
                   fighter_name: name,
