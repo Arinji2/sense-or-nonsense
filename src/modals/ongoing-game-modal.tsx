@@ -11,8 +11,10 @@ import useAnimate from "../../utils/useAnimate";
 
 export default function OngoingGame({
   Animate,
+  isDeleting,
 }: {
   Animate: ReturnType<typeof useAnimate>;
+  isDeleting?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
@@ -23,25 +25,37 @@ export default function OngoingGame({
       document.body.style.overflow = "unset";
     }
 
-    document.addEventListener("mousedown", closeOpenMenus);
+    document.addEventListener("mousedown", (e) => {
+      closeOpenMenus(e, true);
+    });
     return () => {
-      document.removeEventListener("mousedown", closeOpenMenus);
+      document.removeEventListener("mousedown", (e) => {
+        closeOpenMenus(e, true);
+      });
     };
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Animate.showComponent]);
 
   const closeOpenMenus = useCallback(
-    async (e: any, override?: boolean) => {
+    async (e: any, isEventlistener?: boolean, override?: boolean) => {
       if (
         containerRef.current &&
         Animate.showComponent &&
         !containerRef.current.contains(e.target)
       ) {
-        const confirmation =
-          override ??
-          window.confirm(
+        if (isDeleting && isEventlistener) {
+          Animate.setQueue(false);
+          router.refresh();
+          return;
+        }
+        let confirmation = override ?? false;
+        if (!isDeleting) {
+          confirmation = window.confirm(
             "Are you sure you want to cancel? The game in progress will be deleted",
           );
+        }
+
+        confirmation = isDeleting ? true : confirmation;
 
         if (confirmation) {
           toast.promise(RemoveGameAction(), {
@@ -49,6 +63,9 @@ export default function OngoingGame({
             success: "Game deleted",
             error: "Failed to delete game",
           });
+          if (isDeleting) {
+            router.push("/");
+          }
           router.refresh();
           Animate.setQueue(false);
         } else {
@@ -74,7 +91,12 @@ export default function OngoingGame({
             <button
               aria-label="Close Modal"
               onClick={() => {
-                closeOpenMenus({}, true);
+                if (isDeleting) {
+                  Animate.setQueue(false);
+                  router.refresh();
+                } else {
+                  closeOpenMenus({}, true);
+                }
               }}
               className="absolute right-8 top-8 z-20 block rounded-sm bg-black/30 p-2 xl:hidden"
             >
@@ -94,7 +116,12 @@ export default function OngoingGame({
             <button
               aria-label="Close Modal"
               onClick={() => {
-                closeOpenMenus({}, true);
+                if (isDeleting) {
+                  Animate.setQueue(false);
+                  router.refresh();
+                } else {
+                  closeOpenMenus({}, true);
+                }
               }}
               className="absolute right-8 top-8 hidden xl:block"
             >
@@ -113,11 +140,11 @@ export default function OngoingGame({
               <button
                 onClick={async () => {
                   Animate.setQueue(false);
-                  router.push("/pregame");
+                  router.refresh();
                 }}
                 className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-purple-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
               >
-                CONTINUE TO GAME
+                {isDeleting ? "RETURN" : "CONTINUE"} TO GAME
               </button>
               <button
                 onClick={async () => {
