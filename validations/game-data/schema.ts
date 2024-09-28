@@ -1,5 +1,6 @@
 import z from "zod";
 export const GameFighterSchema = z.object({
+  fighter_uid: z.number(),
   fighter_id: z.number(),
   fighter_name: z.string(),
 });

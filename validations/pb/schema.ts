@@ -32,13 +32,14 @@ export const GameSchema = z
       }
 
       const players = val.split(";").map((entry) => {
-        const [fighter_id, fighter_name] = entry.split(":");
+        const [fighters_uid, fighter_id, fighter_name] = entry.split(":");
 
-        if (!fighter_id || !fighter_name) {
+        if (!fighters_uid || !fighter_id || !fighter_name) {
           return null;
         }
 
         return {
+          fighter_uid: Number(fighters_uid),
           fighter_id: Number(fighter_id),
           fighter_name,
         };

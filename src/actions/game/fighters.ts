@@ -25,8 +25,9 @@ export async function AddFighterAction(fighterData: GameFighterSchemaType) {
   ) {
     throw new Error("Name is invalid");
   }
+  const uid = Math.floor(Math.random() * 100000);
   const game = await pb!.collection("games").update(gameData.id, {
-    playerData: `${fighterData.fighter_id}:${fighterData.fighter_name}`,
+    playerData: `${uid}:${fighterData.fighter_id}:${fighterData.fighter_name}`,
   });
 
   const parsedGame = GameSchema.safeParse(game);
@@ -72,9 +73,9 @@ export async function UpdateFighterAction(fighterData: GameFighterSchemaType) {
       fighter_name: fighterData.fighter_name,
     },
   ] as GameFighterSchemaType[];
-
+  const uid = Math.floor(Math.random() * 100000);
   const formattedData = updatedPlayerData.map((player) => {
-    return `${player.fighter_id}:${player.fighter_name}`;
+    return `${uid}:${player.fighter_id}:${player.fighter_name}`;
   });
   const game = await pb!.collection("games").update(gameData.id, {
     playerData: formattedData.join(";"),
