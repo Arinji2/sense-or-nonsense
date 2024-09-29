@@ -34,7 +34,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en" className="bg-black">
+    <html lang="en" className="bg-[#2C2828]">
       <body className={pixelifySans.className}>
         <Toaster
           position="top-right"
