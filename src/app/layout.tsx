@@ -34,7 +34,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang="en">
+    <html lang="en" className="bg-black">
       <body className={pixelifySans.className}>
         <Toaster
           position="top-right"
@@ -48,7 +48,7 @@ export default async function RootLayout({
             },
           }}
         />
-        <main className="flex h-fit w-full flex-col items-center justify-start bg-gradient-bg">
+        <main className="flex h-fit w-full flex-col items-center justify-start">
           {showGameModal && <GameInProgress />}
           {children}
         </main>
