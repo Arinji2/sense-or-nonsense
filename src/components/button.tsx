@@ -13,7 +13,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     <button
       ref={ref}
       className={cn(
-        "flex h-fit w-fit flex-col items-center justify-center rounded-md px-6 py-2 xl:py-3",
+        "flex h-fit w-fit flex-col items-center justify-center rounded-md border border-black px-6 py-2 shadow-md shadow-black xl:py-3",
         className,
         { "w-full": isFullWidth },
       )}
