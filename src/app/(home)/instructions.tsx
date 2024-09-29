@@ -11,7 +11,7 @@ export default function Instructions() {
             HOW TO PLAY
           </h2>
         </div>
-        <div className="flex h-fit w-full flex-col items-center justify-start gap-8">
+        <div className="flex h-fit w-full flex-col items-center justify-start gap-8 xl:gap-12">
           <Step1 />
           <div className="h-[2px] w-full bg-white/10"></div>
           <Step2 />
