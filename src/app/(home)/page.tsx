@@ -1,9 +1,12 @@
 import Hero from "./hero";
+import Instructions from "./instructions";
 
 export default function Page() {
   return (
     <div className="flex h-fit w-full flex-col items-center justify-start">
       <Hero />
+
+      <Instructions />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <div className="flex min-h-[100svh] w-full flex-col items-center justify-start gap-20 py-5 md:h-[100svh] md:pt-10">
+    <div className="flex min-h-[100svh] w-full flex-col items-center justify-start gap-20 py-5 md:h-[100svh]">
       <div className="fixed left-0 top-0 h-[100svh] w-full">
         <Image
           src="/home/home.png"
