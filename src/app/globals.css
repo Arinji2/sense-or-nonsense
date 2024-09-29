@@ -11,7 +11,7 @@
 /* Scroll Bar Style */
 ::-webkit-scrollbar {
   background: black;
-  width: 8px;
+  width: 4px;
   height: 8px;
 }
 

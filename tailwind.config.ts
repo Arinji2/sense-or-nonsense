@@ -23,7 +23,7 @@ const config: Config = {
         },
       },
       letterSpacing: {
-        title: "20px",
+        title: "12px",
         subtitle: "6px",
         text: "2px",
       },
