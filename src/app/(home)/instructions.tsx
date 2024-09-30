@@ -1,5 +1,6 @@
-import { Button } from "@/components/button";
 import { ArrowRight } from "lucide-react";
+import { GetUserMode } from "../../../utils/getMode";
+import GamemodeSelector from "./gamemode-selector.client";
 import { InstructionButton } from "./instructions.client";
 
 export default function Instructions() {
@@ -100,7 +101,8 @@ function Step2() {
   );
 }
 
-function Step3() {
+async function Step3() {
+  const { userID } = await GetUserMode();
   return (
     <div className="mb-auto flex h-fit w-full flex-col items-stretch justify-center gap-6 xl:flex-row">
       <div className="flex h-fit w-full flex-col items-start justify-start gap-8 xl:w-[950px] xl:flex-row xl:items-stretch xl:gap-6">
@@ -146,11 +148,16 @@ function Step3() {
             </span>
           </p>
         </div>
-        <Button className="bg-green-500 px-3 py-2 xl:px-3">
+
+        <GamemodeSelector
+          className="bg-green-500 px-3 py-2 xl:px-3"
+          tag="single"
+          isLoggedIn={userID !== null}
+        >
           <p className="whitespace-nowrap text-xs font-bold text-white">
             START PLAYING
           </p>
-        </Button>
+        </GamemodeSelector>
       </div>
     </div>
   );
