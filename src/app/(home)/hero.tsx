@@ -1,6 +1,7 @@
-import { Button } from "@/components/button";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
+import { GetUserMode } from "../../../utils/getMode";
+import GamemodeSelector from "./gamemode-selector.client";
 
 export default function Hero() {
   return (
@@ -42,7 +43,8 @@ export default function Hero() {
   );
 }
 
-export function HeroHeader() {
+export async function HeroHeader() {
+  const { userID } = await GetUserMode();
   return (
     <div className="z-10 flex h-fit w-full flex-col items-center justify-center gap-4 md:gap-8">
       <h1 className="text-center text-2xl font-bold leading-relaxed tracking-title text-white md:text-3xl md:tracking-title xl:text-5xl">
@@ -53,16 +55,24 @@ export function HeroHeader() {
         "Mandela Effect on basic English Words amplified"
       </p>
       <div className="flex h-fit w-full flex-col items-center justify-center gap-6 py-8 md:flex-row">
-        <Button className="w-full bg-green-500 md:w-fit">
+        <GamemodeSelector
+          className="w-full bg-green-500 md:w-fit"
+          tag="single"
+          isLoggedIn={userID !== null}
+        >
           <p className="text-base font-bold tracking-title text-white md:text-sm">
             SINGLE PLAYER
           </p>
-        </Button>
-        <Button className="w-full bg-teal-500 md:w-fit">
+        </GamemodeSelector>
+        <GamemodeSelector
+          className="w-full bg-teal-500 md:w-fit"
+          tag="multi"
+          isLoggedIn={userID !== null}
+        >
           <p className="text-base font-bold tracking-title text-white md:text-sm">
             MULTI PLAYER
           </p>
-        </Button>
+        </GamemodeSelector>
       </div>
     </div>
   );
