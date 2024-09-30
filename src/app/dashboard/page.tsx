@@ -22,9 +22,11 @@ export default async function Page() {
           <Suspense fallback={<FallbackGamesGraph />}>
             <GamesGraph />
           </Suspense>
-          <div className="row-span-2 h-full w-full border-2 border-yellow-500"></div>
+          <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-green-500/10 p-2 px-4 shadow-md shadow-black md:h-full"></div>
 
-          <div className="h-full w-full border-2 border-red-400"></div>
+          <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-yellow-500/10 p-2 px-4 shadow-md shadow-black md:h-full"></div>
+
+          <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-blue-500/10 p-2 px-4 shadow-md shadow-black md:h-full"></div>
         </div>
       </div>
     </div>
