@@ -1,4 +1,5 @@
 import Credits from "./credits";
+import Footer from "./footer";
 import Hero from "./hero";
 import Instructions from "./instructions";
 
@@ -8,6 +9,7 @@ export default function Page() {
       <Hero />
       <Instructions />
       <Credits />
+      <Footer />
     </div>
   );
 }
