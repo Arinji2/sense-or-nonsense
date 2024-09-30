@@ -29,6 +29,9 @@ const config: Config = {
       maxWidth: {
         "full-page": "1280px",
       },
+      fontSize: {
+        xss: "0.625rem",
+      },
       keyframes: {
         "bounce-right": {
           "0%": {
