@@ -1,47 +1,27 @@
 import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
+import Client from "pocketbase";
 import { CACHED_TAGS } from "../../../constants/tags";
 import { FormateDateDDMM } from "../../../utils/formatting";
-import { GetUserMode } from "../../../utils/getMode";
 import { GamesVsTimeGraphPoints } from "../../../validations/generic/types";
-import { GameSchema, RoundSchema } from "../../../validations/pb/schema";
+import { RoundSchema } from "../../../validations/pb/schema";
+import { GameSchemaType } from "../../../validations/pb/types";
 import { RoundsVsDateGraph } from "./graph.client";
 
-export default async function GamesGraph() {
-  const { pb, mode, userID } = await GetUserMode();
+export default async function GamesGraph({
+  gameData,
+  pb,
+  userID,
+}: {
+  gameData: GameSchemaType[];
+  pb: Client;
+  userID: string;
+}) {
   const graphData = await unstable_cache(
     async () => {
-      const dateToCheckFor = await pb
-        .collection("games")
-        .getFirstListItem(
-          `user = "${userID}" && (gameID = "1" || gameID = "0")`,
-          {
-            sort: "-created",
-          },
-        );
-      const maxDate = new Date(dateToCheckFor.created);
-
-      const minDate = new Date(maxDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-      const gameData = await pb.collection("games").getFullList({
-        batch: 100,
-        filter: `user = "${userID}" && (gameID = "1" || gameID = "0") && created > "${minDate.toISOString()}"`,
-        sort: "-created",
-      });
-
-      const parsedGameData = gameData
-        .map((game) => {
-          const parse = GameSchema.safeParse(game);
-          if (parse.success) {
-            return parse.data;
-          }
-          return null;
-        })
-        .filter((game) => game !== null);
-
       const roundsData = (
         await Promise.all(
-          parsedGameData.map(async (game) => {
+          gameData.map(async (game) => {
             return await pb.collection("rounds").getFullList({
               filter: `game="${game.id}" && correct = true`,
             });
@@ -61,7 +41,7 @@ export default async function GamesGraph() {
         })
         .filter((round) => round !== null);
 
-      const finalData = parsedGameData.map((game) => {
+      const finalData = gameData.map((game) => {
         const rounds = parsedRoundsData.filter(
           (round) => round.game === game.id,
         );
@@ -143,7 +123,6 @@ export default async function GamesGraph() {
     },
     [],
     {
-      revalidate: 1,
       tags: [`${CACHED_TAGS.user_games_graph}-${userID}`],
     },
   )();
