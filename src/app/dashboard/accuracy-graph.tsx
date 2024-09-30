@@ -1,5 +1,8 @@
 import { Loader2 } from "lucide-react";
-import { AccuracyVsDifficultyGraphPoints } from "../../../validations/generic/types";
+import {
+  AccuracyVsDifficultyGraphPoints,
+  ReferencePoints,
+} from "../../../validations/generic/types";
 import { GameSchemaType, RoundSchemaType } from "../../../validations/pb/types";
 import { AccuracyVsDifficulty } from "./graph.client";
 
@@ -52,7 +55,10 @@ export default async function AccuracyGraph({
     },
   ) as any as AccuracyVsDifficultyGraphPoints[];
 
-  const maxAccuracy = Math.max(...graph.map((data) => Number(data.y)));
+  const maxAccuracy = {
+    value: Math.max(...graph.map((data) => Number(data.y))),
+    key: graph[graph.length - 1].x,
+  } as ReferencePoints;
 
   return (
     <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-green-500/10 p-2 px-4 shadow-md shadow-black md:h-full">

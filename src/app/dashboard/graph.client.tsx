@@ -17,6 +17,7 @@ import {
 import {
   AccuracyVsDifficultyGraphPoints,
   GamesVsTimeGraphPoints,
+  ReferencePoints,
 } from "../../../validations/generic/types";
 
 type CustomTooltipProps = {
@@ -159,7 +160,7 @@ export function AccuracyVsDifficulty({
   maxAccuracy,
 }: {
   data: AccuracyVsDifficultyGraphPoints[];
-  maxAccuracy: number;
+  maxAccuracy: ReferencePoints;
 }) {
   return (
     <GraphWrapper title={"ACCURACY VS DIFFICULTY (7 DAYS)"}>
@@ -215,9 +216,9 @@ export function AccuracyVsDifficulty({
           }
         />
         <ReferenceLine
-          y={maxAccuracy}
+          y={maxAccuracy.value}
           label={{
-            value: `Max Accuracy: ${maxAccuracy}s`,
+            value: `Max Accuracy: ${maxAccuracy.value}`,
             position: "insideBottomRight",
             style: { fill: "#d946ef", fontSize: "0.625rem" },
             dy: 20,

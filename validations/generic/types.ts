@@ -52,9 +52,12 @@ export type GamesVsTimeGraphPoints = {
   }[];
 };
 
-
-
 export type AccuracyVsDifficultyGraphPoints = {
   x: string;
   y: string;
+};
+
+export type ReferencePoints = {
+  value: number;
+  key: string;
 };
