@@ -28,7 +28,7 @@ export default function Hero() {
           <h2 className="text-center text-xl font-bold tracking-title text-purple-500 md:text-2xl xl:text-3xl">
             ABOUT THE GAME
           </h2>
-          <p className="max-w-[800px] text-center text-[16px] text-white/70 md:text-[16px]">
+          <p className="max-w-[800px] text-center text-xs text-white/70 md:text-base">
             You will be given a <span className="text-red-500">word</span> and
             its <span className="text-emerald-500">definition</span>, you need
             to figure out if this word makes{" "}
@@ -45,7 +45,7 @@ export default function Hero() {
 export function HeroHeader() {
   return (
     <div className="z-10 flex h-fit w-full flex-col items-center justify-center gap-4 md:gap-8">
-      <h1 className="text-center text-2xl font-bold tracking-title text-white md:text-3xl md:tracking-title xl:text-5xl">
+      <h1 className="text-center text-2xl font-bold leading-relaxed tracking-title text-white md:text-3xl md:tracking-title xl:text-5xl">
         <span className="block text-green-500 md:inline">SENSE</span> OR{" "}
         <span className="block text-red-500 md:inline">NONSENSE</span>
       </h1>
