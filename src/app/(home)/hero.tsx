@@ -1,5 +1,6 @@
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
+import { Suspense } from "react";
 import { GetUserMode } from "../../../utils/getMode";
 import GamemodeSelector from "./gamemode-selector.client";
 
@@ -24,7 +25,9 @@ export default function Hero() {
         }}
         className="z-10 flex h-full w-full flex-col items-center justify-start gap-20 px-4 py-10"
       >
-        <HeroHeader />
+        <Suspense fallback={<></>}>
+          <HeroHeader />
+        </Suspense>
         <div className="z-10 mt-auto flex h-fit w-full flex-col items-center justify-center gap-8">
           <h2 className="text-center text-xl font-bold tracking-title text-purple-500 md:text-2xl xl:text-3xl">
             ABOUT THE GAME

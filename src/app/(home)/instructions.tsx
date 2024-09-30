@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import { Suspense } from "react";
 import { GetUserMode } from "../../../utils/getMode";
 import GamemodeSelector from "./gamemode-selector.client";
 import { InstructionButton } from "./instructions.client";
@@ -17,7 +18,9 @@ export default function Instructions() {
           <div className="h-[2px] w-full bg-white/10"></div>
           <Step2 />
           <div className="h-[2px] w-full bg-white/10"></div>
-          <Step3 />
+          <Suspense fallback={<></>}>
+            <Step3 />
+          </Suspense>
         </div>
       </div>
     </div>
