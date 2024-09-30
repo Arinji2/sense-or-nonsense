@@ -79,8 +79,10 @@ function GraphWrapper({ children, title }: { children: any; title: string }) {
 
 export function RoundsVsDateGraph({
   data,
+  maxNumberOfGamesPlayed,
 }: {
   data: GamesVsTimeGraphPoints[];
+  maxNumberOfGamesPlayed: ReferencePoints;
 }) {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const title = useMemo(() => {
@@ -149,6 +151,17 @@ export function RoundsVsDateGraph({
               ]}
             />
           }
+        />
+        <ReferenceLine
+          y={maxNumberOfGamesPlayed.value}
+          label={{
+            value: `Max Games: ${maxNumberOfGamesPlayed.value}`,
+            position: "insideBottomRight",
+            style: { fill: "#d946ef", fontSize: "0.625rem" },
+            dy: 20,
+          }}
+          stroke="#d946ef"
+          strokeDasharray="3 3"
         />
       </LineChart>
     </GraphWrapper>

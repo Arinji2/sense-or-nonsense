@@ -2,7 +2,10 @@ import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import { CACHED_TAGS } from "../../../constants/tags";
 import { FormateDateDDMM } from "../../../utils/formatting";
-import { GamesVsTimeGraphPoints } from "../../../validations/generic/types";
+import {
+  GamesVsTimeGraphPoints,
+  ReferencePoints,
+} from "../../../validations/generic/types";
 import { GameSchemaType } from "../../../validations/pb/types";
 import { RoundsVsDateGraph } from "./graph.client";
 
@@ -14,7 +17,7 @@ export default async function GamesGraph({
   gameData: GameSchemaType[];
   userID: string;
 }) {
-  const graphData = await unstable_cache(
+  const { points, maxNumberOfGamesPlayed } = await unstable_cache(
     async () => {
       const mergedDataMap = new Map<string, GamesVsTimeGraphPoints>();
 
@@ -83,7 +86,15 @@ export default async function GamesGraph({
         });
       }
 
-      return graphData;
+      const maxNumberOfGamesPlayed = {
+        value: Math.max(...graphData.map((data) => Number(data.y))),
+        key: graphData[graphData.length - 1].x,
+      } as ReferencePoints;
+
+      return {
+        points: graphData,
+        maxNumberOfGamesPlayed,
+      };
     },
     [],
     {
@@ -93,7 +104,10 @@ export default async function GamesGraph({
 
   return (
     <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-red-500/10 p-2 px-4 shadow-md shadow-black md:h-full">
-      <RoundsVsDateGraph data={graphData} />
+      <RoundsVsDateGraph
+        data={points}
+        maxNumberOfGamesPlayed={maxNumberOfGamesPlayed}
+      />
     </div>
   );
 }
