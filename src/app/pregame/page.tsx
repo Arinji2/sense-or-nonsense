@@ -25,6 +25,7 @@ export default async function Page() {
     return {
       fighter_id: player.fighter_id,
       fighter_name: player.fighter_name,
+      fighter_uid: player.fighter_uid,
     };
   });
 
@@ -32,7 +33,7 @@ export default async function Page() {
     <div className="relative flex h-full w-full flex-col items-center justify-start">
       <WidthWrapper>
         <div className="relative flex w-full flex-col items-center justify-center gap-12 pb-10 xl:h-[100svh]">
-          <h1 className="w-full px-2 text-center text-[35px] font-bold tracking-subtitle text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
+          <h1 className="tracking-subtitle w-full px-2 text-center text-[35px] font-bold text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
             CONFIRM YOUR SELECTIONS
           </h1>
           <div className="flex h-fit w-full flex-col-reverse items-center justify-start gap-12 xl:flex-col">
