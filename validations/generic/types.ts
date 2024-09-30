@@ -43,3 +43,11 @@ export type SavedSoundSettingsSchemaType = z.infer<
   typeof SavedSoundSettingsSchema
 >;
 export type AudioHookReturn = ReturnType<typeof useAudio>;
+
+export type GamesVsTimeGraphPoints = {
+  x: string;
+  y: number;
+  data: {
+    ID: string;
+  }[];
+};

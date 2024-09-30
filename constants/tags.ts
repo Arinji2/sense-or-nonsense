@@ -7,4 +7,6 @@ export const CACHED_TAGS = {
   //user_client
   guest_client: "guest_client",
   //guest_client
+  user_games_graph: "user_games_graph",
+  //user_games_graph-userID
 };

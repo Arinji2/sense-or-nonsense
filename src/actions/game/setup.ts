@@ -43,5 +43,6 @@ export async function FinishGameAction() {
   cookies().delete("game-id");
   revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
   revalidateTag(`${CACHED_TAGS.mode_select}-${userID}-${gameData.gameID}`);
+  revalidateTag(`${CACHED_TAGS.user_games_graph}-${userID}`);
   return gameData.id;
 }

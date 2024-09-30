@@ -6,7 +6,12 @@ export function FormatDate1(date: Date) {
     year: "numeric",
   });
 }
-
+//DD/MM
+export function FormateDateDDMM(date: Date) {
+  let day = date.toLocaleDateString("en-US", { day: "2-digit" });
+  let month = date.toLocaleDateString("en-US", { month: "2-digit" });
+  return `${day}/${month}`;
+}
 export function NameFormat(name: string): string {
   return name
     .toLowerCase()
