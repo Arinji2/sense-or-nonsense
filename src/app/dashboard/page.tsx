@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { CACHED_TAGS } from "../../../constants/tags";
 import { GetUserMode } from "../../../utils/getMode";
-import { GameSchema } from "../../../validations/pb/schema";
+import { GameSchema, RoundSchema } from "../../../validations/pb/schema";
+import AccuracyGraph, { FallbackAccuracyGraph } from "./accuracy-graph";
 import GamesGraph, { FallbackGamesGraph } from "./games-graph";
 
 export default async function Page() {
@@ -13,7 +14,7 @@ export default async function Page() {
     redirect("/");
   }
 
-  const { gameData } = await unstable_cache(
+  const { gameData, roundsData } = await unstable_cache(
     async () => {
       const dateToCheckFor = await pb
         .collection("games")
@@ -42,8 +43,40 @@ export default async function Page() {
         })
         .filter((game) => game !== null);
 
+      const roundsData = (
+        await Promise.all(
+          gameData.map(async (game) => {
+            return await pb.collection("rounds").getFullList({
+              filter: `game="${game.id}"`,
+            });
+          }),
+        )
+      ).flat();
+
+      const parsedRoundsData = roundsData
+        .map((round) => {
+          const parse = RoundSchema.safeParse(round);
+          if (parse.success) {
+            return parse.data;
+          }
+          if (parse.error) {
+          }
+          return null;
+        })
+        .filter((round) => round !== null);
+
+      const finalData = parsedGameData
+        .map((game) => {
+          const rounds = parsedRoundsData.filter(
+            (round) => round.game === game.id,
+          );
+          return rounds;
+        })
+        .flat();
+
       return {
         gameData: parsedGameData,
+        roundsData: finalData,
         minDate: minDate,
         maxDate: maxDate,
       };
@@ -72,9 +105,15 @@ export default async function Page() {
           className="grid h-full w-full grid-cols-1 gap-8 xl:grid-cols-2 xl:grid-rows-2"
         >
           <Suspense fallback={<FallbackGamesGraph />}>
-            <GamesGraph gameData={gameData} pb={pb} userID={userID!} />
+            <GamesGraph gameData={gameData} userID={userID!} />
           </Suspense>
-          <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-green-500/10 p-2 px-4 shadow-md shadow-black md:h-full"></div>
+          <Suspense fallback={<FallbackAccuracyGraph />}>
+            <AccuracyGraph
+              gameData={gameData}
+              roundsData={roundsData}
+              userID={userID!}
+            />
+          </Suspense>
 
           <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-yellow-500/10 p-2 px-4 shadow-md shadow-black md:h-full"></div>
 

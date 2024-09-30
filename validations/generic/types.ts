@@ -51,3 +51,10 @@ export type GamesVsTimeGraphPoints = {
     ID: string;
   }[];
 };
+
+
+
+export type AccuracyVsDifficultyGraphPoints = {
+  x: string;
+  y: string;
+};

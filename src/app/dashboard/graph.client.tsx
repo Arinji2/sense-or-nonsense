@@ -8,12 +8,16 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
-import { GamesVsTimeGraphPoints } from "../../../validations/generic/types";
+import {
+  AccuracyVsDifficultyGraphPoints,
+  GamesVsTimeGraphPoints,
+} from "../../../validations/generic/types";
 
 type CustomTooltipProps = {
   active?: boolean;
@@ -56,7 +60,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
 function GraphWrapper({ children, title }: { children: any; title: string }) {
   return (
     <div className="flex h-[400px] w-full flex-col items-start justify-start gap-6 xl:h-full">
-      <h2 className="text-sm font-bold tracking-title text-white/50 md:text-lg">
+      <h2 className="text-sm font-bold tracking-title text-white/50 md:text-base">
         {title}
       </h2>
       <div className="relative h-full w-full">
@@ -144,6 +148,82 @@ export function RoundsVsDateGraph({
               ]}
             />
           }
+        />
+      </LineChart>
+    </GraphWrapper>
+  );
+}
+
+export function AccuracyVsDifficulty({
+  data,
+  maxAccuracy,
+}: {
+  data: AccuracyVsDifficultyGraphPoints[];
+  maxAccuracy: number;
+}) {
+  return (
+    <GraphWrapper title={"ACCURACY VS DIFFICULTY (7 DAYS)"}>
+      <LineChart
+        data={data}
+        margin={{
+          top: -20,
+          right: 0,
+          left: 20,
+          bottom: 20,
+        }}
+      >
+        <CartesianGrid stroke="rgba(255, 255, 255, 0.2)" strokeWidth={2} />
+        <Legend
+          verticalAlign="top"
+          align="right"
+          wrapperStyle={{ paddingBottom: 10, fontSize: "0.75rem" }}
+        />
+        <Line
+          type="monotone"
+          dataKey="y"
+          stroke="#22c55e"
+          name="Accuracy"
+          strokeWidth={3}
+        />
+        <XAxis dataKey="x" className="text-xs">
+          <Label
+            value="Difficulty"
+            offset={-12}
+            position="insideBottom"
+            fill="white"
+          />
+        </XAxis>
+        <YAxis className="text-xs">
+          <Label
+            value="Accuracy"
+            angle={-90}
+            position="insideLeft"
+            style={{ textAnchor: "middle", fill: "white" }}
+            offset={-10}
+          />
+        </YAxis>
+        <Tooltip
+          content={
+            <CustomTooltip
+              labelDisplay="DATE"
+              fields={[
+                {
+                  label: "ACCURACY",
+                },
+              ]}
+            />
+          }
+        />
+        <ReferenceLine
+          y={maxAccuracy}
+          label={{
+            value: `Max Accuracy: ${maxAccuracy}s`,
+            position: "insideBottomRight",
+            style: { fill: "#d946ef", fontSize: "0.625rem" },
+            dy: 20,
+          }}
+          stroke="#d946ef"
+          strokeDasharray="3 3"
         />
       </LineChart>
     </GraphWrapper>

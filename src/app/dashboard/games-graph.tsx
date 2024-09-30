@@ -1,60 +1,24 @@
 import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
-import Client from "pocketbase";
 import { CACHED_TAGS } from "../../../constants/tags";
 import { FormateDateDDMM } from "../../../utils/formatting";
 import { GamesVsTimeGraphPoints } from "../../../validations/generic/types";
-import { RoundSchema } from "../../../validations/pb/schema";
 import { GameSchemaType } from "../../../validations/pb/types";
 import { RoundsVsDateGraph } from "./graph.client";
 
 export default async function GamesGraph({
   gameData,
-  pb,
+
   userID,
 }: {
   gameData: GameSchemaType[];
-  pb: Client;
   userID: string;
 }) {
   const graphData = await unstable_cache(
     async () => {
-      const roundsData = (
-        await Promise.all(
-          gameData.map(async (game) => {
-            return await pb.collection("rounds").getFullList({
-              filter: `game="${game.id}" && correct = true`,
-            });
-          }),
-        )
-      ).flat();
-
-      const parsedRoundsData = roundsData
-        .map((round) => {
-          const parse = RoundSchema.safeParse(round);
-          if (parse.success) {
-            return parse.data;
-          }
-          if (parse.error) {
-          }
-          return null;
-        })
-        .filter((round) => round !== null);
-
-      const finalData = gameData.map((game) => {
-        const rounds = parsedRoundsData.filter(
-          (round) => round.game === game.id,
-        );
-        return {
-          ...game,
-          rounds: rounds,
-          score: rounds.length,
-        };
-      });
-
       const mergedDataMap = new Map<string, GamesVsTimeGraphPoints>();
 
-      finalData.forEach((data) => {
+      gameData.forEach((data) => {
         const date = FormateDateDDMM(new Date(data.created));
         if (mergedDataMap.has(date)) {
           const existingData = mergedDataMap.get(date)!;
