@@ -1,13 +1,24 @@
 import type { Metadata } from "next";
-import { Pixelify_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
 import { ValidateGameIDCookie } from "../../utils/game-data";
 import GameInProgress from "./game-in-progress";
 import "./globals.css";
 
-const pixelifySans = Pixelify_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const dogicalPixelFont = localFont({
+  src: [
+    {
+      path: "./../fonts/dogicapixel.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./../fonts/dogicapixelbold.ttf",
+      weight: "800",
+      style: "normal",
+    },
+  ],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -35,7 +46,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="bg-[#2C2828]">
-      <body className={pixelifySans.className}>
+      <body className={dogicalPixelFont.className}>
         <Toaster
           position="top-right"
           toastOptions={{
