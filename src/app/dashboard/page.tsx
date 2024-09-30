@@ -118,7 +118,7 @@ export default async function Page() {
           }}
           className="grid h-full w-full grid-cols-1 gap-8 xl:grid-cols-2 xl:grid-rows-2"
         >
-          <div className="flex h-fit w-full flex-col items-center justify-start gap-3 rounded-md bg-blue-500/10 p-2 px-4 shadow-md shadow-black md:h-full">
+          <div className="flex h-fit w-full flex-col items-center justify-start gap-3 rounded-md bg-blue-500/10 px-4 py-5 shadow-md shadow-black md:h-full xl:pb-3 xl:pt-1">
             <div className="flex h-fit w-full shrink-0 flex-col items-center justify-between gap-3 px-2 xl:h-[20%] xl:flex-row">
               <Button className="h-fit w-full rounded-sm bg-green-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:py-2">
                 <p className="text-xs font-bold text-white md:text-xs">
@@ -135,41 +135,31 @@ export default async function Page() {
               <h2 className="text-center text-sm font-bold text-white">
                 QUICK LINKS
               </h2>
-              <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between gap-x-2 gap-y-3">
-                <Button className="h-fit w-full rounded-sm bg-orange-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-1">
-                  <p className="text-xs font-bold text-white md:text-xss">
-                    Edit Account
-                  </p>
+              <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between gap-x-2 gap-y-6 xl:gap-y-4">
+                <Button className="h-fit w-full rounded-sm bg-orange-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                  <p className="text-xss font-bold text-white">Edit Account</p>
                 </Button>
-                <Button className="h-fit w-full rounded-sm bg-teal-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-1">
-                  <p className="text-xs font-bold text-white md:text-xss">
-                    Edit Defaults
-                  </p>
+                <Button className="h-fit w-full rounded-sm bg-teal-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                  <p className="text-xss font-bold text-white">Edit Defaults</p>
                 </Button>
-                <Button className="h-fit w-full rounded-sm bg-purple-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-1">
-                  <p className="text-xs font-bold text-white md:text-xss">
-                    View Games
-                  </p>
+                <Button className="h-fit w-full rounded-sm bg-purple-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                  <p className="text-xss font-bold text-white">View Games</p>
                 </Button>
-                <Button className="h-fit w-full rounded-sm bg-emerald-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-1">
-                  <p className="text-xs font-bold text-white md:text-xss">
-                    Update Avatar
-                  </p>
+                <Button className="h-fit w-full rounded-sm bg-emerald-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                  <p className="text-xss font-bold text-white">Update Avatar</p>
                 </Button>
-                <Button className="h-fit w-full rounded-sm bg-pink-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-1">
-                  <p className="text-xs font-bold text-white md:text-xss">
+                <Button className="h-fit w-full rounded-sm bg-pink-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                  <p className="text-xss font-bold text-white">
                     View Flagged Words
                   </p>
                 </Button>
-                <Button className="h-fit w-full rounded-sm bg-fuchsia-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-1">
-                  <p className="text-xs font-bold text-white md:text-xss">
+                <Button className="h-fit w-full rounded-sm bg-fuchsia-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                  <p className="text-xss font-bold text-white">
                     View Word Bank
                   </p>
                 </Button>
-                <Button className="h-fit w-full rounded-sm bg-blue-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-1">
-                  <p className="text-xs font-bold text-white md:text-xss">
-                    Go To Home
-                  </p>
+                <Button className="h-fit w-full rounded-sm bg-blue-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                  <p className="text-xss font-bold text-white">Go To Home</p>
                 </Button>
               </div>
             </div>
