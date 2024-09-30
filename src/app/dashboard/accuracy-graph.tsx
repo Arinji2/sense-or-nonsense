@@ -1,8 +1,6 @@
 import { Loader2 } from "lucide-react";
-import {
-  AccuracyVsDifficultyGraphPoints,
-  ReferencePoints,
-} from "../../../validations/generic/types";
+import { unstable_cache } from "next/cache";
+import { CACHED_TAGS } from "../../../constants/tags";
 import { GameSchemaType, RoundSchemaType } from "../../../validations/pb/types";
 import { AccuracyVsDifficulty } from "./graph.client";
 
@@ -16,53 +14,55 @@ export default async function AccuracyGraph({
 
   userID: string;
 }) {
-  const difficultyAccuracyMap = new Map<string, number>();
-  gameData.forEach((game) => {
-    if (difficultyAccuracyMap.has(game.difficulty)) {
-      const existingAccuracy = difficultyAccuracyMap.get(game.difficulty)!;
-      const roundsForGame = roundsData.filter(
-        (round) => round.game === game.id,
-      );
-      if (roundsForGame.length === 0) {
-        return;
-      }
-      const accuracy =
-        roundsForGame.filter((round) => round.correct).length /
-        roundsForGame.length;
-      difficultyAccuracyMap.set(game.difficulty, existingAccuracy + accuracy);
-    } else {
-      const roundsForGame = roundsData.filter(
-        (round) => round.game === game.id,
-      );
-      if (roundsForGame.length === 0) {
-        return;
-      }
-      const accuracy =
-        roundsForGame.filter((round) => round.correct).length /
-        roundsForGame.length;
-      difficultyAccuracyMap.set(game.difficulty, accuracy);
-    }
-  });
+  const { points, maxAccuracy } = await unstable_cache(
+    async (games: GameSchemaType[], rounds: RoundSchemaType[]) => {
+      const difficultyAccuracyMap = new Map();
+      games.forEach((game) => {
+        const roundsForGame = rounds.filter((round) => round.game === game.id);
+        if (roundsForGame.length === 0) {
+          return;
+        }
+        const accuracy =
+          roundsForGame.filter((round) => round.correct).length /
+          roundsForGame.length;
 
-  console.log(difficultyAccuracyMap);
+        if (difficultyAccuracyMap.has(game.difficulty)) {
+          const existingAccuracy = difficultyAccuracyMap.get(game.difficulty);
+          difficultyAccuracyMap.set(
+            game.difficulty,
+            existingAccuracy + accuracy,
+          );
+        } else {
+          difficultyAccuracyMap.set(game.difficulty, accuracy);
+        }
+      });
 
-  const graph = Array.from(difficultyAccuracyMap.entries()).map(
-    ([difficulty, accuracy]) => {
+      const graph = Array.from(difficultyAccuracyMap.entries()).map(
+        ([difficulty, accuracy]) => ({
+          x: difficulty,
+          y: accuracy.toFixed(2),
+        }),
+      );
+
+      const maxAccuracy = {
+        value: Math.max(...graph.map((data) => Number(data.y))),
+        key: graph[graph.length - 1].x,
+      };
+
       return {
-        x: difficulty,
-        y: accuracy.toFixed(2),
+        points: graph,
+        maxAccuracy,
       };
     },
-  ) as any as AccuracyVsDifficultyGraphPoints[];
-
-  const maxAccuracy = {
-    value: Math.max(...graph.map((data) => Number(data.y))),
-    key: graph[graph.length - 1].x,
-  } as ReferencePoints;
+    [],
+    {
+      tags: [`${CACHED_TAGS.user_games_graph}-${userID}`],
+    },
+  )(gameData, roundsData);
 
   return (
     <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-green-500/10 p-2 px-4 shadow-md shadow-black md:h-full">
-      <AccuracyVsDifficulty data={graph} maxAccuracy={maxAccuracy} />
+      <AccuracyVsDifficulty data={points} maxAccuracy={maxAccuracy} />
     </div>
   );
 }
