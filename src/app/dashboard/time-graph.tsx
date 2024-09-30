@@ -6,33 +6,59 @@ import {
   DashboardGraphPoints,
   ReferencePoints,
 } from "../../../validations/generic/types";
-import { GameSchemaType } from "../../../validations/pb/types";
-import { RoundsVsDateGraph } from "./graph.client";
+import { GameSchemaType, RoundSchemaType } from "../../../validations/pb/types";
+import { TimeVsDateGraph } from "./graph.client";
 
-export default async function GamesGraph({
+export default async function TimeGraph({
   gameData,
-  maxDate,
+  roundData,
   userID,
+  maxDate,
 }: {
   gameData: GameSchemaType[];
-  maxDate: Date;
+  roundData: RoundSchemaType[];
   userID: string;
+  maxDate: Date;
 }) {
-  const { points, maxNumberOfGamesPlayed } = await unstable_cache(
-    async (games: GameSchemaType[], latestDate: Date) => {
+  const { maxTimePlayed, points } = await unstable_cache(
+    async (
+      games: GameSchemaType[],
+      rounds: RoundSchemaType[],
+      latestDate: Date,
+    ) => {
       const mergedDataMap = new Map<string, DashboardGraphPoints>();
 
-      games.forEach((data) => {
-        const date = FormateDateDDMM(new Date(data.created));
+      games.forEach((game) => {
+        const date = FormateDateDDMM(new Date(game.created));
+        const roundDataForGame = rounds.filter(
+          (round) => round.game !== game.id,
+        );
+        console.log(roundDataForGame);
+        if (roundDataForGame.length === 0) return;
+
+        const timeTaken = roundData.reduce((acc, data) => {
+          return acc + data.time_elapsed;
+        }, 0);
+
         if (mergedDataMap.has(date)) {
-          const existingData = mergedDataMap.get(date)!;
-          existingData.y = (Number.parseInt(existingData.y) + 1).toString();
+          const existingData = mergedDataMap.get(date);
+          mergedDataMap.set(date, {
+            x: date,
+            y: (Number.parseInt(existingData?.y!) + timeTaken).toString(),
+          });
         } else {
           mergedDataMap.set(date, {
             x: date,
-            y: "1",
+            y: timeTaken.toString(),
           });
         }
+      });
+
+      mergedDataMap.forEach((value, key) => {
+        mergedDataMap.set(key, {
+          x: key,
+          y: Math.ceil(Number.parseInt(value.y) / 60).toString(),
+        });
       });
 
       let graphData = Array.from(mergedDataMap.values());
@@ -74,35 +100,32 @@ export default async function GamesGraph({
         });
       }
 
-      const maxNumberOfGamesPlayed = {
+      const maxTimePlayed = {
         value: Math.max(...graphData.map((data) => Number(data.y))),
         key: graphData[graphData.length - 1].x,
       } as ReferencePoints;
 
       return {
         points: graphData,
-        maxNumberOfGamesPlayed,
+        maxTimePlayed,
       };
     },
     [],
     {
       tags: [`${CACHED_TAGS.user_games_graph}-${userID}`],
     },
-  )(gameData, maxDate);
+  )(gameData, roundData, maxDate);
 
   return (
-    <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-red-500/10 p-2 px-4 shadow-md shadow-black md:h-full">
-      <RoundsVsDateGraph
-        data={points}
-        maxNumberOfGamesPlayed={maxNumberOfGamesPlayed}
-      />
+    <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-yellow-500/10 p-2 px-4 shadow-md shadow-black md:h-full">
+      <TimeVsDateGraph data={points} maxTimePlayed={maxTimePlayed} />
     </div>
   );
 }
 
-export function FallbackGamesGraph() {
+export function FallbackTimeGraph() {
   return (
-    <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-red-500/10 p-2 px-4 shadow-md shadow-black md:h-full">
+    <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-yellow-500/10 p-2 px-4 shadow-md shadow-black md:h-full">
       <p className="text-center text-base font-bold tracking-title text-white md:text-xl xl:text-2xl">
         LOADING
       </p>

@@ -15,8 +15,7 @@ import {
   YAxis,
 } from "recharts";
 import {
-  AccuracyVsDifficultyGraphPoints,
-  GamesVsTimeGraphPoints,
+  DashboardGraphPoints,
   ReferencePoints,
 } from "../../../validations/generic/types";
 
@@ -81,7 +80,7 @@ export function RoundsVsDateGraph({
   data,
   maxNumberOfGamesPlayed,
 }: {
-  data: GamesVsTimeGraphPoints[];
+  data: DashboardGraphPoints[];
   maxNumberOfGamesPlayed: ReferencePoints;
 }) {
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
@@ -172,7 +171,7 @@ export function AccuracyVsDifficulty({
   data,
   maxAccuracy,
 }: {
-  data: AccuracyVsDifficultyGraphPoints[];
+  data: DashboardGraphPoints[];
   maxAccuracy: ReferencePoints;
 }) {
   return (
@@ -232,6 +231,97 @@ export function AccuracyVsDifficulty({
           y={maxAccuracy.value}
           label={{
             value: `Max Accuracy: ${maxAccuracy.value}`,
+            position: "insideBottomRight",
+            style: { fill: "#d946ef", fontSize: "0.625rem" },
+            dy: 20,
+          }}
+          stroke="#d946ef"
+          strokeDasharray="3 3"
+        />
+      </LineChart>
+    </GraphWrapper>
+  );
+}
+
+export function TimeVsDateGraph({
+  data,
+  maxTimePlayed,
+}: {
+  data: DashboardGraphPoints[];
+  maxTimePlayed: ReferencePoints;
+}) {
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const title = useMemo(() => {
+    if (isMobile) {
+      return "TIME PLAYED (5 DAYS)";
+    }
+    return "TIME PLAYED (7 DAYS)";
+  }, [isMobile]);
+
+  const formattedData = useMemo(() => {
+    if (isMobile) {
+      return data.slice(0, 5);
+    }
+    return data;
+  }, [data, isMobile]);
+
+  return (
+    <GraphWrapper title={title}>
+      <LineChart
+        data={formattedData}
+        margin={{
+          top: -20,
+          right: 0,
+          left: isMobile ? 15 : 20,
+          bottom: 20,
+        }}
+      >
+        <CartesianGrid stroke="rgba(255, 255, 255, 0.2)" strokeWidth={2} />
+        <Legend
+          verticalAlign="top"
+          align="right"
+          wrapperStyle={{ paddingBottom: 10, fontSize: "0.75rem" }}
+        />
+        <Line
+          type="monotone"
+          dataKey="y"
+          stroke="#22c55e"
+          name="Games Played"
+          strokeWidth={3}
+        />
+        <XAxis dataKey="x" className="text-xs">
+          <Label
+            value="Date"
+            offset={-12}
+            position="insideBottom"
+            fill="white"
+          />
+        </XAxis>
+        <YAxis className="text-xs">
+          <Label
+            value="Time (mins)"
+            angle={-90}
+            position="insideLeft"
+            style={{ textAnchor: "middle", fill: "white" }}
+            offset={-10}
+          />
+        </YAxis>
+        <Tooltip
+          content={
+            <CustomTooltip
+              labelDisplay="DATE"
+              fields={[
+                {
+                  label: "TIME PLAYED (mins)",
+                },
+              ]}
+            />
+          }
+        />
+        <ReferenceLine
+          y={maxTimePlayed.value}
+          label={{
+            value: `Max Time Played: ${maxTimePlayed.value}m`,
             position: "insideBottomRight",
             style: { fill: "#d946ef", fontSize: "0.625rem" },
             dy: 20,

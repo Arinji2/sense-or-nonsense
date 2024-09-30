@@ -44,15 +44,7 @@ export type SavedSoundSettingsSchemaType = z.infer<
 >;
 export type AudioHookReturn = ReturnType<typeof useAudio>;
 
-export type GamesVsTimeGraphPoints = {
-  x: string;
-  y: number;
-  data: {
-    ID: string;
-  }[];
-};
-
-export type AccuracyVsDifficultyGraphPoints = {
+export type DashboardGraphPoints = {
   x: string;
   y: string;
 };

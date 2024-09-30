@@ -6,6 +6,7 @@ import { GetUserMode } from "../../../utils/getMode";
 import { GameSchema, RoundSchema } from "../../../validations/pb/schema";
 import AccuracyGraph, { FallbackAccuracyGraph } from "./accuracy-graph";
 import GamesGraph, { FallbackGamesGraph } from "./games-graph";
+import TimeGraph, { FallbackTimeGraph } from "./time-graph";
 
 export default async function Page() {
   const { pb, userID } = await GetUserMode();
@@ -14,7 +15,7 @@ export default async function Page() {
     redirect("/");
   }
 
-  const { gameData, roundsData } = await unstable_cache(
+  const { gameData, roundsData, maxDate } = await unstable_cache(
     async () => {
       const dateToCheckFor = await pb
         .collection("games")
@@ -24,8 +25,11 @@ export default async function Page() {
             sort: "-created",
           },
         );
+      console.log(dateToCheckFor);
       const maxDate = new Date(dateToCheckFor.created);
       const minDate = new Date(maxDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+      console.log(maxDate, minDate);
 
       const gameData = await pb.collection("games").getFullList({
         batch: 100,
@@ -87,6 +91,14 @@ export default async function Page() {
     },
   )();
 
+  // const data = await pb.collection("rounds").getFullList();
+  //  await Promise.all(data.forEach( async (data) => {
+  //  await pb.collection("rounds").update(data.id, {
+  //     timeTaken: Math.random() * 10,
+  //   });
+
+  // }));
+
   return (
     <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E] xl:h-[100svh] xl:min-h-1">
       <div
@@ -105,7 +117,11 @@ export default async function Page() {
           className="grid h-full w-full grid-cols-1 gap-8 xl:grid-cols-2 xl:grid-rows-2"
         >
           <Suspense fallback={<FallbackGamesGraph />}>
-            <GamesGraph gameData={gameData} userID={userID!} />
+            <GamesGraph
+              gameData={gameData}
+              userID={userID!}
+              maxDate={maxDate}
+            />
           </Suspense>
           <Suspense fallback={<FallbackAccuracyGraph />}>
             <AccuracyGraph
@@ -115,7 +131,14 @@ export default async function Page() {
             />
           </Suspense>
 
-          <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-yellow-500/10 p-2 px-4 shadow-md shadow-black md:h-full"></div>
+          <Suspense fallback={<FallbackTimeGraph />}>
+            <TimeGraph
+              gameData={gameData}
+              roundData={roundsData}
+              userID={userID!}
+              maxDate={maxDate}
+            />
+          </Suspense>
 
           <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-blue-500/10 p-2 px-4 shadow-md shadow-black md:h-full"></div>
         </div>
