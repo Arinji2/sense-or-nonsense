@@ -18,10 +18,10 @@ export default async function GamesGraph({
   userID: string;
 }) {
   const { points, maxNumberOfGamesPlayed } = await unstable_cache(
-    async () => {
+    async (games: GameSchemaType[]) => {
       const mergedDataMap = new Map<string, GamesVsTimeGraphPoints>();
 
-      gameData.forEach((data) => {
+      games.forEach((data) => {
         const date = FormateDateDDMM(new Date(data.created));
         if (mergedDataMap.has(date)) {
           const existingData = mergedDataMap.get(date)!;
@@ -100,7 +100,7 @@ export default async function GamesGraph({
     {
       tags: [`${CACHED_TAGS.user_games_graph}-${userID}`],
     },
-  )();
+  )(gameData);
 
   return (
     <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-red-500/10 p-2 px-4 shadow-md shadow-black md:h-full">
