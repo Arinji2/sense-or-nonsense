@@ -23,9 +23,8 @@ const config: Config = {
         },
       },
       letterSpacing: {
-        title: "12px",
-        subtitle: "6px",
-        text: "2px",
+        title: "0.1875rem",
+        number: "-0.225rem",
       },
       maxWidth: {
         "full-page": "1280px",
