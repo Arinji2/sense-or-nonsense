@@ -3,10 +3,10 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import React, { useMemo, useState } from "react";
+import { FightersList } from "../../../constants/fighters";
 import { cn } from "../../../utils/cn";
 import { GameFighterSchemaType } from "../../../validations/game-data/types";
 import { CurrentStreaks } from "../../../validations/generic/types";
-import { FightersList } from "../fighters/fighters";
 
 export default function PlayerView({
   playerData,
@@ -43,7 +43,7 @@ export default function PlayerView({
       )}
     >
       <div className="flex h-[40px] w-full shrink-0 flex-row items-center justify-between">
-        <h1 className="text-center text-[15px] font-bold tracking-text text-white">
+        <h1 className="tracking-text text-center text-[15px] font-bold text-white">
           Currently Playing
         </h1>
         <p className="text-[20px] font-bold text-[--playerColor]">
@@ -120,7 +120,7 @@ export default function PlayerView({
                 className="bottom-4 z-30 flex h-[100px] w-full shrink-0 flex-col items-center justify-start gap-6 rounded-md bg-[--lighterInnerPlayerColor] p-4 xl:h-[150px]"
               >
                 <div className="flex h-[40px] w-full shrink-0 flex-row items-center justify-between">
-                  <h1 className="text-left text-[15px] font-bold tracking-text text-white">
+                  <h1 className="tracking-text text-left text-[15px] font-bold text-white">
                     Playing in <br /> {index + 1}{" "}
                     {index + 1 > 1 ? "Rounds" : "Round"}
                   </h1>

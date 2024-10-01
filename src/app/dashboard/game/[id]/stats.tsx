@@ -1,6 +1,6 @@
+import { FightersList } from "@/../constants/fighters";
 import { BackdropsList } from "@/app/backdrop/backdrops";
 import { DifficultyList } from "@/app/difficulty/difficully";
-import { FightersList } from "@/app/fighters/fighters";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { SummaryData } from "../../../../../validations/generic/types";
@@ -9,42 +9,42 @@ import { GameSchemaType } from "../../../../../validations/pb/types";
 export function GameStats({ data }: { data: SummaryData }) {
   return (
     <div className="flex h-full w-full flex-col items-start justify-start gap-6">
-      <h2 className="text-[30px] font-medium tracking-subtitle text-white">
+      <h2 className="tracking-subtitle text-[30px] font-medium text-white">
         GAME STATS
       </h2>
       <div className="flex h-fit w-full flex-row items-center justify-center gap-2 xl:w-fit">
         <div className="flex h-full w-fit flex-col items-end justify-center gap-3">
-          <p className="text-[15px] tracking-text text-white xl:text-white/60">
+          <p className="tracking-text text-[15px] text-white xl:text-white/60">
             CORRECT:
           </p>
-          <p className="text-[15px] tracking-text text-white xl:text-white/60">
+          <p className="tracking-text text-[15px] text-white xl:text-white/60">
             INCORRECT:
           </p>
-          <p className="text-[15px] tracking-text text-white xl:text-white/60">
+          <p className="tracking-text text-[15px] text-white xl:text-white/60">
             ACCURACY:
           </p>
-          <p className="text-[15px] tracking-text text-white xl:text-white/60">
+          <p className="tracking-text text-[15px] text-white xl:text-white/60">
             MAX STREAK:
           </p>
-          <p className="text-[15px] tracking-text text-white xl:text-white/60">
+          <p className="tracking-text text-[15px] text-white xl:text-white/60">
             TIME PLAYED:
           </p>
         </div>
         <div className="flex h-full w-fit flex-col items-start justify-center gap-3">
-          <p className="text-[15px] tracking-text text-blue-500">
+          <p className="tracking-text text-[15px] text-blue-500">
             {data.correct}
           </p>
-          <p className="text-[15px] tracking-text text-blue-500">
+          <p className="tracking-text text-[15px] text-blue-500">
             {data.incorrect}
           </p>
-          <p className="text-[15px] tracking-text text-blue-500">
+          <p className="tracking-text text-[15px] text-blue-500">
             {Math.round((data.correct / (data.correct + data.incorrect)) * 100)}
             %
           </p>
-          <p className="text-[15px] tracking-text text-blue-500">
+          <p className="tracking-text text-[15px] text-blue-500">
             {data.maxStreak.value}
           </p>
-          <p className="text-[15px] tracking-text text-blue-500">
+          <p className="tracking-text text-[15px] text-blue-500">
             {data.timePlayed}s
           </p>
         </div>
@@ -88,7 +88,7 @@ export function GameInfo({
       }
       className="flex h-full w-full flex-col items-start justify-start gap-6"
     >
-      <h2 className="text-[30px] font-medium tracking-subtitle text-white">
+      <h2 className="tracking-subtitle text-[30px] font-medium text-white">
         GAME INFO
       </h2>
       <div className="flex h-fit w-full flex-col items-center justify-center gap-2 xl:w-fit xl:opacity-50">

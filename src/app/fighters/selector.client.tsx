@@ -7,9 +7,9 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { FightersList } from "../../../constants/fighters";
 import useAnimate from "../../../utils/useAnimate";
 import { useFighterContext } from "./context";
-import { FightersList } from "./fighters";
 const scroll = 400;
 
 function Scroll(
@@ -128,10 +128,10 @@ export default function Selector() {
               </div>
 
               <div className="mt-auto flex h-fit w-full flex-col items-center justify-center gap-5 px-6">
-                <h2 className="w-full truncate text-center text-[40px] font-semibold tracking-subtitle text-white xl:text-[60px]">
+                <h2 className="tracking-subtitle w-full truncate text-center text-[40px] font-semibold text-white xl:text-[60px]">
                   {fighter.name.toUpperCase()}
                 </h2>
-                <p className="line-clamp-3 text-center text-[20px] tracking-text text-white md:text-[25px]">
+                <p className="tracking-text line-clamp-3 text-center text-[20px] text-white md:text-[25px]">
                   {fighter.description}
                 </p>
               </div>

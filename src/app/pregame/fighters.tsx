@@ -1,6 +1,6 @@
 import Image from "next/image";
+import { FightersList } from "../../../constants/fighters";
 import { GameFighterSchemaType } from "../../../validations/game-data/types";
-import { FightersList } from "../fighters/fighters";
 import EditButton from "./edit.client";
 
 export default function Fighters({
@@ -19,7 +19,7 @@ export default function Fighters({
   return (
     <div className="flex h-fit w-full flex-col items-start justify-center gap-4">
       <div className="flex h-fit w-fit flex-row items-center justify-center gap-6">
-        <p className="text-2xl font-medium tracking-text text-white md:text-3xl">
+        <p className="tracking-text text-2xl font-medium text-white md:text-3xl">
           <span className="text-yellow-500">2. </span>FIGHTERS
         </p>
         <EditButton objKey="playerData" />

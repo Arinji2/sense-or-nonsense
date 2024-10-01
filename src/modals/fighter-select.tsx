@@ -1,6 +1,6 @@
 "use client";
 
-import { FightersList } from "@/app/fighters/fighters";
+import { FightersList } from "@/../constants/fighters";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -137,7 +137,7 @@ export default function FighterModal({
               >
                 <X className="size-10 text-white" />
               </button>
-              <h4 className="text-center text-[20px] font-bold tracking-subtitle text-green-500 md:text-[35px]">
+              <h4 className="tracking-subtitle text-center text-[20px] font-bold text-green-500 md:text-[35px]">
                 {" "}
                 SETUP FIGHTER FOR PLAYER{" "}
                 {isMultiplayer && locFighterData.length + 1}

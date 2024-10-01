@@ -1,6 +1,6 @@
 "use server";
 
-import { FightersList } from "@/app/fighters/fighters";
+import { FightersList } from "@/../constants/fighters";
 import { revalidateTag } from "next/cache";
 import { CACHED_TAGS } from "../../../constants/tags";
 import { ValidateGameIDCookie } from "../../../utils/game-data";
