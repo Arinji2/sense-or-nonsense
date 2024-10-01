@@ -53,7 +53,7 @@ export default async function RootLayout({
               backgroundColor: "#2c2828",
               color: "white",
               borderRadius: "4px",
-              fontWeight: 500,
+              fontSize: "10px",
               letterSpacing: "1px",
             },
           }}
