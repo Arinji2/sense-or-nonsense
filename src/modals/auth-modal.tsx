@@ -11,16 +11,16 @@ import toast from "react-hot-toast";
 import LoginImage from "../../public/auth.webp";
 import useAnimate from "../../utils/useAnimate";
 
-type Provider = "google" | "discord" | "github";
-
 export default function AuthModal({
   Animate,
   disabledProvider,
   state,
+  refresh,
 }: {
   Animate: ReturnType<typeof useAnimate>;
-  disabledProvider?: Provider[];
+  disabledProvider?: string[];
   state?: Record<string, string>;
+  refresh?: boolean;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -50,6 +50,37 @@ export default function AuthModal({
 
   const router = useRouter();
   const pb = new Pocketbase("https://db-word.arinji.com");
+
+  const oauthHandler = async (provider: string) => {
+    await toast.promise(
+      (async () => {
+        const authData = await pb.collection("users").authWithOAuth2({
+          provider: provider,
+        });
+
+        await AddAccountCookie(authData.token);
+        refresh && router.refresh();
+      })(),
+      {
+        loading: `Authenticating with ${provider}...`,
+        success: "Authenticated successfully!",
+        error: "Authentication failed!",
+      },
+    );
+
+    if (state) {
+      const key = state.key;
+      const value = state.value;
+      history.pushState(null, "", `?${key}=${value}`);
+    }
+
+    Animate.setQueue(false);
+  };
+
+  // Filter enabled providers
+  const enabledProviders = ["google", "discord", "github"].filter(
+    (provider) => !disabledProvider?.includes(provider),
+  );
 
   return (
     Animate.actualState && (
@@ -92,117 +123,28 @@ export default function AuthModal({
               <X className="size-10 text-white" />
             </button>
             <h4 className="text-center text-base font-bold text-green-500 md:text-lg xl:text-2xl">
-              {" "}
               CONTINUE WITH SENSE OR NONSENSE
             </h4>
-            <div className="grid h-fit w-full grid-cols-1 items-center justify-center gap-5 md:grid-cols-2 xl:w-[70%] xl:gap-10">
-              <Button
-                disabled={disabledProvider?.includes("google")}
-                onClick={async () => {
-                  await toast.promise(
-                    (async () => {
-                      const authData = await pb
-                        .collection("users")
-                        .authWithOAuth2({
-                          provider: "google",
-                        });
-
-                      await AddAccountCookie(authData.token);
-                    })(),
-                    {
-                      loading: "Authenticating With Google...",
-                      success: "Authenticated Successfully!",
-                      error: "Authentication failed!",
-                    },
-                  );
-
-                  if (state) {
-                    const key = state.key;
-                    const value = state.value;
-                    history.pushState(null, "", `?${key}=${value}`);
-                  }
-
-                  Animate.setQueue(false);
-                }}
-                className="flex h-fit w-full flex-row items-center justify-center gap-5 bg-white/10 text-xs text-white disabled:hidden md:gap-3 md:text-xs xl:w-full xl:p-4"
-              >
-                AUTH WITH{" "}
-                <Image
-                  src="/brands/google.svg"
-                  alt="Google Logo"
-                  width={20}
-                  height={20}
-                />
-              </Button>
-
-              <Button
-                disabled={disabledProvider?.includes("discord")}
-                onClick={async () => {
-                  await toast.promise(
-                    (async () => {
-                      const authData = await pb
-                        .collection("users")
-                        .authWithOAuth2({
-                          provider: "discord",
-                        });
-
-                      await AddAccountCookie(authData.token);
-                    })(),
-                    {
-                      loading: "Authenticating With Discord...",
-                      success: "Authenticated Successfully!",
-                      error: "Authentication failed!",
-                    },
-                  );
-                  if (state) {
-                    const key = state.key;
-                    const value = state.value;
-                    history.pushState(null, "", `?${key}=${value}`);
-                  }
-
-                  Animate.setQueue(false);
-                }}
-                className="flex h-fit w-full flex-row items-center justify-center gap-5 bg-white/10 text-xs text-white disabled:hidden md:gap-3 md:text-xs xl:w-full xl:p-4"
-              >
-                AUTH WITH{" "}
-                <Image
-                  src="/brands/discord.svg"
-                  alt="Discord Logo"
-                  width={20}
-                  height={20}
-                />
-              </Button>
-              <Button
-                disabled={disabledProvider?.includes("github")}
-                onClick={async () => {
-                  await toast.promise(
-                    pb.collection("users").authWithOAuth2({
-                      provider: "github",
-                    }),
-                    {
-                      loading: "Authenticating With Github...",
-                      success: "Authenticated Successfully!",
-                      error: "Authentication failed!",
-                    },
-                  );
-                  if (state) {
-                    const key = state.key;
-                    const value = state.value;
-                    history.pushState(null, "", `?${key}=${value}`);
-                  }
-
-                  Animate.setQueue(false);
-                }}
-                className="flex h-fit w-full flex-row items-center justify-center gap-5 bg-white/10 text-xs text-white disabled:hidden md:gap-3 md:text-xs xl:col-span-2 xl:w-full xl:p-4"
-              >
-                AUTH WITH{" "}
-                <Image
-                  src="/brands/github.svg"
-                  alt="Github Logo"
-                  width={20}
-                  height={20}
-                />
-              </Button>
+            <div
+              className={`grid h-fit w-full grid-cols-1 items-center justify-center gap-5 md:grid-cols-2 xl:w-[70%] xl:gap-10`}
+            >
+              {enabledProviders.map((provider) => (
+                <Button
+                  key={provider}
+                  onClick={() => oauthHandler(provider)}
+                  className={`flex h-fit w-full flex-row items-center justify-center gap-5 bg-white/10 text-xs text-white md:gap-3 md:text-xs xl:p-4 ${
+                    enabledProviders.length === 1 ? "xl:col-span-2" : ""
+                  }`}
+                >
+                  AUTH WITH{" "}
+                  <Image
+                    src={`/brands/${provider}.svg`}
+                    alt={`${provider} logo`}
+                    width={20}
+                    height={20}
+                  />
+                </Button>
+              ))}
             </div>
           </div>
         </div>

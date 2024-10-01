@@ -1,19 +1,22 @@
 import { Button } from "@/components/button";
 import Link from "next/link";
-import { cn } from "../../../../utils/cn";
+import { ExternalAuthModel } from "pocketbase";
 import { GetUserMode } from "../../../../utils/getMode";
 import { AccountSchema } from "../../../../validations/pb/schema";
 import Account from "./account.client";
+import LinkOauth from "./link.client";
 import Username from "./username.client";
 
 export default async function Page() {
   const { mode, pb, userID } = await GetUserMode();
   let currentUsername = "";
+  let existingOauth: ExternalAuthModel[] = [];
 
   if (mode === "user") {
     const parsedAccount = AccountSchema.safeParse(pb.authStore.model!);
     if (parsedAccount.success) {
       currentUsername = parsedAccount.data.username;
+      existingOauth = await pb.collection("users").listExternalAuths(userID!);
     }
   }
   return (
@@ -44,50 +47,15 @@ export default async function Page() {
             isGuest={mode === "guest"}
             currentUsername={currentUsername}
           />
-          <div
-            className={cn(
-              "flex h-fit w-full flex-col items-center justify-center gap-8 gap-y-2 bg-yellow-500/20 p-4 md:h-[200px] md:flex-row",
-              {
-                "cursor-not-allowed opacity-20": mode === "guest",
-              },
-            )}
-          >
-            <div className="flex h-fit w-fit flex-col items-center justify-center md:w-[300px] md:items-start xl:w-[400px]">
-              <h3 className="text-center text-lg font-bold text-white md:text-left md:text-xl xl:text-2xl">
-                LOGIN WITH OTHER PROVIDER
-              </h3>
-            </div>
-            <div className="h-[80%] w-[2px] bg-white/20"></div>
-            <div className="flex h-fit w-full flex-col items-center justify-center gap-3 gap-y-8 md:flex-row xl:w-[500px]">
-              <div className="flex h-fit w-fit flex-col items-start justify-start gap-6 md:gap-3">
-                <p className="text-center text-xss font-bold text-white md:text-left">
-                  Available Providrs
-                </p>
+          {existingOauth.length < 3 && (
+            <LinkOauth
+              isGuest={mode === "guest"}
+              existingOauth={existingOauth.map((auth) =>
+                auth.provider.toLowerCase(),
+              )}
+            />
+          )}
 
-                <div className="flex h-fit w-full flex-col items-center justify-center md:w-fit">
-                  <ul className="flex h-fit w-fit flex-col items-start justify-start gap-2 text-white/50">
-                    <li className="flex flex-row items-center justify-start gap-2 text-xss">
-                      <div className="size-2 rounded-full bg-green-500"></div>
-                      Google
-                    </li>
-                    <li className="flex flex-row items-center justify-start gap-2 text-xss">
-                      <div className="size-2 rounded-full bg-green-500"></div>
-                      Discord
-                    </li>
-                    <li className="flex flex-row items-center justify-start gap-2 text-xss">
-                      <div className="size-2 rounded-full bg-green-500"></div>
-                      Github
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <Button className="h-fit w-full rounded-sm bg-green-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 md:ml-auto md:w-fit xl:w-[120px] xl:py-2">
-                <p className="text-xs font-bold text-white md:text-xs">
-                  CONVERT
-                </p>
-              </Button>
-            </div>
-          </div>
           <div className="flex h-fit w-full flex-col items-center justify-center gap-8 gap-y-2 bg-orange-500/20 p-4 md:h-[200px] md:flex-row">
             <div className="flex h-fit w-fit flex-col items-center justify-center md:w-[300px] md:items-start xl:w-[400px]">
               <h3 className="text-left text-lg font-bold text-white md:text-xl xl:text-2xl">
