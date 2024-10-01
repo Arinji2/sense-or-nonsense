@@ -1,22 +1,22 @@
-import AlexanderImage from "@/../public/fighters/alexander.png";
-import BillyImage from "@/../public/fighters/billy.png";
-import DaveImage from "@/../public/fighters/dave.png";
-import FoxyImage from "@/../public/fighters/foxy.png";
-import JacobImage from "@/../public/fighters/jacob.png";
-import JoeImage from "@/../public/fighters/joe.png";
+import AveryImage from "@/../public/fighters/avery.png";
+import ElianaImage from "@/../public/fighters/eliana.png";
+import ElliotImage from "@/../public/fighters/elliot.png";
+import EthanImage from "@/../public/fighters/ethan.png";
+import FrostyImage from "@/../public/fighters/frosty.png";
+import JesseImage from "@/../public/fighters/jesse.png";
+import LeoImage from "@/../public/fighters/leo.png";
 import MollyImage from "@/../public/fighters/molly.png";
-import SamanthaImage from "@/../public/fighters/samantha.png";
-import ScarletImage from "@/../public/fighters/scarlet.png";
+import RavenImage from "@/../public/fighters/raven.png";
 
-import AlexanderTransparentImage from "@/../public/fighters/transparent/alexander.png";
-import BillyTransparentImage from "@/../public/fighters/transparent/billy.png";
-import DaveTransparentImage from "@/../public/fighters/transparent/dave.png";
-import FoxyTransparentImage from "@/../public/fighters/transparent/foxy.png";
-import JacobTransparentImage from "@/../public/fighters/transparent/jacob.png";
-import JoeTransparentImage from "@/../public/fighters/transparent/joe.png";
+import AveryTransparentImage from "@/../public/fighters/transparent/avery.png";
+import ElianaTransparentImage from "@/../public/fighters/transparent/eliana.png";
+import ElliotTransparentImage from "@/../public/fighters/transparent/elliot.png";
+import EthanTransparentImage from "@/../public/fighters/transparent/ethan.png";
+import FrostyTransparentImage from "@/../public/fighters/transparent/frosty.png";
+import JesseTransparentImage from "@/../public/fighters/transparent/jesse.png";
+import LeoTransparentImage from "@/../public/fighters/transparent/leo.png";
 import MollyTransparentImage from "@/../public/fighters/transparent/molly.png";
-import SamanthaTransparentImage from "@/../public/fighters/transparent/samantha.png";
-import ScarletTransparentImage from "@/../public/fighters/transparent/scarlet.png";
+import RavenTransparentImage from "@/../public/fighters/transparent/raven.png";
 
 export const FightersList = [
   {
@@ -24,71 +24,107 @@ export const FightersList = [
     name: "Molly",
     image: MollyImage,
     transparentImage: MollyTransparentImage,
-    description: "A very cool lore here about Molly :D i love",
     color: "#FFAD3B",
+    lore: {
+      short:
+        "Armed with the powers of the animal kingdom, Molly takes a special interest in reading. Oh, and she hates dark places.",
+      long: "Armed with the powers of the animal kingdom, Molly is a human in all other aspects. She is a jolly hybrid who takes a special interest in reading new things. However, she hates dark places and is quite literally scared of them. Her favorite color is, of course, yellow, thus portraying her vibrance.",
+    },
   },
   {
     id: 1,
-    name: "Alexander",
-    image: AlexanderImage,
-    transparentImage: AlexanderTransparentImage,
-    description: "A very cool lore here about Alexander :D i love",
+    name: "Jesse",
+    image: JesseImage,
+    transparentImage: JesseTransparentImage,
     color: "#DE6A38",
+    lore: {
+      short:
+        "No matter what she is doing, you'll always hear her either singing or humming her favorite songs. Music is her passion and she's definitely got her priorities straight.",
+      long: "When it comes to superpowers, Jesse's is surely music. She's always learning new things and sometimes even manages to fit in a little bit of sports in her schedule. Her favorite color is orange and her room definitely shows that.",
+    },
   },
   {
     id: 2,
-    name: "Billy",
-    image: BillyImage,
-    transparentImage: BillyTransparentImage,
-    description: "A very cool lore here about Billy :D i love",
+    name: "Leo",
+    image: LeoImage,
+    transparentImage: LeoTransparentImage,
     color: "#264F6E",
+    lore: {
+      short:
+        "Being the quiet computer genius with a hoodie, Leo prefers keeping to himself. All he needs to survive is a mouse, a keyboard, and a screen with a problem to solve.",
+      long: "Leo is the quiet hooded tech-wiz who stays away from all kinds of social interactions. He loves the teal blue color because apparently it helps him not get noticed by too many. All he needs is his computer to work his magic.",
+    },
   },
   {
     id: 3,
-    name: "Dave",
-    image: DaveImage,
-    transparentImage: DaveTransparentImage,
-    description: "A very cool lore here about Dave :D i love",
+    name: "Raven",
+    image: RavenImage,
+    transparentImage: RavenTransparentImage,
     color: "#C93038",
+    lore: {
+      short:
+        "Raven, though our brave knight in shining armor, is quite a cinnamon roll. He takes great interest in archery but steers clear of large crowds and gatherings. Social anxiety, you know.",
+      long: "Raven is the ideal knight in shining armor, tough on the outside but quite a softie on the inside. He likes all things red and has a special knack for archery. However, social anxiety catches up when he finds himself amidst large crowds and gatherings so he prefers to steer clear.",
+    },
   },
   {
     id: 4,
-    name: "Foxy",
-    image: FoxyImage,
-    transparentImage: FoxyTransparentImage,
-    description: "A very cool lore here about Foxy :D i love",
+    name: "Elliot",
+    image: ElliotImage,
+    transparentImage: ElliotTransparentImage,
     color: "#4C93AD",
+    lore: {
+      short:
+        "Elliot is a cat by character and human by nature. He is very proud of his Medieval name and loves to sleep. Well, you don't need superpowers when you're a cat.",
+      long: "Elliot's appearance of a cat makes him liked by many and loved by more. He is a cheerful hybrid by nature and doesn't think he needs a superpower when he's already a cat. He carries his Medieval name around very proudly. However, one time you shouldn't disturb him is when he sleeps.",
+    },
   },
   {
     id: 5,
-    name: "Jacob",
-    image: JacobImage,
-    transparentImage: JacobTransparentImage,
-    description: "A very cool lore here about Jacob :D i love",
+    name: "Ethan",
+    image: EthanImage,
+    transparentImage: EthanTransparentImage,
     color: "#63C2C9",
+    lore: {
+      short:
+        "A golden retriever at heart, Ethan is your friendly neighborhood chef. He likes his kitchen spick 'n' span especially when he sets about preparing absolute delicacies.",
+      long: "Ethan is the cheerful neighborhood chef who manages to give you a little taste from his kitchen at least once a week. However, being a particularly tidy culinary expert, he likes his kitchen to himself and rightfully so. Light blue being his favorite color, you might just catch him gazing up at the sky on a clear day!",
+    },
   },
   {
     id: 6,
-    name: "Joe",
-    image: JoeImage,
-    transparentImage: JoeTransparentImage,
-    description: "A very cool lore here about Joe :D i love",
+    name: "Frosty",
+    image: FrostyImage,
+    transparentImage: FrostyTransparentImage,
     color: "#FCF960",
+    lore: {
+      short:
+        "Frosty lives in freezing temperatures and loves making crystals out of snow. Warmth is his biggest nightmare but he is definitely more wholesome than any human one may come across.",
+      long: "Frosty is a creature of freezing temperatures and loves crafting crystals out of snow. Warmth is his greatest nightmare, but his heart is certainly more wholesome than most humans.",
+    },
   },
   {
     id: 7,
-    name: "Samantha",
-    image: SamanthaImage,
-    transparentImage: SamanthaTransparentImage,
-    description: "A very cool lore here about Samantha :D i love",
+    name: "Avery",
+    image: AveryImage,
+    transparentImage: AveryTransparentImage,
     color: "#46275C",
+    lore: {
+      short:
+        "Tomboyish by nature, baseball is Avery's superpower. She bowls at the speed of light and there's no way you're defeating her.",
+      long: "Avery's skill set when it comes to baseball is every player's dream. She started playing when she was barely a kid and has remained undefeated ever since. She is as temperamental as her favorite color, purple. She might look grumpy but she just needs to be on the field to smile.",
+    },
   },
   {
     id: 8,
-    name: "Scarlet",
-    image: ScarletImage,
-    transparentImage: ScarletTransparentImage,
-    description: "A very cool lore here about Scarlet :D i love",
+    name: "Eliana",
+    image: ElianaImage,
+    transparentImage: ElianaTransparentImage,
     color: "#309C62",
+    lore: {
+      short:
+        "Eliana is our walkie-talkie astronomer who reads the universe like a book. She spends nights stargazing but stays miles away from insects. She says science calls this 'entomophobia.'",
+      long: "All things human, Eliana's superpower is astronomy. She reads the universe like an open book and spends nights stargazing. The color green fascinates her, reminding her of nature. However, she always steers clear of the insect world. Science, according to her, calls this 'entomophobia.'",
+    },
   },
 ] as const;

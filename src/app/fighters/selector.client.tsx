@@ -132,7 +132,7 @@ export default function Selector() {
                   {fighter.name.toUpperCase()}
                 </h2>
                 <p className="tracking-text line-clamp-3 text-center text-[20px] text-white md:text-[25px]">
-                  {fighter.description}
+                  {fighter.lore.short}
                 </p>
               </div>
             </button>
