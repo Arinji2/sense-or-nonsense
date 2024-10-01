@@ -27,11 +27,9 @@ export default async function Page() {
             sort: "-created",
           },
         );
-      console.log(dateToCheckFor);
+
       const maxDate = new Date(dateToCheckFor.created);
       const minDate = new Date(maxDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-
-      console.log(maxDate, minDate);
 
       const gameData = await pb.collection("games").getFullList({
         batch: 100,
@@ -92,15 +90,6 @@ export default async function Page() {
       tags: [`${CACHED_TAGS.user_games_graph}-${userID}`],
     },
   )();
-
-  // const data = await pb.collection("rounds").getFullList();
-  //  await Promise.all(data.forEach( async (data) => {
-  //  await pb.collection("rounds").update(data.id, {
-  //     timeTaken: Math.random() * 10,
-  //   });
-
-  // }));
-
   return (
     <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E] xl:h-[100svh] xl:min-h-1">
       <div
@@ -186,9 +175,8 @@ export default async function Page() {
           <Suspense fallback={<FallbackTimeGraph />}>
             <TimeGraph
               gameData={gameData}
-              roundData={roundsData}
+              roundsData={roundsData}
               userID={userID!}
-              maxDate={maxDate}
             />
           </Suspense>
         </div>

@@ -175,7 +175,7 @@ export function AccuracyVsDifficulty({
   maxAccuracy: ReferencePoints;
 }) {
   return (
-    <GraphWrapper title={"ACCURACY VS DIFFICULTY (7 DAYS)"}>
+    <GraphWrapper title={"ACCURACY VS DIFFICULTY"}>
       <LineChart
         data={data}
         margin={{
@@ -243,36 +243,21 @@ export function AccuracyVsDifficulty({
   );
 }
 
-export function TimeVsDateGraph({
+export function MaxTimeVsDifficulty({
   data,
-  maxTimePlayed,
+  maxTimeTaken,
 }: {
   data: DashboardGraphPoints[];
-  maxTimePlayed: ReferencePoints;
+  maxTimeTaken: ReferencePoints;
 }) {
-  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
-  const title = useMemo(() => {
-    if (isMobile) {
-      return "TIME PLAYED (5 DAYS)";
-    }
-    return "TIME PLAYED (7 DAYS)";
-  }, [isMobile]);
-
-  const formattedData = useMemo(() => {
-    if (isMobile) {
-      return data.slice(0, 5);
-    }
-    return data;
-  }, [data, isMobile]);
-
   return (
-    <GraphWrapper title={title}>
+    <GraphWrapper title={"MAX TIME TAKEN VS DIFFICULTY"}>
       <LineChart
-        data={formattedData}
+        data={data}
         margin={{
           top: -20,
           right: 0,
-          left: isMobile ? 15 : 20,
+          left: 20,
           bottom: 20,
         }}
       >
@@ -286,12 +271,12 @@ export function TimeVsDateGraph({
           type="monotone"
           dataKey="y"
           stroke="#22c55e"
-          name="Games Played"
+          name="Accuracy"
           strokeWidth={3}
         />
         <XAxis dataKey="x" className="text-xs">
           <Label
-            value="Date"
+            value="Difficulty"
             offset={-12}
             position="insideBottom"
             fill="white"
@@ -299,7 +284,7 @@ export function TimeVsDateGraph({
         </XAxis>
         <YAxis className="text-xs">
           <Label
-            value="Time (mins)"
+            value="Max Time Taken"
             angle={-90}
             position="insideLeft"
             style={{ textAnchor: "middle", fill: "white" }}
@@ -312,16 +297,16 @@ export function TimeVsDateGraph({
               labelDisplay="DATE"
               fields={[
                 {
-                  label: "TIME PLAYED (mins)",
+                  label: "ACCURACY",
                 },
               ]}
             />
           }
         />
         <ReferenceLine
-          y={maxTimePlayed.value}
+          y={maxTimeTaken.value}
           label={{
-            value: `Max Time Played: ${maxTimePlayed.value}m`,
+            value: `Max Time Taken: ${maxTimeTaken.value}`,
             position: "insideBottomRight",
             style: { fill: "#d946ef", fontSize: "0.625rem" },
             dy: 20,

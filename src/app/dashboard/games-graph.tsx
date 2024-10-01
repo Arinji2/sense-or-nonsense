@@ -44,6 +44,7 @@ export default async function GamesGraph({
       for (let i = 0; i < 7; i++) {
         const date = new Date(latestDate);
         date.setDate(date.getDate() - i);
+
         const formattedDate = FormateDateDDMM(date);
         if (!mergedDataMap.has(formattedDate)) {
           graphData.push({
@@ -53,11 +54,24 @@ export default async function GamesGraph({
         }
       }
 
-      graphData.sort(
-        (a, b) =>
-          new Date().setDate(Number.parseInt(a.x.split("/")[0])) -
-          new Date().setDate(Number.parseInt(b.x.split("/")[0])),
-      );
+      graphData.sort((a, b) => {
+        const dateA = new Date();
+
+        dateA.setDate(Number.parseInt(a.x.split("/")[0]));
+        dateA.setMonth(Number.parseInt(a.x.split("/")[1]) - 1);
+
+        const dateB = new Date();
+        dateB.setDate(Number.parseInt(b.x.split("/")[0]));
+        dateB.setMonth(Number.parseInt(b.x.split("/")[1]) - 1);
+
+        if (dateA.getTime() > dateB.getTime()) {
+          return 1;
+        }
+        if (dateA.getTime() < dateB.getTime()) {
+          return -1;
+        }
+        return 0;
+      });
 
       graphData = graphData.slice(0, 7);
       const monthsSet = new Set<string>();

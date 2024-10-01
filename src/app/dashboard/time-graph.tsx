@@ -1,124 +1,70 @@
 import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import { CACHED_TAGS } from "../../../constants/tags";
-import { FormateDateDDMM } from "../../../utils/formatting";
-import {
-  DashboardGraphPoints,
-  ReferencePoints,
-} from "../../../validations/generic/types";
+import { DashboardGraphPoints } from "../../../validations/generic/types";
 import { GameSchemaType, RoundSchemaType } from "../../../validations/pb/types";
-import { TimeVsDateGraph } from "./graph.client";
+import { MaxTimeVsDifficulty } from "./graph.client";
 
 export default async function TimeGraph({
   gameData,
-  roundData,
+  roundsData,
   userID,
-  maxDate,
 }: {
   gameData: GameSchemaType[];
-  roundData: RoundSchemaType[];
+  roundsData: RoundSchemaType[];
+
   userID: string;
-  maxDate: Date;
 }) {
-  const { maxTimePlayed, points } = await unstable_cache(
-    async (
-      games: GameSchemaType[],
-      rounds: RoundSchemaType[],
-      latestDate: Date,
-    ) => {
-      const mergedDataMap = new Map<string, DashboardGraphPoints>();
-
+  const { points, maxTimeTaken } = await unstable_cache(
+    async (games: GameSchemaType[], rounds: RoundSchemaType[]) => {
+      const maxTimeDifficultyMap = new Map<string, number>();
       games.forEach((game) => {
-        const date = FormateDateDDMM(new Date(game.created));
-        const roundDataForGame = rounds.filter(
-          (round) => round.game !== game.id,
-        );
-        console.log(roundDataForGame);
-        if (roundDataForGame.length === 0) return;
-
-        const timeTaken = roundData.reduce((acc, data) => {
-          return acc + data.time_elapsed;
-        }, 0);
-
-        if (mergedDataMap.has(date)) {
-          const existingData = mergedDataMap.get(date);
-          mergedDataMap.set(date, {
-            x: date,
-            y: (Number.parseInt(existingData?.y!) + timeTaken).toString(),
-          });
-        } else {
-          mergedDataMap.set(date, {
-            x: date,
-            y: timeTaken.toString(),
-          });
-        }
-      });
-
-      mergedDataMap.forEach((value, key) => {
-        mergedDataMap.set(key, {
-          x: key,
-          y: Math.ceil(Number.parseInt(value.y) / 60).toString(),
-        });
-      });
-
-      let graphData = Array.from(mergedDataMap.values());
-
-      graphData.sort(
-        (a, b) => new Date(b.x).getTime() - new Date(a.x).getTime(),
-      );
-
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(latestDate);
-        date.setDate(date.getDate() - i);
-        const formattedDate = FormateDateDDMM(date);
-        if (!mergedDataMap.has(formattedDate)) {
-          graphData.push({
-            x: formattedDate,
-            y: "0",
-          });
-        }
-      }
-
-      graphData.sort(
-        (a, b) =>
-          new Date().setDate(Number.parseInt(a.x.split("/")[0])) -
-          new Date().setDate(Number.parseInt(b.x.split("/")[0])),
-      );
-
-      graphData = graphData.slice(0, 7);
-      const monthsSet = new Set<string>();
-      graphData.forEach((data) => {
-        if (monthsSet.has(data.x.split("/")[1])) {
+        const roundsForGame = rounds.filter((round) => round.game === game.id);
+        if (roundsForGame.length === 0) {
           return;
         }
-        monthsSet.add(data.x.split("/")[1]);
+
+        const maxTimeTaken = Math.max(
+          ...roundsForGame.map((round) => round.time_elapsed),
+        );
+
+        if (maxTimeDifficultyMap.has(game.difficulty)) {
+          const existingTimeTaken = maxTimeDifficultyMap.get(game.difficulty);
+          maxTimeDifficultyMap.set(
+            game.difficulty,
+            Math.max(existingTimeTaken!, maxTimeTaken),
+          );
+        } else {
+          maxTimeDifficultyMap.set(game.difficulty, maxTimeTaken);
+        }
       });
 
-      if (monthsSet.size === 1) {
-        graphData.forEach((data) => {
-          data.x = data.x.split("/")[0];
-        });
-      }
+      const graph = Array.from(maxTimeDifficultyMap.entries()).map(
+        ([difficulty, maxTimeTaken]) => ({
+          x: difficulty,
+          y: Math.round(maxTimeTaken),
+        }),
+      );
 
-      const maxTimePlayed = {
-        value: Math.max(...graphData.map((data) => Number(data.y))),
-        key: graphData[graphData.length - 1].x,
-      } as ReferencePoints;
+      const maxTimeTaken = {
+        value: Math.max(...graph.map((data) => Number(data.y))),
+        key: graph[graph.length - 1].x,
+      };
 
       return {
-        points: graphData,
-        maxTimePlayed,
+        points: graph as any as DashboardGraphPoints[],
+        maxTimeTaken,
       };
     },
     [],
     {
       tags: [`${CACHED_TAGS.user_games_graph}-${userID}`],
     },
-  )(gameData, roundData, maxDate);
+  )(gameData, roundsData);
 
   return (
     <div className="flex h-[450px] w-full flex-row items-center justify-center gap-3 rounded-md bg-yellow-500/10 p-2 px-4 shadow-md shadow-black md:h-full">
-      <TimeVsDateGraph data={points} maxTimePlayed={maxTimePlayed} />
+      <MaxTimeVsDifficulty data={points} maxTimeTaken={maxTimeTaken} />
     </div>
   );
 }
