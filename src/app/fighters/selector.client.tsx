@@ -128,10 +128,10 @@ export default function Selector() {
               </div>
 
               <div className="mt-auto flex h-fit w-full flex-col items-center justify-center gap-5 px-6">
-                <h2 className="tracking-subtitle w-full truncate text-center text-[40px] font-semibold text-white xl:text-[60px]">
+                <h2 className="tracking-subtitle w-full truncate text-center text-base font-semibold text-white md:text-2xl xl:text-6xl">
                   {fighter.name.toUpperCase()}
                 </h2>
-                <p className="tracking-text line-clamp-3 text-center text-[20px] text-white md:text-[25px]">
+                <p className="tracking-text line-clamp-3 text-center text-sm text-white/70 md:text-base">
                   {fighter.lore.short}
                 </p>
               </div>
