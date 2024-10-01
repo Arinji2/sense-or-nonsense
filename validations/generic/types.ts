@@ -53,3 +53,16 @@ export type ReferencePoints = {
   value: number;
   key: string;
 };
+
+export type FighterDataType = {
+  id: number;
+  name: string;
+  image: string;
+  transparentImage: string;
+  color: string;
+  secondaryColor?: string;
+  lore: {
+    short: string;
+    long: string;
+  };
+};

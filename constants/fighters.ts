@@ -17,6 +17,7 @@ import JesseTransparentImage from "@/../public/fighters/transparent/jesse.png";
 import LeoTransparentImage from "@/../public/fighters/transparent/leo.png";
 import MollyTransparentImage from "@/../public/fighters/transparent/molly.png";
 import RavenTransparentImage from "@/../public/fighters/transparent/raven.png";
+import { FighterDataType } from "../validations/generic/types";
 
 export const FightersList = [
   {
@@ -25,6 +26,7 @@ export const FightersList = [
     image: MollyImage,
     transparentImage: MollyTransparentImage,
     color: "#FFAD3B",
+    secondaryColor: "#a16207",
     lore: {
       short:
         "Armed with the powers of the animal kingdom, Molly takes a special interest in reading. Oh, and she hates dark places.",
@@ -37,6 +39,7 @@ export const FightersList = [
     image: JesseImage,
     transparentImage: JesseTransparentImage,
     color: "#DE6A38",
+    secondaryColor: "#7c2d12",
     lore: {
       short:
         "No matter what she is doing, you'll always hear her either singing or humming her favorite songs. Music is her passion and she's definitely got her priorities straight.",
@@ -61,6 +64,7 @@ export const FightersList = [
     image: RavenImage,
     transparentImage: RavenTransparentImage,
     color: "#C93038",
+    secondaryColor: "#7f1d1d",
     lore: {
       short:
         "Raven, though our brave knight in shining armor, is quite a cinnamon roll. He takes great interest in archery but steers clear of large crowds and gatherings. Social anxiety, you know.",
@@ -85,6 +89,7 @@ export const FightersList = [
     image: EthanImage,
     transparentImage: EthanTransparentImage,
     color: "#63C2C9",
+    secondaryColor: "#0e7490",
     lore: {
       short:
         "A golden retriever at heart, Ethan is your friendly neighborhood chef. He likes his kitchen spick 'n' span especially when he sets about preparing absolute delicacies.",
@@ -97,6 +102,7 @@ export const FightersList = [
     image: FrostyImage,
     transparentImage: FrostyTransparentImage,
     color: "#FCF960",
+    secondaryColor: "#a16207",
     lore: {
       short:
         "Frosty lives in freezing temperatures and loves making crystals out of snow. Warmth is his biggest nightmare but he is definitely more wholesome than any human one may come across.",
@@ -121,10 +127,11 @@ export const FightersList = [
     image: ElianaImage,
     transparentImage: ElianaTransparentImage,
     color: "#309C62",
+    secondaryColor: "#065f46",
     lore: {
       short:
         "Eliana is our walkie-talkie astronomer who reads the universe like a book. She spends nights stargazing but stays miles away from insects. She says science calls this 'entomophobia.'",
       long: "All things human, Eliana's superpower is astronomy. She reads the universe like an open book and spends nights stargazing. The color green fascinates her, reminding her of nature. However, she always steers clear of the insect world. Science, according to her, calls this 'entomophobia.'",
     },
   },
-] as const;
+] as any as FighterDataType[];

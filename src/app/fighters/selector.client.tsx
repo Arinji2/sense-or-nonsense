@@ -7,8 +7,11 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { Button } from "@/components/button";
+import FighterExpand from "@/modals/fighter-expand";
 import { FightersList } from "../../../constants/fighters";
 import useAnimate from "../../../utils/useAnimate";
+import { FighterDataType } from "../../../validations/generic/types";
 import { useFighterContext } from "./context";
 const scroll = 400;
 
@@ -61,6 +64,10 @@ export default function Selector() {
   const router = useRouter();
   const animate = useAnimate(800);
   const { fighterData, isMultiplayer } = useFighterContext();
+  const [fighterExpand, setFighterExpand] = useState<FighterDataType | null>(
+    null,
+  );
+  const expandAnimate = useAnimate(800);
 
   const [documentDefined, setDocumentDefined] = useState(false);
   const [selectedFighterID, setSelectedFighterID] = useState<number | null>(
@@ -73,6 +80,12 @@ export default function Selector() {
 
   return (
     <>
+      {documentDefined &&
+        fighterExpand &&
+        createPortal(
+          <FighterExpand Animate={expandAnimate} fighterData={fighterExpand} />,
+          document.body,
+        )}
       {documentDefined &&
         Number.isInteger(selectedFighterID) &&
         createPortal(
@@ -108,14 +121,10 @@ export default function Selector() {
           className="no-scrollbar flex h-full w-full snap-x snap-mandatory flex-row items-center justify-start gap-3 overflow-x-scroll rounded-md xl:max-w-[600px]"
         >
           {FightersList.map((fighter) => (
-            <button
-              onClick={async () => {
-                setSelectedFighterID(fighter.id);
-                animate.setQueue(true);
-              }}
+            <div
               key={fighter.id}
               style={{ "--fighterColor": fighter.color } as React.CSSProperties}
-              className="to flex h-full w-full max-w-[800px] shrink-0 snap-center flex-col items-center justify-start bg-gradient-to-b from-[--fighterColor] from-60% py-14 pt-8 brightness-75 transition-all duration-300 ease-in-out hover:brightness-100 xl:py-16 xl:pt-10"
+              className="to relative flex h-full w-full max-w-[800px] shrink-0 snap-center flex-col items-center justify-start bg-gradient-to-b from-[--fighterColor] from-60% py-28 pt-8 brightness-75 transition-all duration-300 ease-in-out hover:brightness-100 xl:py-24 xl:pt-10"
             >
               <div className="relative size-[200px] xl:size-[300px]">
                 <Image
@@ -135,7 +144,23 @@ export default function Selector() {
                   {fighter.lore.short}
                 </p>
               </div>
-            </button>
+              <button
+                className="absolute left-0 top-0 h-full w-full"
+                onClick={async () => {
+                  setSelectedFighterID(fighter.id);
+                  animate.setQueue(true);
+                }}
+              />
+              <Button
+                onClick={() => {
+                  setFighterExpand(fighter);
+                  expandAnimate.setQueue(true);
+                }}
+                className="absolute bottom-8 h-fit w-[80%] bg-white/40 text-sm xl:bottom-5 xl:w-fit"
+              >
+                LEARN MORE
+              </Button>
+            </div>
           ))}
         </div>
       </div>
