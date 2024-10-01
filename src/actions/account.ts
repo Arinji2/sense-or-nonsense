@@ -1,6 +1,7 @@
 "use server";
 import { revalidateTag, unstable_noStore } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Pocketbase from "pocketbase";
 import { CACHED_TAGS } from "../../constants/tags";
 import { ConnectPBAdmin } from "../../utils/connectPB";
@@ -88,5 +89,36 @@ export async function UpdateUsername(username: string) {
   } catch (error) {
     console.error(error);
     throw new Error("Update Username Failed");
+  }
+}
+
+export async function DeleteAccount() {
+  unstable_noStore();
+  const { mode, pb, userID } = await GetUserMode();
+  try {
+    if (mode === "user") {
+      await pb.collection("users").delete(userID!);
+    } else if (mode === "guest") {
+      const guestID = cookies().get("guest-session")?.value;
+      const guestData = await pb
+        .collection("guests")
+        .getFirstListItem(`session_id = "${guestID}"`);
+      const pbAdmin = await ConnectPBAdmin();
+      await pbAdmin.collection("guests").delete(guestData.id);
+      const guestUserData = await pbAdmin
+        .collection("users")
+        .getFirstListItem(`guest_data="${guestData.id}"`);
+      await pbAdmin.collection("users").delete(guestUserData.id);
+    }
+
+    cookies().delete("user");
+    cookies().delete("guest-session");
+
+    revalidateTag(`${CACHED_TAGS.user_client}`);
+
+    redirect("/");
+  } catch (error) {
+    console.error(error);
+    throw new Error("Delete Account Failed");
   }
 }
