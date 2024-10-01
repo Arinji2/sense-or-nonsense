@@ -1,6 +1,6 @@
 "use client";
 
-import { UpdateUsername } from "@/actions/account";
+import { UpdateUsernameAction } from "@/actions/account";
 import { Button } from "@/components/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -62,7 +62,7 @@ export default function Username({
           type="submit"
           onClick={(e) => {
             e.preventDefault();
-            toast.promise(UpdateUsername(username), {
+            toast.promise(UpdateUsernameAction(username), {
               loading: "Updating Username...",
               success: "Username Updated Successfully!",
               error: "Username Update Failed!",

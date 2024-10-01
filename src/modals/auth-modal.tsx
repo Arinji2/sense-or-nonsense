@@ -1,6 +1,6 @@
 "use client";
 
-import { AddAccountCookie } from "@/actions/account";
+import { AddAccountCookieAction } from "@/actions/account";
 import { Button } from "@/components/button";
 import { X } from "lucide-react";
 import Image from "next/image";
@@ -58,7 +58,7 @@ export default function AuthModal({
           provider: provider,
         });
 
-        await AddAccountCookie(authData.token);
+        await AddAccountCookieAction(authData.token);
         refresh && router.refresh();
       })(),
       {

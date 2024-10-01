@@ -1,10 +1,12 @@
 "use client";
 
-import { DeleteAccount } from "@/actions/account";
+import { DeleteAccountAction } from "@/actions/account";
 import { Button } from "@/components/button";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 export default function Delete() {
+  const router = useRouter();
   return (
     <div className="flex h-fit w-full flex-col items-center justify-center gap-8 gap-y-2 bg-orange-500/20 p-4 md:h-[200px] md:flex-row">
       <div className="flex h-fit w-fit flex-col items-center justify-center md:w-[300px] md:items-start xl:w-[400px]">
@@ -44,12 +46,18 @@ export default function Delete() {
           </div>
         </div>
         <Button
-          onClick={() =>
-            toast.promise(DeleteAccount(), {
-              loading: "Deleting Account...",
-              success: "Account Deleted Successfully!",
-              error: "Account Deletion Failed!",
-            })
+          onClick={async () =>
+            await toast.promise(
+              (async () => {
+                await DeleteAccountAction();
+                router.push("/");
+              })(),
+              {
+                loading: "Deleting Account...",
+                success: "Account Deleted",
+                error: "Error Deleting Account",
+              },
+            )
           }
           className="h-fit w-full rounded-sm bg-red-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 md:ml-auto xl:w-[120px] xl:py-2"
         >

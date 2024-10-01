@@ -1,6 +1,6 @@
 "use client";
 
-import { ConvertAccount } from "@/actions/account";
+import { ConvertAccountAction } from "@/actions/account";
 import { Button } from "@/components/button";
 import AuthModal from "@/modals/auth-modal";
 import { useSearchParams } from "next/navigation";
@@ -26,7 +26,7 @@ export default function Account() {
 
     toast.promise(
       (async () => {
-        await ConvertAccount();
+        await ConvertAccountAction();
         isValidatedRef.current = false;
       })(),
       {

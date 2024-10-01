@@ -1,13 +1,12 @@
 "use server";
 import { revalidateTag, unstable_noStore } from "next/cache";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import Pocketbase from "pocketbase";
 import { CACHED_TAGS } from "../../constants/tags";
 import { ConnectPBAdmin } from "../../utils/connectPB";
 import { GetUserMode } from "../../utils/getMode";
 import { UsernameSchema } from "../../validations/pb/schema";
-export async function AddAccountCookie(token: string) {
+export async function AddAccountCookieAction(token: string) {
   const pb = new Pocketbase("https://db-word.arinji.com/");
   pb.authStore.save(token);
   await pb.collection("users").authRefresh();
@@ -27,7 +26,7 @@ export async function AddAccountCookie(token: string) {
   }
 }
 
-export async function ConvertAccount() {
+export async function ConvertAccountAction() {
   unstable_noStore();
   const guestID = cookies().get("guest-session")?.value;
   const userToken = cookies().get("user")?.value;
@@ -74,7 +73,7 @@ export async function ConvertAccount() {
   }
 }
 
-export async function UpdateUsername(username: string) {
+export async function UpdateUsernameAction(username: string) {
   try {
     const { userID, mode, pb } = await GetUserMode();
     if (mode !== "user") throw new Error("User not logged in");
@@ -92,7 +91,7 @@ export async function UpdateUsername(username: string) {
   }
 }
 
-export async function DeleteAccount() {
+export async function DeleteAccountAction() {
   unstable_noStore();
   const { mode, pb, userID } = await GetUserMode();
   try {
@@ -104,19 +103,18 @@ export async function DeleteAccount() {
         .collection("guests")
         .getFirstListItem(`session_id = "${guestID}"`);
       const pbAdmin = await ConnectPBAdmin();
-      await pbAdmin.collection("guests").delete(guestData.id);
+
       const guestUserData = await pbAdmin
         .collection("users")
         .getFirstListItem(`guest_data="${guestData.id}"`);
       await pbAdmin.collection("users").delete(guestUserData.id);
+      await pbAdmin.collection("guests").delete(guestData.id);
     }
 
     cookies().delete("user");
     cookies().delete("guest-session");
 
     revalidateTag(`${CACHED_TAGS.user_client}`);
-
-    redirect("/");
   } catch (error) {
     console.error(error);
     throw new Error("Delete Account Failed");
