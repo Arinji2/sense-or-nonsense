@@ -1,8 +1,11 @@
 import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
-import { CACHED_TAGS } from "../../../constants/tags";
-import { DashboardGraphPoints } from "../../../validations/generic/types";
-import { GameSchemaType, RoundSchemaType } from "../../../validations/pb/types";
+import { CACHED_TAGS } from "../../../../constants/tags";
+import { DashboardGraphPoints } from "../../../../validations/generic/types";
+import {
+  GameSchemaType,
+  RoundSchemaType,
+} from "../../../../validations/pb/types";
 import { MaxTimeVsDifficulty } from "./graph.client";
 
 export default async function TimeGraph({

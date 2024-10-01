@@ -1,12 +1,12 @@
 import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
-import { CACHED_TAGS } from "../../../constants/tags";
-import { FormateDateDDMM } from "../../../utils/formatting";
+import { CACHED_TAGS } from "../../../../constants/tags";
+import { FormateDateDDMM } from "../../../../utils/formatting";
 import {
   DashboardGraphPoints,
   ReferencePoints,
-} from "../../../validations/generic/types";
-import { GameSchemaType } from "../../../validations/pb/types";
+} from "../../../../validations/generic/types";
+import { GameSchemaType } from "../../../../validations/pb/types";
 import { RoundsVsDateGraph } from "./graph.client";
 
 export default async function GamesGraph({

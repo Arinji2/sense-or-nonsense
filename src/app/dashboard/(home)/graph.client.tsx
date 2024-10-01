@@ -17,7 +17,7 @@ import {
 import {
   DashboardGraphPoints,
   ReferencePoints,
-} from "../../../validations/generic/types";
+} from "../../../../validations/generic/types";
 
 type CustomTooltipProps = {
   active?: boolean;
