@@ -2,10 +2,20 @@ import { Button } from "@/components/button";
 import Link from "next/link";
 import { cn } from "../../../../utils/cn";
 import { GetUserMode } from "../../../../utils/getMode";
+import { AccountSchema } from "../../../../validations/pb/schema";
 import Account from "./account.client";
+import Username from "./username.client";
 
 export default async function Page() {
   const { mode, pb, userID } = await GetUserMode();
+  let currentUsername = "";
+
+  if (mode === "user") {
+    const parsedAccount = AccountSchema.safeParse(pb.authStore.model!);
+    if (parsedAccount.success) {
+      currentUsername = parsedAccount.data.username;
+    }
+  }
   return (
     <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E] xl:h-[100svh] xl:min-h-1">
       <div
@@ -30,37 +40,10 @@ export default async function Page() {
           className="flex h-full w-full flex-col items-center justify-start gap-10"
         >
           {mode !== "user" && <Account />}
-          <div
-            className={cn(
-              "flex h-fit w-full flex-col items-center justify-center gap-8 gap-y-2 bg-green-500/20 p-4 md:h-[200px] md:flex-row",
-              {
-                "cursor-not-allowed opacity-20": mode === "guest",
-              },
-            )}
-          >
-            <div className="flex h-fit w-fit flex-col items-center justify-center md:w-[300px] md:items-start xl:w-[400px]">
-              <h3 className="text-lg font-bold text-white md:text-xl xl:text-2xl">
-                EDIT USERNAME
-              </h3>
-            </div>
-            <div className="h-[80%] w-[2px] bg-white/20"></div>
-            <div className="flex h-fit w-full flex-col items-center justify-center gap-3 gap-y-8 md:flex-row xl:w-[500px]">
-              <div className="flex h-fit w-fit flex-col items-start justify-start gap-6 md:gap-3">
-                <p className="text-center text-xss font-bold text-white md:text-left">
-                  Edit your username
-                </p>
-
-                <input
-                  type="text"
-                  disabled={mode === "guest"}
-                  className="h-fit w-full shrink rounded-sm bg-white/10 px-3 py-2 text-sm text-white md:w-fit md:py-1.5 md:text-base xl:py-2.5"
-                />
-              </div>
-              <Button className="h-fit w-full shrink-0 rounded-sm bg-green-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 md:ml-auto xl:w-[120px] xl:py-2">
-                <p className="text-xs font-bold text-white md:text-xs">SAVE</p>
-              </Button>
-            </div>
-          </div>
+          <Username
+            isGuest={mode === "guest"}
+            currentUsername={currentUsername}
+          />
           <div
             className={cn(
               "flex h-fit w-full flex-col items-center justify-center gap-8 gap-y-2 bg-yellow-500/20 p-4 md:h-[200px] md:flex-row",

@@ -1,4 +1,5 @@
 import z from "zod";
+import { REGEX } from "../../constants/regex";
 
 export const UserSchema = z.object({
   id: z.string(),
@@ -86,3 +87,17 @@ export const RoundSchema = z.object({
 });
 
 export const RoundsSchema = z.array(RoundSchema);
+
+export const AccountSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  email: z.string(),
+  default_avatar: z.number(),
+  default_backdrop: z.number(),
+  guest_data: z.string(),
+});
+
+export const UsernameSchema = z
+  .string()
+  .regex(REGEX.username, "Username can only contain numbers and letters.")
+  .max(20, "Username can't be longer than 20 characters");

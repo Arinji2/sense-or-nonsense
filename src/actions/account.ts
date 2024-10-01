@@ -1,8 +1,11 @@
 "use server";
-import { unstable_noStore } from "next/cache";
+import { revalidateTag, unstable_noStore } from "next/cache";
 import { cookies } from "next/headers";
 import Pocketbase from "pocketbase";
+import { CACHED_TAGS } from "../../constants/tags";
 import { ConnectPBAdmin } from "../../utils/connectPB";
+import { GetUserMode } from "../../utils/getMode";
+import { UsernameSchema } from "../../validations/pb/schema";
 export async function AddAccountCookie(token: string) {
   const pb = new Pocketbase("https://db-word.arinji.com/");
   pb.authStore.save(token);
@@ -67,5 +70,23 @@ export async function ConvertAccount() {
   } catch (error) {
     console.error(error);
     throw new Error("Convert Account Failed");
+  }
+}
+
+export async function UpdateUsername(username: string) {
+  try {
+    const { userID, mode, pb } = await GetUserMode();
+    if (mode !== "user") throw new Error("User not logged in");
+
+    UsernameSchema.parse(username);
+    if (username.length === 0) throw new Error("Username can't be empty");
+    await pb.collection("users").update(userID!, {
+      username,
+    });
+
+    revalidateTag(CACHED_TAGS.user_client);
+  } catch (error) {
+    console.error(error);
+    throw new Error("Update Username Failed");
   }
 }
