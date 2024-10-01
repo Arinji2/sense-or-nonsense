@@ -1,6 +1,11 @@
 import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
-import { default as Pocketbase } from "pocketbase";
+import { redirect } from "next/navigation";
+import {
+  default as Pocketbase,
+  RecordAuthResponse,
+  RecordModel,
+} from "pocketbase";
 import { CACHED_TAGS } from "../constants/tags";
 
 export async function ConnectPBAdmin() {
@@ -34,12 +39,18 @@ export async function ConnectPBUser() {
   }
 
   const cachedTokenData = await unstable_cache(
-    async (cookie: string) => {
+    async (token: string) => {
       const pb = new Pocketbase("https://db-word.arinji.com/");
-      pb.authStore.loadFromCookie(cookie);
-      const token = await pb.collection("users").authRefresh();
+      pb.authStore.save(token);
+      let authData: RecordAuthResponse<RecordModel>;
 
-      return token;
+      try {
+        authData = await pb.collection("users").authRefresh();
+      } catch (error) {
+        redirect("/");
+      }
+
+      return authData;
     },
     [],
     {
