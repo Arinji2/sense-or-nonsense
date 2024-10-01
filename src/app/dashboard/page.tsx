@@ -1,6 +1,7 @@
 import { Button } from "@/components/button";
 import { Heart } from "lucide-react";
 import { unstable_cache } from "next/cache";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { CACHED_TAGS } from "../../../constants/tags";
@@ -109,25 +110,34 @@ export default async function Page() {
         >
           <div className="flex h-fit w-full flex-col items-center justify-start gap-3 rounded-md bg-blue-500/10 px-4 py-5 shadow-md shadow-black md:h-full xl:pb-3 xl:pt-1">
             <div className="flex h-fit w-full shrink-0 flex-col items-center justify-between gap-3 px-2 xl:h-[20%] xl:flex-row">
-              <Button className="h-fit w-full rounded-sm bg-green-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:py-2">
+              <Link
+                href="/single"
+                className="flex h-fit w-full flex-col items-center justify-center rounded-sm bg-green-500 bg-opacity-30 px-3 leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:py-2"
+              >
                 <p className="text-xs font-bold text-white md:text-xs">
                   SINGLE PLAYER
                 </p>
-              </Button>
-              <Button className="h-fit w-full rounded-sm bg-teal-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:py-2">
+              </Link>
+              <Link
+                href="/multi"
+                className="flex h-fit w-full flex-col items-center justify-center rounded-sm bg-teal-500 bg-opacity-30 px-3 leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:py-2"
+              >
                 <p className="text-xs font-bold text-white md:text-xs">
                   MULTI PLAYER
                 </p>
-              </Button>
+              </Link>
             </div>
             <div className="flex h-fit w-full flex-col items-center justify-start gap-5 border-y-2 border-white/10 py-4">
               <h2 className="text-center text-sm font-bold text-white">
                 QUICK LINKS
               </h2>
               <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between gap-x-2 gap-y-6 xl:gap-y-4">
-                <Button className="h-fit w-full rounded-sm bg-orange-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                <Link
+                  href="/dashboard/account"
+                  className="h-fit w-full rounded-sm bg-orange-500 bg-opacity-30 px-3 leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:w-fit xl:py-2"
+                >
                   <p className="text-xss font-bold text-white">Edit Account</p>
-                </Button>
+                </Link>
                 <Button className="h-fit w-full rounded-sm bg-teal-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
                   <p className="text-xss font-bold text-white">Edit Defaults</p>
                 </Button>
