@@ -1,3 +1,4 @@
+import { StaticImageData } from "next/image";
 import { z } from "zod";
 import { useAudio } from "../../utils/useAudio";
 import { SavedSoundSettingsSchema } from "./schema";
@@ -57,8 +58,8 @@ export type ReferencePoints = {
 export type FighterDataType = {
   id: number;
   name: string;
-  image: string;
-  transparentImage: string;
+  image: StaticImageData;
+  transparentImage: StaticImageData;
   color: string;
   secondaryColor?: string;
   lore: {

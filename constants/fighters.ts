@@ -134,4 +134,4 @@ export const FightersList = [
       long: "All things human, Eliana's superpower is astronomy. She reads the universe like an open book and spends nights stargazing. The color green fascinates her, reminding her of nature. However, she always steers clear of the insect world. Science, according to her, calls this 'entomophobia.'",
     },
   },
-] as any as FighterDataType[];
+] as FighterDataType[];
