@@ -68,6 +68,21 @@ export async function CheckDefaultFighterAction() {
   }
 }
 
+export async function DeleteDefaultFighterAction() {
+  try {
+    const { pb, userID, mode } = await GetUserMode();
+
+    if (mode !== "user") throw new Error("Invalid mode");
+
+    await pb.collection("users").update(userID!, {
+      default_fighter: "",
+    });
+
+    revalidateTag(`${CACHED_TAGS.user_client}`);
+  } catch (e) {
+    return false;
+  }
+}
 export async function SetDefaultBackdropAction(backdropID: number) {
   try {
     const { pb, userID, mode } = await GetUserMode();
@@ -103,7 +118,22 @@ export async function CheckDefaultBackdropAction() {
     await AddBackdropAction(backdropID);
     return true;
   } catch (e) {
-    console.log(e);
+    return false;
+  }
+}
+
+export async function DeleteDefaultBackdropAction() {
+  try {
+    const { pb, userID, mode } = await GetUserMode();
+
+    if (mode !== "user") throw new Error("Invalid mode");
+
+    await pb.collection("users").update(userID!, {
+      default_backdrop: 0,
+    });
+
+    revalidateTag(`${CACHED_TAGS.user_client}`);
+  } catch (e) {
     return false;
   }
 }

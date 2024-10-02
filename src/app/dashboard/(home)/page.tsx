@@ -9,10 +9,11 @@ import { GetUserMode } from "../../../../utils/getMode";
 import { GameSchema, RoundSchema } from "../../../../validations/pb/schema";
 import AccuracyGraph, { FallbackAccuracyGraph } from "./accuracy-graph";
 import GamesGraph, { FallbackGamesGraph } from "./games-graph";
+import { DefaultsButton } from "./links.client";
 import TimeGraph, { FallbackTimeGraph } from "./time-graph";
 
 export default async function Page() {
-  const { pb, userID } = await GetUserMode();
+  const { pb, userID, mode } = await GetUserMode();
 
   if (userID === null) {
     redirect("/");
@@ -138,9 +139,7 @@ export default async function Page() {
                 >
                   <p className="text-xss font-bold text-white">Edit Account</p>
                 </Link>
-                <Button className="h-fit w-full rounded-sm bg-teal-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
-                  <p className="text-xss font-bold text-white">Edit Defaults</p>
-                </Button>
+                <DefaultsButton isGuest={mode !== "user"} />
                 <Button className="h-fit w-full rounded-sm bg-purple-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
                   <p className="text-xss font-bold text-white">View Games</p>
                 </Button>

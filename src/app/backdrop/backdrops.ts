@@ -7,13 +7,9 @@ import ParisImage from "@/../public/levels/paris.png";
 import RainbowImage from "@/../public/levels/rainbow.png";
 import SavannahImage from "@/../public/levels/savannah.png";
 import WorldImage from "@/../public/levels/world.png";
+import { BackdropDataType } from "../../../validations/generic/types";
 
 export const BackdropsList = [
-  {
-    id: 0,
-    name: "BRIDGE",
-    image: BridgeImage,
-  },
   {
     id: 1,
     name: "CAFE",
@@ -54,4 +50,9 @@ export const BackdropsList = [
     name: "LOS ANGELOS",
     image: LosAngelosImage,
   },
-];
+  {
+    id: 9,
+    name: "BRIDGE",
+    image: BridgeImage,
+  },
+] as BackdropDataType[];

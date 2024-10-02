@@ -14,13 +14,20 @@ export default async function Page({
     setDefaults: string | string[] | undefined;
   };
 }) {
-  await ValidateGameIDCookie();
+  let isSettingDefaults = false;
+  if (searchParams.setDefaults && !Array.isArray(searchParams.setDefaults)) {
+    if (searchParams.setDefaults === "true") isSettingDefaults = true;
+  }
+
+  if (!isSettingDefaults) {
+    await ValidateGameIDCookie();
+  }
   const { selected } = searchParams;
   const selectedBackdropData = {
     verified: false,
     id: 0,
   } as BackdropSelected;
-  let isSettingDefaults = false;
+
   if (
     selected &&
     !Array.isArray(selected) &&
@@ -32,21 +39,20 @@ export default async function Page({
 
     if (selectedBackdrop !== -1) {
       selectedBackdropData.verified = true;
-      selectedBackdropData.id = selectedBackdrop;
+      selectedBackdropData.id = BackdropsList[selectedBackdrop].id;
     }
   }
 
-  if (searchParams.setDefaults && !Array.isArray(searchParams.setDefaults)) {
-    if (searchParams.setDefaults === "true") isSettingDefaults = true;
-  }
-
-  console.log(isSettingDefaults);
   return (
     <div className="relative flex h-fit w-full flex-col items-center justify-start">
       {selectedBackdropData.verified && (
         <div className="fixed left-0 top-0 h-[100svh] w-full">
           <Image
-            src={BackdropsList[selectedBackdropData.id].image}
+            src={
+              BackdropsList.find(
+                (backdrop) => backdrop.id === selectedBackdropData.id,
+              )!.image
+            }
             alt="Backdrop"
             fill
             className="fixed object-cover brightness-[.1]"

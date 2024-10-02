@@ -67,3 +67,9 @@ export type FighterDataType = {
     long: string;
   };
 };
+
+export type BackdropDataType = {
+  id: number;
+  name: string;
+  image: StaticImageData;
+};

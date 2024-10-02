@@ -93,7 +93,7 @@ export default function PlayNowButton({
         );
 
         if (!hasSetFighter) {
-          router.push("/fighter");
+          router.push("/fighters");
         } else if (!hasSetBackdrop) {
           router.push("/backdrop");
         } else router.push("/pregame");

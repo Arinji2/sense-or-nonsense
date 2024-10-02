@@ -123,6 +123,7 @@ export default function FighterModal({
                   });
 
                   router.push("/dashboard/defaults");
+                  return;
                 }
                 if (locFighterData.length === 0) {
                   await AddFighterAction(characterData);

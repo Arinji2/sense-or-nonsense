@@ -5,6 +5,7 @@ import { GetUserMode } from "../../../utils/getMode";
 import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
 
+import { GameSchemaType } from "../../../validations/pb/types";
 import { FighterProvider } from "./context";
 import Selector from "./selector.client";
 
@@ -16,47 +17,47 @@ export default async function Page({
   };
 }) {
   const { pb, userID, mode } = await GetUserMode();
-  const { gameData, rounds } = await ValidateGameIDCookie();
   let isSettingDefaults = false;
+  let globalGameData: GameSchemaType = {} as GameSchemaType;
 
-  if (searchParams.setDefaults && !Array.isArray(searchParams.setDefaults)) {
-    if (mode !== "user") {
-      redirect("/");
-    }
-    if (searchParams.setDefaults === "true") isSettingDefaults = true;
+  if (searchParams.setDefaults === "true") isSettingDefaults = true;
+
+  if (!isSettingDefaults) {
+    const { gameData } = await ValidateGameIDCookie();
+    globalGameData = gameData;
   }
+
   let isMultiplayer = false;
 
-  try {
-    let selectedGame = GamesList.find(
-      (game) => game.id === Number.parseInt(gameData.gameID),
-    );
-    if (selectedGame === undefined) {
-      if (isSettingDefaults) {
-        selectedGame = GamesList[0];
+  if (!isSettingDefaults) {
+    try {
+      let selectedGame = GamesList.find(
+        (game) => game.id === Number.parseInt(globalGameData.gameID),
+      );
+      if (selectedGame === undefined) {
+        if (isSettingDefaults) {
+          selectedGame = GamesList[0];
+        }
+        throw new Error();
       }
-      throw new Error();
-    }
 
-    if (selectedGame.isMultiplayer) isMultiplayer = true;
-    if (!isSettingDefaults) {
+      if (selectedGame.isMultiplayer) isMultiplayer = true;
       if (
         DifficultyList.find(
           (difficulty) =>
-            difficulty.level === Number.parseInt(gameData.difficulty),
+            difficulty.level === Number.parseInt(globalGameData.difficulty),
         ) === undefined
       ) {
         throw new Error("difficulty");
       }
+    } catch (e: any) {
+      if (e.message === "difficulty") {
+        redirect("/difficulty");
+      }
+      redirect("/unauthorized");
     }
-  } catch (e: any) {
-    if (e.message === "difficulty") {
-      redirect("/difficulty");
-    }
-    redirect("/unauthorized");
   }
-
-  if (typeof gameData.playerData === "boolean")
+  if (typeof globalGameData.playerData === "boolean")
     throw new Error("Player data deformed");
 
   return (
@@ -68,7 +69,7 @@ export default async function Page({
         </h1>
         <FighterProvider
           value={{
-            fighterData: gameData.playerData,
+            fighterData: globalGameData.playerData,
             isMultiplayer: isMultiplayer,
             isSettingDefaults: isSettingDefaults,
           }}
