@@ -1,4 +1,6 @@
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
+import { CACHED_TAGS } from "../../../../constants/tags";
 import { GetUserMode } from "../../../../utils/getMode";
 import { RoundSchema } from "../../../../validations/pb/schema";
 import FiltersContainer from "./filters.client";
@@ -79,11 +81,24 @@ export default async function Page({
 
   const sortString = getSortString(levelFilter, optionFilter, attemptedFilter);
 
-  const wordsRecord = await pb.collection("rounds").getList(pageNumber, 10, {
-    filter: `game.user = "${userID}" && is_fake = false && real_word != ""${filterString}`,
-    expand: "real_word,game",
-    sort: sortString.length > 2 ? sortString : "-created",
-  });
+  const wordsRecord = await unstable_cache(
+    async (
+      locPageNumber: number,
+      locUserID: string,
+      locFilterString: string,
+      locSortString: string,
+    ) => {
+      return await pb.collection("rounds").getList(locPageNumber, 10, {
+        filter: `game.user = "${locUserID}" && is_fake = false && real_word != ""${locFilterString}`,
+        expand: "real_word,game",
+        sort: locSortString.length > 2 ? locSortString : "-created",
+      });
+    },
+    [],
+    {
+      tags: [`${CACHED_TAGS.user_games}-${userID}`],
+    },
+  )(pageNumber, userID!, filterString, sortString);
 
   const parsedWords = wordsRecord.items
     .map((word) => {
