@@ -8,27 +8,46 @@ import { GamesList } from "../games";
 import { FighterProvider } from "./context";
 import Selector from "./selector.client";
 
-export default async function Page() {
-  const { pb, userID } = await GetUserMode();
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: {
+    setDefaults: string | string[] | undefined;
+  };
+}) {
+  const { pb, userID, mode } = await GetUserMode();
   const { gameData, rounds } = await ValidateGameIDCookie();
+  let isSettingDefaults = false;
+
+  if (searchParams.setDefaults && !Array.isArray(searchParams.setDefaults)) {
+    if (mode !== "user") {
+      redirect("/");
+    }
+    if (searchParams.setDefaults === "true") isSettingDefaults = true;
+  }
   let isMultiplayer = false;
+
   try {
-    const selectedGame = GamesList.find(
+    let selectedGame = GamesList.find(
       (game) => game.id === Number.parseInt(gameData.gameID),
     );
     if (selectedGame === undefined) {
+      if (isSettingDefaults) {
+        selectedGame = GamesList[0];
+      }
       throw new Error();
     }
 
     if (selectedGame.isMultiplayer) isMultiplayer = true;
-
-    if (
-      DifficultyList.find(
-        (difficulty) =>
-          difficulty.level === Number.parseInt(gameData.difficulty),
-      ) === undefined
-    ) {
-      throw new Error("difficulty");
+    if (!isSettingDefaults) {
+      if (
+        DifficultyList.find(
+          (difficulty) =>
+            difficulty.level === Number.parseInt(gameData.difficulty),
+        ) === undefined
+      ) {
+        throw new Error("difficulty");
+      }
     }
   } catch (e: any) {
     if (e.message === "difficulty") {
@@ -43,7 +62,7 @@ export default async function Page() {
   return (
     <WidthWrapper>
       <div className="relative flex h-[100svh] w-full flex-col items-center justify-start gap-10 xl:flex-row xl:justify-between">
-        <h1 className="w-full px-2 text-center text-[35px] font-bold tracking-subtitle text-red-500 md:text-[40px] xl:text-[60px] xl:leading-[100px]">
+        <h1 className="tracking-subtitle w-full px-2 text-center text-[35px] font-bold text-red-500 md:text-[40px] xl:text-[60px] xl:leading-[100px]">
           SELECT <span className="inline xl:block">YOUR</span>{" "}
           <span className="inline xl:block">FIGHTER</span>
         </h1>
@@ -51,6 +70,7 @@ export default async function Page() {
           value={{
             fighterData: gameData.playerData,
             isMultiplayer: isMultiplayer,
+            isSettingDefaults: isSettingDefaults,
           }}
         >
           <Selector />

@@ -9,10 +9,12 @@ import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import { cn } from "../../utils/cn";
 
+import { SetDefaultFighterAction } from "@/actions/defaults";
 import { AddFighterAction, UpdateFighterAction } from "@/actions/game/fighters";
 import { useFighterContext } from "@/app/fighters/context";
 import useAnimate from "../../utils/useAnimate";
 import { GameFighterSchemaType } from "../../validations/game-data/types";
+import { FighterNameSchema } from "../../validations/generic/schema";
 import FighterFinalize from "./fighter-finalize";
 
 export default function FighterModal({
@@ -24,7 +26,7 @@ export default function FighterModal({
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [name, setName] = useState("");
-  const { fighterData, isMultiplayer } = useFighterContext();
+  const { fighterData, isMultiplayer, isSettingDefaults } = useFighterContext();
   const [locFighterData, setLocFighterData] =
     useState<GameFighterSchemaType[]>(fighterData);
 
@@ -100,12 +102,12 @@ export default function FighterModal({
               onSubmit={async (e) => {
                 e.preventDefault();
                 if (!name) return;
-                if (name.toLowerCase().includes(":")) {
-                  return toast.error("Name cannot have :");
-                } else if (name.toLowerCase().includes(";")) {
-                  return toast.error("Name cannot have ;");
-                } else if (name.toLowerCase().includes("CPU")) {
-                  return toast.error("Name cannot be CPU");
+                const parse = FighterNameSchema.safeParse(name);
+                if (parse.error) {
+                  const errorMessage =
+                    parse.error.errors[0]?.message || "Invalid input";
+                  toast.error(errorMessage);
+                  return;
                 }
                 const characterData = {
                   fighter_id: fighterID,
@@ -113,6 +115,15 @@ export default function FighterModal({
                 } as GameFighterSchemaType;
 
                 toast.success("Fighter Selected");
+                if (isSettingDefaults) {
+                  await toast.promise(SetDefaultFighterAction(characterData), {
+                    loading: "Setting Default Fighter",
+                    success: "Default Fighter Set",
+                    error: "Failed to set default fighter",
+                  });
+
+                  router.push("/dashboard/defaults");
+                }
                 if (locFighterData.length === 0) {
                   await AddFighterAction(characterData);
                 } else {
@@ -137,9 +148,11 @@ export default function FighterModal({
               >
                 <X className="size-10 text-white" />
               </button>
-              <h4 className="tracking-subtitle text-center text-[20px] font-bold text-green-500 md:text-[35px]">
+              <h4 className="tracking-subtitle text-center text-[20px] font-bold text-green-500 md:text-3xl">
                 {" "}
-                SETUP FIGHTER FOR PLAYER{" "}
+                SETUP FIGHTER FOR {isSettingDefaults
+                  ? "DEFAULTS"
+                  : "PLAYER"}{" "}
                 {isMultiplayer && locFighterData.length + 1}
               </h4>
               <div className="flex h-fit w-full max-w-[400px] flex-col items-start justify-center gap-2">

@@ -9,6 +9,7 @@ export const FighterContext = React.createContext<
 export type FighterContextType = {
   fighterData: GameFighterSchemaType[];
   isMultiplayer: boolean;
+  isSettingDefaults: boolean;
 };
 
 export function useFighterContext() {
@@ -32,9 +33,14 @@ export function FighterProvider({
   const [isMultiplayer, setIsMultiplayer] = useState(
     value?.isMultiplayer ?? false,
   );
+  const [isSettingDefaults, setIsSettingDefaults] = useState(
+    value?.isSettingDefaults ?? false,
+  );
 
   return (
-    <FighterContext.Provider value={{ fighterData, isMultiplayer }}>
+    <FighterContext.Provider
+      value={{ fighterData, isMultiplayer, isSettingDefaults }}
+    >
       {children}
     </FighterContext.Provider>
   );

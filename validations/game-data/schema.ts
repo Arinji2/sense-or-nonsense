@@ -11,3 +11,12 @@ export const WordSchema = z.object({
   id: z.string(),
   isFake: z.boolean(),
 });
+
+export const StringifiedGameFighterSchema = z.string().transform((val) => {
+  const [uid, fighterID, fighterName] = val.split(":");
+  return {
+    fighter_uid: Number(uid),
+    fighter_id: Number(fighterID),
+    fighter_name: fighterName,
+  };
+});

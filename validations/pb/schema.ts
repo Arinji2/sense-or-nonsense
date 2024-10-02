@@ -1,15 +1,6 @@
 import z from "zod";
 import { REGEX } from "../../constants/regex";
 
-export const UserSchema = z.object({
-  id: z.string(),
-  username: z.string(),
-  email: z.string(),
-  default_avatar: z.string(),
-  default_backdrop: z.string(),
-  guest_data: z.string(),
-});
-
 export const StoredWordSchema = z.object({
   level: z.number(),
   word: z.string(),
@@ -92,7 +83,7 @@ export const AccountSchema = z.object({
   id: z.string(),
   username: z.string(),
   email: z.string(),
-  default_avatar: z.number(),
+  default_fighter: z.string(),
   default_backdrop: z.number(),
   guest_data: z.string(),
 });
