@@ -25,6 +25,7 @@
     "recharts": "^2.12.7",
     "server-only": "^0.0.1",
     "tailwind-merge": "^2.3.0",
+    "use-debounce": "^10.0.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
