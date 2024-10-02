@@ -52,6 +52,6 @@ export async function UpdateRound(roundData: RoundSchemaType) {
   } catch (e) {
     throw new Error("Failed to update round");
   }
-
+  revalidateTag(`${CACHED_TAGS.user_games}-${userID}`);
   revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
 }
