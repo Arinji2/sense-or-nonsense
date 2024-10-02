@@ -39,7 +39,6 @@ export default async function Page({
     }
   }
 
-  console.log(pageNumber);
   const wordsRecord = await pb.collection("rounds").getList(pageNumber, 10, {
     filter: `game.user = "${userID}" && is_fake = false && real_word != ""`,
     expand: "real_word,game",
@@ -61,7 +60,7 @@ export default async function Page({
         style={{
           minHeight: "inherit",
         }}
-        className="flex h-full w-full max-w-full-page flex-col items-start justify-start gap-10 px-4 py-5 xl:px-0 xl:py-10"
+        className="flex h-full w-full max-w-full-page flex-col items-start justify-start gap-5 px-4 py-5 xl:px-0 xl:py-10"
       >
         <h1 className="text-base font-bold leading-relaxed tracking-title text-white md:text-xl">
           <Link
@@ -72,6 +71,11 @@ export default async function Page({
           </Link>
           /WORD BANK
         </h1>
+
+        <p className="pb-5 text-sm text-white/70">
+          This is the word bank, it contains all the correct words you have
+          encountered throughout your games.{" "}
+        </p>
         <div
           style={{
             minHeight: "inherit",
