@@ -61,7 +61,7 @@ export default async function TimeGraph({
     },
     [],
     {
-      tags: [`${CACHED_TAGS.user_games_graph}-${userID}`],
+      tags: [`${CACHED_TAGS.user_games}-${userID}`],
     },
   )(gameData, roundsData);
 

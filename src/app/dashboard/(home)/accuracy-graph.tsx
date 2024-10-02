@@ -59,7 +59,7 @@ export default async function AccuracyGraph({
     },
     [],
     {
-      tags: [`${CACHED_TAGS.user_games_graph}-${userID}`],
+      tags: [`${CACHED_TAGS.user_games}-${userID}`],
     },
   )(gameData, roundsData);
 

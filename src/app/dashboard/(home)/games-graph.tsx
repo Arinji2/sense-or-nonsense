@@ -100,7 +100,7 @@ export default async function GamesGraph({
     },
     [],
     {
-      tags: [`${CACHED_TAGS.user_games_graph}-${userID}`],
+      tags: [`${CACHED_TAGS.user_games}-${userID}`],
     },
   )(gameData, maxDate);
 
