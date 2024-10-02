@@ -11,6 +11,7 @@ export default async function Page({
 }: {
   searchParams: {
     selected: undefined | string | string[];
+    setDefaults: string | string[] | undefined;
   };
 }) {
   await ValidateGameIDCookie();
@@ -19,6 +20,7 @@ export default async function Page({
     verified: false,
     id: 0,
   } as BackdropSelected;
+  let isSettingDefaults = false;
   if (
     selected &&
     !Array.isArray(selected) &&
@@ -33,6 +35,12 @@ export default async function Page({
       selectedBackdropData.id = selectedBackdrop;
     }
   }
+
+  if (searchParams.setDefaults && !Array.isArray(searchParams.setDefaults)) {
+    if (searchParams.setDefaults === "true") isSettingDefaults = true;
+  }
+
+  console.log(isSettingDefaults);
   return (
     <div className="relative flex h-fit w-full flex-col items-center justify-start">
       {selectedBackdropData.verified && (
@@ -47,11 +55,14 @@ export default async function Page({
       )}
       <WidthWrapper>
         <div className="relative flex h-fit w-full flex-col items-center justify-start gap-10 py-10">
-          <h1 className="z-20 w-full px-2 text-center text-[35px] font-bold tracking-subtitle text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
+          <h1 className="tracking-subtitle z-20 w-full px-2 text-center text-[35px] font-bold text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
             SELECT A BACKDROP
           </h1>
           <Selector backdropData={selectedBackdropData} />
-          <Menu backdrop={selectedBackdropData} />
+          <Menu
+            isSettingDefaults={isSettingDefaults}
+            backdrop={selectedBackdropData}
+          />
         </div>
       </WidthWrapper>
     </div>

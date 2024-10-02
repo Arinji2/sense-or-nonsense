@@ -1,7 +1,9 @@
 "use server";
 
 import { BackdropsList } from "@/app/backdrop/backdrops";
+import { revalidateTag } from "next/cache";
 import { FightersList } from "../../constants/fighters";
+import { CACHED_TAGS } from "../../constants/tags";
 import { GetUserMode } from "../../utils/getMode";
 import { StringifiedGameFighterSchema } from "../../validations/game-data/schema";
 import { GameFighterSchemaType } from "../../validations/game-data/types";
@@ -25,6 +27,7 @@ export async function SetDefaultFighterAction(
     await pb.collection("users").update(userID!, {
       default_fighter: fighterString,
     });
+    revalidateTag(`${CACHED_TAGS.user_client}`);
   } catch (e) {
     throw new Error("Failed to set default fighter");
   }
@@ -74,6 +77,8 @@ export async function SetDefaultBackdropAction(backdropID: number) {
     await pb.collection("users").update(userID!, {
       default_backdrop: backdropID,
     });
+
+    revalidateTag(`${CACHED_TAGS.user_client}`);
   } catch (e) {
     throw new Error("Failed to set default backdrop");
   }

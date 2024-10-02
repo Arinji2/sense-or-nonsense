@@ -1,5 +1,6 @@
 "use client";
 
+import { SetDefaultBackdropAction } from "@/actions/defaults";
 import { AddBackdropAction } from "@/actions/game/backdrop";
 import { ChevronUpCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -10,7 +11,13 @@ import { NameFormat } from "../../../utils/formatting";
 import { BackdropSelected } from "../../../validations/generic/types";
 import { BackdropsList } from "./backdrops";
 
-export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
+export default function Menu({
+  isSettingDefaults,
+  backdrop,
+}: {
+  backdrop: BackdropSelected;
+  isSettingDefaults: boolean;
+}) {
   const [isActive, setIsActive] = useState(false);
   const [randomSelected, setRandomSelected] = useState(false);
   const searchParams = useSearchParams();
@@ -85,12 +92,22 @@ export default function Menu({ backdrop }: { backdrop: BackdropSelected }) {
         <button
           disabled={!backdrop.verified}
           onClick={async () => {
-            const resolve = toast.promise(AddBackdropAction(backdrop.id), {
+            if (isSettingDefaults) {
+              await toast.promise(SetDefaultBackdropAction(backdrop.id), {
+                loading: "Setting Default Backdrop",
+                success: "Default Backdrop Set",
+                error: "Failed to set default backdrop",
+              });
+
+              router.push("/dashboard/defaults");
+              return;
+            }
+            await toast.promise(AddBackdropAction(backdrop.id), {
               loading: "Selecting Backdrop",
               success: "Backdrop Selected",
               error: "Failed to select backdrop",
             });
-            await resolve;
+
             const isRedirected = searchParams.get("redirected");
             if (isRedirected && isRedirected === "true") {
               router.replace("/pregame");
