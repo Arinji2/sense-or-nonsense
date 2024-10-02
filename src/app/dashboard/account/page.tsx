@@ -25,7 +25,7 @@ export default async function Page() {
         style={{
           minHeight: "inherit",
         }}
-        className="flex h-full w-full max-w-full-page flex-col items-start justify-start gap-10 px-4 xl:px-0 xl:py-10"
+        className="flex h-full w-full max-w-full-page flex-col items-start justify-start gap-10 px-4 py-5 xl:px-0 xl:py-10"
       >
         <h1 className="text-base font-bold leading-relaxed tracking-title text-white md:text-xl">
           <Link
