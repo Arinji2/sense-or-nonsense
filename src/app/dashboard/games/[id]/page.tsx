@@ -23,6 +23,7 @@ export default async function Page({
     player: StringSearchParamType;
     round: StringSearchParamType;
     word: StringSearchParamType;
+    analysis: StringSearchParamType;
 
     correct: StringSearchParamType;
     timeleft: StringSearchParamType;
@@ -141,7 +142,7 @@ export default async function Page({
     <div className="flex h-fit w-full flex-col items-center justify-start">
       <WidthWrapper>
         <div className="relative flex h-fit w-full flex-col items-center justify-start gap-12 pb-10">
-          <h1 className="w-full px-2 text-center text-[35px] font-bold tracking-subtitle text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
+          <h1 className="tracking-subtitle w-full px-2 text-center text-[35px] font-bold text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
             GAME OVER
           </h1>
           {gameIsMultiplayer && (
@@ -150,8 +151,8 @@ export default async function Page({
                 scroll={false}
                 href={
                   previousPlayerExists
-                    ? `/dashboard/game/${params.id}?player=${currentPlayerIndex - 1}`
-                    : `/dashboard/game/${params.id}?player=${playerData.length - 1}`
+                    ? `/dashboard/games/${params.id}?player=${currentPlayerIndex - 1}`
+                    : `/dashboard/games/${params.id}?player=${playerData.length - 1}`
                 }
               >
                 <ChevronLeftCircle className="h-6 w-6 text-white" />
@@ -167,8 +168,8 @@ export default async function Page({
                 scroll={false}
                 href={
                   nextPlayerExists
-                    ? `/dashboard/game/${params.id}?player=${currentPlayerIndex + 1}`
-                    : `/dashboard/game/${params.id}?player=${0}`
+                    ? `/dashboard/games/${params.id}?player=${currentPlayerIndex + 1}`
+                    : `/dashboard/games/${params.id}?player=${0}`
                 }
               >
                 <ChevronRightCircle className="h-6 w-6 text-white" />

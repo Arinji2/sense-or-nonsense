@@ -74,4 +74,14 @@ export type BackdropDataType = {
   image: StaticImageData;
 };
 
+export type GamesDataType = {
+  id: number;
+  title: string;
+  image: StaticImageData;
+  description: string;
+  showLeft: boolean;
+  isMultiplayer: boolean;
+  showTime: boolean;
+};
+
 export type DictionarySchemaType = z.infer<typeof DictonarySchema>;

@@ -2,6 +2,7 @@ import CoopImage from "../../public/modes/coop.png";
 import CPUImage from "../../public/modes/cpu.png";
 import HighScoreImage from "../../public/modes/highscore.png";
 import OnlineImage from "../../public/modes/online.png";
+import { GamesDataType } from "../../validations/generic/types";
 
 export const GamesList = [
   {
@@ -41,4 +42,4 @@ export const GamesList = [
     isMultiplayer: true,
     showTime: true,
   },
-];
+] as GamesDataType[];
