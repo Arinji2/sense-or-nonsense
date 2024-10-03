@@ -7,6 +7,7 @@ import FiltersContainer from "./filters.client";
 import Words from "./items.client";
 import Pagination from "./pagination.client";
 import Search from "./search.client";
+import StateLogger from "./state-logger.client";
 
 export default async function Page({
   searchParams,
@@ -132,6 +133,7 @@ export default async function Page({
           This is the word bank, it contains all the correct words you have
           encountered throughout your games.{" "}
         </p>
+        <StateLogger />
         <div className="flex h-fit w-full flex-col items-stretch justify-center gap-4 xl:flex-row">
           <Search />
           <FiltersContainer resultsFound={wordsRecord.totalItems} />

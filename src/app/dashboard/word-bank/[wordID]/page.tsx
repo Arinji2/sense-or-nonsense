@@ -80,8 +80,6 @@ export default async function Page({ params }: { params: { wordID: string } }) {
     redirect("/dashboard/word-bank?state=round_not_found");
   }
 
-  console.log(roundInfo);
-
   return (
     <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E]">
       <div
