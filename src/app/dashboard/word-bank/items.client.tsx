@@ -64,7 +64,7 @@ function WordItem({ index, round }: { index: number; round: RoundSchemaType }) {
           {round.expand?.game?.difficulty}
         </p>
       </div>
-      <div className="flex h-fit w-full shrink-0 flex-col items-start justify-start gap-2 py-2 xl:h-full xl:w-[15%]">
+      <div className="flex h-fit w-full shrink-0 flex-col items-start justify-start gap-2 py-2 xl:h-full xl:w-[13%]">
         <p className="mb-auto line-clamp-1 text-xs text-white/50">
           Option Chosen:
         </p>
