@@ -1,5 +1,4 @@
 import { GamesList } from "@/app/games";
-import WidthWrapper from "@/wrappers/width-wrapper";
 import { ChevronLeftCircle, ChevronRightCircle } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -65,86 +64,67 @@ export default async function Page({
   const players = GetPlayerGraphs(playerData, rounds);
 
   return (
-    <div className="flex h-fit w-full flex-col items-center justify-start">
-      <WidthWrapper>
-        <div className="relative flex h-fit w-full flex-col items-center justify-start gap-12 pb-10">
-          <h1 className="tracking-subtitle w-full px-2 text-center text-[35px] font-bold text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
-            GAME OVER
-          </h1>
-          {gameIsMultiplayer && (
-            <MultiplayerNavigator
-              previousPlayerExists={previousPlayerExists}
-              id={params.id}
-              currentPlayerIndex={currentPlayerIndex}
-              playerData={playerData}
-              nextPlayerExists={nextPlayerExists}
-            />
-          )}
-
-          <div
-            className="relative hidden min-h-[90svh] w-full gap-5 xl:grid"
-            style={{
-              gridTemplateColumns: "auto 1fr",
-              gridTemplateRows: "1fr 1fr",
-            }}
+    <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E]">
+      <div
+        style={{
+          minHeight: "inherit",
+        }}
+        className="flex h-full w-full max-w-full-page flex-col items-start justify-start gap-5 px-4 py-5 xl:px-0 xl:py-10"
+      >
+        <h1 className="text-base font-bold leading-relaxed tracking-title text-white md:text-xl">
+          <Link
+            href="/dashboard"
+            className="block text-white/50 md:inline xl:text-lg"
           >
-            <div className="rounded-sm bg-red-500/10 p-5">
-              <GameStats data={players[currentPlayerIndex]} />
-            </div>
-            <div className="rounded-sm bg-blue-500/10 p-5">
-              <TimeGraph
-                data={players[currentPlayerIndex].graphPoints}
-                minTimeLeft={players[currentPlayerIndex].minTimeLeft}
-                maxTimeLeft={players[currentPlayerIndex].maxTimeLeft}
-              />
-            </div>
-            <div className="rounded-sm bg-green-500/10 p-5">
-              <GameInfo gameData={gameData} index={currentPlayerIndex} />
-            </div>
-            <div className="rounded-sm bg-yellow-500/10 p-5">
-              <AccuracyGraph
-                data={players[currentPlayerIndex].graphPoints}
-                maxAccuracy={players[currentPlayerIndex].maxAccuracy}
-                maxStreak={players[currentPlayerIndex].maxStreak}
-              />
-            </div>
-          </div>
-
-          <div
-            className="grid min-h-[90svh] w-full grid-cols-1 gap-5 xl:hidden xl:grid-cols-2 xl:grid-rows-2"
-            style={{
-              gridTemplateRows: "1fr 1fr",
-            }}
+            DASHBOARD
+          </Link>
+          <Link
+            href="/dashboard/games"
+            className="block text-white/50 md:inline xl:text-lg"
           >
-            <div className="w-full rounded-sm bg-red-500/10 p-5">
-              <GameStats data={players[currentPlayerIndex]} />
-            </div>
-            <div className="w-full rounded-sm bg-green-500/10 p-5">
-              <GameInfo gameData={gameData} index={currentPlayerIndex} />
-            </div>
-            <div className="w-full rounded-sm bg-blue-500/10 p-5">
-              <TimeGraph
-                data={players[currentPlayerIndex].graphPoints}
-                minTimeLeft={players[currentPlayerIndex].minTimeLeft}
-                maxTimeLeft={players[currentPlayerIndex].maxTimeLeft}
-              />
-            </div>
-            <div className="w-full rounded-sm bg-yellow-500/10 p-5">
-              <AccuracyGraph
-                data={players[currentPlayerIndex].graphPoints}
-                maxAccuracy={players[currentPlayerIndex].maxAccuracy}
-                maxStreak={players[currentPlayerIndex].maxStreak}
-              />
-            </div>
-          </div>
-
-          <RoundStats
+            /GAMES
+          </Link>
+          /Analysis
+        </h1>
+        {gameIsMultiplayer && (
+          <MultiplayerNavigator
+            previousPlayerExists={previousPlayerExists}
+            id={params.id}
             currentPlayerIndex={currentPlayerIndex}
-            game={rounds}
-            searchParams={searchParams}
+            playerData={playerData}
+            nextPlayerExists={nextPlayerExists}
           />
+        )}
+
+        <div className="games-viewer relative grid h-fit w-full gap-5 md:min-h-[90svh]">
+          <div className="game-stats rounded-sm bg-red-500/10 p-5">
+            <GameStats data={players[currentPlayerIndex]} />
+          </div>
+          <div className="time-graph rounded-sm bg-blue-500/10 p-5">
+            <TimeGraph
+              data={players[currentPlayerIndex].graphPoints}
+              minTimeLeft={players[currentPlayerIndex].minTimeLeft}
+              maxTimeLeft={players[currentPlayerIndex].maxTimeLeft}
+            />
+          </div>
+          <div className="game-info rounded-sm bg-green-500/10 p-5">
+            <GameInfo gameData={gameData} index={currentPlayerIndex} />
+          </div>
+          <div className="accuracy-graph rounded-sm bg-yellow-500/10 p-5">
+            <AccuracyGraph
+              data={players[currentPlayerIndex].graphPoints}
+              maxAccuracy={players[currentPlayerIndex].maxAccuracy}
+              maxStreak={players[currentPlayerIndex].maxStreak}
+            />
+          </div>
         </div>
-      </WidthWrapper>
+
+        <RoundStats
+          currentPlayerIndex={currentPlayerIndex}
+          game={rounds}
+          searchParams={searchParams}
+        />
+      </div>
     </div>
   );
 }

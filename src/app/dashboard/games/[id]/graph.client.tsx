@@ -38,12 +38,12 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
   if (active && payload && payload.length) {
     return (
       <div className="rounded-sm bg-black p-2 text-white">
-        <p className="text-sm font-medium tracking-text text-white">
+        <p className="tracking-text text-sm font-medium text-white">
           {labelDisplay}: <span className="inline text-blue-500">{label}</span>
         </p>
         {fields.map((field, index) => (
           <p
-            className="text-sm font-medium tracking-text text-white"
+            className="tracking-text text-sm font-medium text-white"
             key={index}
           >
             {field.label}:{" "}
@@ -60,9 +60,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({
 function GraphWrapper({ children, title }: { children: any; title: string }) {
   return (
     <div className="flex h-[400px] w-full flex-col items-start justify-start gap-6 xl:h-full">
-      <h2 className="text-[30px] font-medium tracking-subtitle text-white">
-        {title}
-      </h2>
+      <h2 className="text-lg text-white md:text-2xl">{title}</h2>
       <ResponsiveContainer width="100%" height="100%">
         {children}
       </ResponsiveContainer>
@@ -88,8 +86,8 @@ export function TimeGraph({
         margin={{
           top: -20,
           right: 0,
-          left: isTabletOrMobile ? -30 : 0,
-          bottom: -10,
+          left: isTabletOrMobile ? 0 : 10,
+          bottom: isTabletOrMobile ? 10 : 12,
         }}
       >
         <CartesianGrid stroke="rgba(255, 255, 255, 0.2)" strokeWidth={2} />
@@ -105,16 +103,30 @@ export function TimeGraph({
           name="Time Left"
           strokeWidth={3}
         />
-        <XAxis dataKey="x">
-          <Label value="Rounds" offset={-10} position="insideBottom" />
+        <XAxis
+          dataKey="x"
+          style={{
+            fontSize: "0.8rem",
+          }}
+        >
+          <Label
+            value="Rounds"
+            offset={-10}
+            position="insideBottom"
+            className="text-xss xl:text-sm"
+          />
         </XAxis>
-        <YAxis>
+        <YAxis
+          style={{
+            fontSize: "0.8rem",
+          }}
+        >
           <Label
             value="Time Left (s)"
             angle={-90}
             position="insideLeft"
             style={{ textAnchor: "middle" }}
-            className="hidden md:block"
+            className="text-xss xl:text-sm"
           />
         </YAxis>
         <Tooltip
@@ -178,8 +190,8 @@ export function AccuracyGraph({
         margin={{
           top: -20,
           right: 0,
-          left: isTabletOrMobile ? -30 : 0,
-          bottom: -10,
+          left: isTabletOrMobile ? 0 : 10,
+          bottom: isTabletOrMobile ? 10 : 12,
         }}
       >
         <CartesianGrid stroke="rgba(255, 255, 255, 0.2)" strokeWidth={2} />
@@ -195,15 +207,30 @@ export function AccuracyGraph({
           name="Accuracy"
           strokeWidth={3}
         />
-        <XAxis dataKey="x">
-          <Label value="Rounds" offset={-10} position="insideBottom" />
+        <XAxis
+          dataKey="x"
+          style={{
+            fontSize: "0.8rem",
+          }}
+        >
+          <Label
+            value="Rounds"
+            className="text-xss xl:text-sm"
+            offset={-10}
+            position="insideBottom"
+          />
         </XAxis>
-        <YAxis>
+        <YAxis
+          style={{
+            fontSize: "0.8rem",
+          }}
+        >
           <Label
             value="Accuracy (%)"
             angle={-90}
             position="insideLeft"
             style={{ textAnchor: "middle" }}
+            className="text-xss xl:text-sm"
           />
         </YAxis>
         <Tooltip

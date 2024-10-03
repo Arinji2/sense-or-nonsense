@@ -46,3 +46,45 @@
 .small-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
+
+.games-viewer {
+  display: grid;
+  gap: 1.25rem; /* equivalent to gap-5 */
+  width: 100%;
+  height: fit-content;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "stats"
+    "info"
+    "time"
+    "accuracy";
+}
+
+.game-stats {
+  grid-area: stats;
+}
+.game-info {
+  grid-area: info;
+}
+.time-graph {
+  grid-area: time;
+}
+.accuracy-graph {
+  grid-area: accuracy;
+}
+
+@media (min-width: 768px) {
+  .games-viewer {
+    min-height: 90vh;
+  }
+}
+
+@media (min-width: 1280px) {
+  .games-viewer {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      "stats time"
+      "info accuracy";
+  }
+}
