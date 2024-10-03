@@ -3,17 +3,15 @@ import WidthWrapper from "@/wrappers/width-wrapper";
 import { ChevronLeftCircle, ChevronRightCircle } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  StringSearchParamType,
-  SummaryData,
-  SummaryGraphPoints,
-} from "../../../../../validations/generic/types";
-import { AccuracyGraph, TimeGraph } from "./graph";
+import { StringSearchParamType } from "../../../../../validations/generic/types";
+import { AccuracyGraph, TimeGraph } from "./graph.client";
 import { GameInfo, GameStats } from "./stats";
 
 import { GetGameData } from "../../../../../utils/game-data";
 import { GetUserMode } from "../../../../../utils/getMode";
+import { GameFighterSchemaType } from "../../../../../validations/game-data/types";
 import RoundStats from "./round";
+import { GetPlayerGraphs } from "./utils";
 
 export default async function Page({
   searchParams,
@@ -36,10 +34,9 @@ export default async function Page({
 
   const { gameData, rounds } = await GetGameData(pb, params.id, userID!);
 
-  if (!gameData.isValidated) redirect("/pregame");
+  if (!gameData.isValidated) redirect("/dashboard/games");
 
   let { playerData, gameID } = gameData;
-  if (typeof playerData === "boolean") redirect("/pregame");
 
   const gameIsMultiplayer =
     gameID === "1" ||
@@ -65,78 +62,7 @@ export default async function Page({
       typeof playerData[currentPlayerIndex - 1] !== "undefined";
   }
 
-  const players: SummaryData[] = [];
-  playerData.forEach((_, index) => {
-    let playerData = {
-      correct: 0,
-      incorrect: 0,
-      timePlayed: 0,
-      graphPoints: [] as SummaryGraphPoints[],
-      maxAccuracy: 0,
-      maxTimeLeft: 0,
-      minTimeLeft: Infinity as number,
-      maxStreak: {
-        value: 0,
-        round: 0,
-      },
-    };
-    let playerStreak = 0;
-
-    rounds.forEach((round) => {
-      if (round.player_index !== index) return;
-
-      let localStreak = playerStreak;
-
-      if (round.correct) {
-        playerData.correct += 1;
-        localStreak = playerStreak + 1;
-      } else {
-        playerData.incorrect += 1;
-        localStreak = 0;
-      }
-
-      const timeTakenForRound = 10 - round.time_elapsed;
-
-      playerData.timePlayed += round.time_elapsed;
-
-      playerData.graphPoints.push({
-        x: round.round_number,
-        y: timeTakenForRound,
-        accuracy: Math.round(
-          (playerData.correct / (playerData.correct + playerData.incorrect)) *
-            100,
-        ),
-      });
-
-      playerData.maxTimeLeft = Math.max(
-        playerData.maxTimeLeft,
-        timeTakenForRound,
-      );
-
-      playerData.minTimeLeft = Math.min(
-        playerData.minTimeLeft,
-        timeTakenForRound,
-      );
-
-      const localMaxStreak = Math.max(playerData.maxStreak.value, localStreak);
-
-      if (localMaxStreak !== playerData.maxStreak.value) {
-        playerData.maxStreak.value = localMaxStreak;
-        playerData.maxStreak.round = round.round_number;
-      }
-
-      playerStreak = localStreak;
-    });
-
-    playerData.maxAccuracy = Math.max(
-      playerData.maxAccuracy,
-      ...playerData.graphPoints.map((point) => point.accuracy),
-    );
-
-    if (playerData.minTimeLeft === Infinity) playerData.minTimeLeft = 0;
-
-    players.push(playerData as SummaryData);
-  });
+  const players = GetPlayerGraphs(playerData, rounds);
 
   return (
     <div className="flex h-fit w-full flex-col items-center justify-start">
@@ -146,35 +72,13 @@ export default async function Page({
             GAME OVER
           </h1>
           {gameIsMultiplayer && (
-            <div className="sticky top-0 z-40 flex h-[50px] w-full flex-row items-center justify-between bg-black/20 px-4 py-2 backdrop-blur-sm">
-              <Link
-                scroll={false}
-                href={
-                  previousPlayerExists
-                    ? `/dashboard/games/${params.id}?player=${currentPlayerIndex - 1}`
-                    : `/dashboard/games/${params.id}?player=${playerData.length - 1}`
-                }
-              >
-                <ChevronLeftCircle className="h-6 w-6 text-white" />
-              </Link>
-              <p className="w-full max-w-[500px] truncate px-4 text-center text-sm text-white xl:text-base">
-                <span className="hidden text-white/50 xl:inline">
-                  Currently Viewing
-                </span>{" "}
-                <span className="text-white/50">Player</span>{" "}
-                {playerData[currentPlayerIndex].fighter_name}
-              </p>
-              <Link
-                scroll={false}
-                href={
-                  nextPlayerExists
-                    ? `/dashboard/games/${params.id}?player=${currentPlayerIndex + 1}`
-                    : `/dashboard/games/${params.id}?player=${0}`
-                }
-              >
-                <ChevronRightCircle className="h-6 w-6 text-white" />
-              </Link>
-            </div>
+            <MultiplayerNavigator
+              previousPlayerExists={previousPlayerExists}
+              id={params.id}
+              currentPlayerIndex={currentPlayerIndex}
+              playerData={playerData}
+              nextPlayerExists={nextPlayerExists}
+            />
           )}
 
           <div
@@ -241,6 +145,52 @@ export default async function Page({
           />
         </div>
       </WidthWrapper>
+    </div>
+  );
+}
+
+function MultiplayerNavigator({
+  previousPlayerExists,
+  id,
+  currentPlayerIndex,
+  playerData,
+  nextPlayerExists,
+}: {
+  previousPlayerExists: boolean;
+  id: string;
+  currentPlayerIndex: number;
+  playerData: GameFighterSchemaType[];
+  nextPlayerExists: boolean;
+}) {
+  return (
+    <div className="sticky top-0 z-40 flex h-[50px] w-full flex-row items-center justify-between bg-black/20 px-4 py-2 backdrop-blur-sm">
+      <Link
+        scroll={false}
+        href={
+          previousPlayerExists
+            ? `/dashboard/games/${id}?player=${currentPlayerIndex - 1}`
+            : `/dashboard/games/${id}?player=${playerData.length - 1}`
+        }
+      >
+        <ChevronLeftCircle className="h-6 w-6 text-white" />
+      </Link>
+      <p className="w-full max-w-[500px] truncate px-4 text-center text-sm text-white xl:text-base">
+        <span className="hidden text-white/50 xl:inline">
+          Currently Viewing
+        </span>{" "}
+        <span className="text-white/50">Player</span>{" "}
+        {playerData[currentPlayerIndex].fighter_name}
+      </p>
+      <Link
+        scroll={false}
+        href={
+          nextPlayerExists
+            ? `/dashboard/games/${id}?player=${currentPlayerIndex + 1}`
+            : `/dashboard/games/${id}?player=${0}`
+        }
+      >
+        <ChevronRightCircle className="h-6 w-6 text-white" />
+      </Link>
     </div>
   );
 }
