@@ -113,7 +113,7 @@ export default async function Page() {
             <div className="flex h-fit w-full shrink-0 flex-col items-center justify-between gap-3 px-2 xl:h-[20%] xl:flex-row">
               <Link
                 href="/single"
-                className="flex h-fit w-full flex-col items-center justify-center rounded-sm bg-green-500 bg-opacity-30 px-3 leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:py-2"
+                className="flex h-fit w-full flex-col items-center justify-center rounded-sm bg-green-500 bg-opacity-30 px-3 py-2 leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70"
               >
                 <p className="text-xs font-bold text-white md:text-xs">
                   SINGLE PLAYER
@@ -121,7 +121,7 @@ export default async function Page() {
               </Link>
               <Link
                 href="/multi"
-                className="flex h-fit w-full flex-col items-center justify-center rounded-sm bg-teal-500 bg-opacity-30 px-3 leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:py-2"
+                className="flex h-fit w-full flex-col items-center justify-center rounded-sm bg-teal-500 bg-opacity-30 px-3 py-2 leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70"
               >
                 <p className="text-xs font-bold text-white md:text-xs">
                   MULTI PLAYER
@@ -132,31 +132,30 @@ export default async function Page() {
               <h2 className="text-center text-sm font-bold text-white">
                 QUICK LINKS
               </h2>
-              <div className="flex h-fit w-full flex-row flex-wrap items-center justify-between gap-x-2 gap-y-6 xl:gap-y-4">
+              <div className="grid h-fit w-full grid-cols-1 items-center justify-between gap-x-2 gap-y-6 xl:grid-cols-3 xl:gap-y-4">
                 <Link
                   href="/dashboard/account"
-                  className="h-fit w-full rounded-sm bg-orange-500 bg-opacity-30 px-3 leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:w-fit xl:py-2"
+                  className="h-fit w-full rounded-sm bg-orange-500 bg-opacity-30 px-3 py-2 text-center leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:w-full"
                 >
                   <p className="text-xss font-bold text-white">Edit Account</p>
                 </Link>
                 <DefaultsButton isGuest={mode !== "user"} />
-                <Button className="h-fit w-full rounded-sm bg-purple-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                <Button className="h-fit w-full rounded-sm bg-purple-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-full xl:py-2">
                   <p className="text-xss font-bold text-white">View Games</p>
                 </Button>
-                <Button className="h-fit w-full rounded-sm bg-emerald-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                <Button className="h-fit w-full rounded-sm bg-emerald-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-full xl:py-2">
                   <p className="text-xss font-bold text-white">Update Avatar</p>
                 </Button>
-                <Button className="h-fit w-full rounded-sm bg-pink-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
-                  <p className="text-xss font-bold text-white">
-                    View Flagged Words
-                  </p>
-                </Button>
-                <Button className="h-fit w-full rounded-sm bg-fuchsia-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+
+                <Link
+                  href="/dashboard/word-bank"
+                  className="h-fit w-full rounded-sm bg-fuchsia-500 bg-opacity-30 px-3 py-2 text-center leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:w-full"
+                >
                   <p className="text-xss font-bold text-white">
                     View Word Bank
                   </p>
-                </Button>
-                <Button className="h-fit w-full rounded-sm bg-blue-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-fit xl:py-2">
+                </Link>
+                <Button className="h-fit w-full rounded-sm bg-blue-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-full xl:py-2">
                   <p className="text-xss font-bold text-white">Go To Home</p>
                 </Button>
               </div>

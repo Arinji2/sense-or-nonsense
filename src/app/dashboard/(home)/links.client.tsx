@@ -42,7 +42,7 @@ export function DefaultsButton({ isGuest }: { isGuest: boolean }) {
         }
       }}
       className={cn(
-        "h-fit w-full rounded-sm bg-teal-500 bg-opacity-30 px-3 leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:w-fit xl:py-2",
+        "h-fit w-full rounded-sm bg-teal-500 bg-opacity-30 px-3 py-2 text-center leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:w-full",
         {
           "cursor-not-allowed opacity-20": isGuest,
         },
