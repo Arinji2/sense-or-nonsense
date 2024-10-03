@@ -9,4 +9,5 @@ export const CACHED_TAGS = {
   //guest_client
   user_games: "user_games",
   //user_games-userID
+  global_words: "global_words",
 };

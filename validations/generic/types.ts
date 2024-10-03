@@ -1,7 +1,7 @@
 import { StaticImageData } from "next/image";
 import { z } from "zod";
 import { useAudio } from "../../utils/useAudio";
-import { SavedSoundSettingsSchema } from "./schema";
+import { DictonarySchema, SavedSoundSettingsSchema } from "./schema";
 
 export type COOPSupportForFighterSelect = {
   supported: boolean;
@@ -73,3 +73,5 @@ export type BackdropDataType = {
   name: string;
   image: StaticImageData;
 };
+
+export type DictionarySchemaType = z.infer<typeof DictonarySchema>;

@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/button";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import Link from "next/link";
 import { useRef } from "react";
 import { FormatDate1, NameFormat } from "../../../../utils/formatting";
 import { RoundSchemaType } from "../../../../validations/pb/types";
@@ -80,9 +80,12 @@ function WordItem({ index, round }: { index: number; round: RoundSchemaType }) {
           {FormatDate1(round.created)}
         </p>
       </div>
-      <Button className="w-full shrink-0 bg-green-500/40 px-4 py-2 text-xs text-white md:text-sm xl:w-fit">
+      <Link
+        href={`/dashboard/word-bank/${round.expand?.real_word?.id}`}
+        className="h-fit w-full rounded-sm bg-green-500 bg-opacity-30 px-5 py-2 text-center leading-tight text-white shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:w-fit"
+      >
         View
-      </Button>
+      </Link>
     </div>
   );
 }
