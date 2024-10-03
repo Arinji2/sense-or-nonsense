@@ -149,7 +149,7 @@ export default function FiltersContainer({
         isLoading={isFiltering}
         startLoading={startFiltering}
         filterKey="attempted"
-        label="Attempted"
+        label="Attempted On"
         width={250}
         color="#84cc16"
       />
