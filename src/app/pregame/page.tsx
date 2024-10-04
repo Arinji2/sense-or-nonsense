@@ -1,4 +1,4 @@
-import WidthWrapper from "@/wrappers/width-wrapper";
+import { Button } from "@/components/button";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ValidateGameIDCookie } from "../../../utils/game-data";
@@ -30,35 +30,39 @@ export default async function Page() {
   });
 
   return (
-    <div className="relative flex h-full w-full flex-col items-center justify-start">
-      <WidthWrapper>
-        <div className="relative flex w-full flex-col items-center justify-center gap-12 pb-10 xl:h-[100svh]">
-          <h1 className="tracking-subtitle w-full px-2 text-center text-[35px] font-bold text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
-            CONFIRM YOUR SELECTIONS
-          </h1>
-          <div className="flex h-fit w-full flex-col-reverse items-center justify-start gap-12 xl:flex-col">
-            <div className="flex h-fit w-full flex-col items-center justify-center gap-6 xl:flex-row xl:gap-20">
-              <div className="flex h-fit w-[80%] flex-col items-start justify-start gap-6 xl:w-fit">
-                <Game gameID={gameID!} />
-                <Fighters fighter_data={fighterData!} />
-              </div>
-              <div className="flex h-fit w-[80%] flex-col items-start justify-start gap-6 xl:w-fit">
-                <Backdrop backdropID={backdrop!} />
-                <Difficulty difficultyID={difficulty!} />
-              </div>
-            </div>
-            <div className="flex h-fit w-[80%] flex-row flex-wrap items-center justify-center gap-6 px-2">
-              <GameSetup />
-              <Link
-                href="/pregame/instructions"
-                className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-purple-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
-              >
-                HOW TO PLAY
-              </Link>
+    <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E] xl:h-[100svh] xl:min-h-1">
+      <div
+        style={{
+          minHeight: "inherit",
+        }}
+        className="flex h-full w-full max-w-full-page flex-col items-center justify-center gap-16 px-4 py-10 xl:px-0"
+      >
+        <h1 className="text-center text-lg font-bold tracking-title text-white md:text-2xl xl:text-3xl">
+          FINALIZE YOUR GAME
+        </h1>
+        <div className="flex h-fit w-full flex-col-reverse items-center justify-center gap-12 xl:flex-col">
+          <div className="flex h-fit w-full flex-col items-center justify-center">
+            <div className="grid w-full grid-cols-1 gap-12 md:w-fit xl:grid-cols-2 xl:grid-rows-2">
+              <Game gameID={gameID!} />
+
+              <Fighters fighter_data={fighterData!} />
+              <Difficulty difficultyID={difficulty!} />
+              <Backdrop backdropID={backdrop!} />
             </div>
           </div>
+          <div className="flex h-fit w-[80%] flex-row flex-wrap items-center justify-center gap-6 px-2">
+            <GameSetup />
+            <Link
+              href="/pregame/instructions"
+              className="h-fit w-full xl:w-fit"
+            >
+              <Button className="w-full bg-purple-500 text-white xl:w-fit">
+                HOW TO PLAY
+              </Button>
+            </Link>
+          </div>
         </div>
-      </WidthWrapper>
+      </div>
     </div>
   );
 }

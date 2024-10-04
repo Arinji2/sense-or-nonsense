@@ -4,6 +4,7 @@ import { RemoveBackdropAction } from "@/actions/game/backdrop";
 import { RemoveDifficultyAction } from "@/actions/game/difficulty";
 import { RemoveFighterAction } from "@/actions/game/fighters";
 import { RemoveGameAction } from "@/actions/game/setup";
+import { PenBox } from "lucide-react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -45,9 +46,9 @@ export default function EditButton({
 
         router.refresh();
       }}
-      className="inline rounded-sm bg-red-500 px-4 py-1 text-lg text-white"
+      className="absolute -right-5 top-0 rounded-sm px-4 py-1 text-lg text-white"
     >
-      EDIT
+      <PenBox className="size-5 text-red-500" />
     </button>
   );
 }

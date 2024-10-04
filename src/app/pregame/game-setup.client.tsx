@@ -3,12 +3,13 @@
 import { useRouter } from "next/navigation";
 
 import { CreateNewRound } from "@/actions/game/rounds";
+import { Button } from "@/components/button";
 import toast from "react-hot-toast";
 
 export default function GameSetup() {
   const router = useRouter();
   return (
-    <button
+    <Button
       onClick={async () => {
         const resolve = toast.promise(CreateNewRound(), {
           loading: "Setting up game...",
@@ -19,9 +20,9 @@ export default function GameSetup() {
 
         router.push("/game");
       }}
-      className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
+      className="w-full bg-green-500 text-white xl:w-fit"
     >
       START GAME{" "}
-    </button>
+    </Button>
   );
 }
