@@ -1,4 +1,3 @@
-export const dynamic = "force-static";
 import Credits from "./credits";
 import Footer from "./footer";
 import Hero from "./hero";
