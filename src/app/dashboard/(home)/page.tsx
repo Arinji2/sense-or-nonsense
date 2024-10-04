@@ -1,4 +1,3 @@
-import { Button } from "@/components/button";
 import { Heart } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import Link from "next/link";
@@ -140,9 +139,12 @@ export default async function Page() {
                   <p className="text-xss font-bold text-white">Edit Account</p>
                 </Link>
                 <DefaultsButton isGuest={mode !== "user"} />
-                <Button className="h-fit w-full rounded-sm bg-purple-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-full xl:py-2">
+                <Link
+                  href="/dashboard/games"
+                  className="h-fit w-full rounded-sm bg-purple-500 bg-opacity-30 px-3 py-2 text-center leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:w-full"
+                >
                   <p className="text-xss font-bold text-white">View Games</p>
-                </Button>
+                </Link>
 
                 <Link
                   href="/dashboard/word-bank"
