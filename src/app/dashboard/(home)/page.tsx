@@ -143,9 +143,6 @@ export default async function Page() {
                 <Button className="h-fit w-full rounded-sm bg-purple-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-full xl:py-2">
                   <p className="text-xss font-bold text-white">View Games</p>
                 </Button>
-                <Button className="h-fit w-full rounded-sm bg-emerald-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-full xl:py-2">
-                  <p className="text-xss font-bold text-white">Update Avatar</p>
-                </Button>
 
                 <Link
                   href="/dashboard/word-bank"
@@ -155,6 +152,7 @@ export default async function Page() {
                     View Word Bank
                   </p>
                 </Link>
+                <div className="hidden w-full xl:block"></div>
                 <Button className="h-fit w-full rounded-sm bg-blue-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-full xl:py-2">
                   <p className="text-xss font-bold text-white">Go To Home</p>
                 </Button>
