@@ -61,7 +61,7 @@ export type FighterDataType = {
   image: StaticImageData;
   transparentImage: StaticImageData;
   color: string;
-  secondaryColor?: string;
+
   lore: {
     short: string;
     long: string;
