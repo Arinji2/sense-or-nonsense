@@ -19,9 +19,9 @@ export async function SetupGameAction(gameID: string) {
   }
 
   cookies().set("game-id", parsedGame.data.id, {
-    httpOnly: true,
     sameSite: "strict" as const,
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: process.env.NODE_ENV === "production",
     expires: new Date(new Date().getTime() + 604800000), // 7 days
     path: "/",
   });
