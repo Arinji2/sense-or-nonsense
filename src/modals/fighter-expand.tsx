@@ -55,7 +55,7 @@ export default function FighterExpand({
                 "--fighterColor": fighterData.color,
               } as React.CSSProperties
             }
-            className="group relative flex h-[80%] w-[70%] max-w-[1280px] flex-col items-center justify-start gap-5 overflow-hidden rounded-md bg-[--fighterColor] px-10 py-3 md:h-[80%] md:w-[50%] xl:h-[400px] xl:w-[80%] xl:flex-row xl:gap-20"
+            className="group relative flex h-[80%] w-[80%] max-w-[1280px] flex-col items-center justify-start gap-5 overflow-hidden rounded-md bg-neutral-800 px-6 py-3 md:h-[80%] md:w-[50%] xl:h-[400px] xl:w-[80%] xl:flex-row xl:gap-20 xl:px-10"
           >
             <button
               aria-label="Close Modal"
@@ -85,16 +85,16 @@ export default function FighterExpand({
                 priority
               />
             </div>
-            <div className="flex h-full max-h-[300px] w-full flex-col items-start justify-start gap-5 overflow-y-auto xl:max-h-full xl:justify-center">
-              <p className="text-center text-base font-bold tracking-title text-white md:text-2xl xl:text-4xl">
+            <div className="no-scrollbar flex h-full max-h-[300px] w-full flex-col items-start justify-start gap-5 overflow-y-auto xl:max-h-full xl:justify-center">
+              <p className="text-center text-base font-bold tracking-title text-[--fighterColor] md:text-2xl xl:text-4xl">
                 {fighterData.name}
               </p>
-              <p className="max-w-[700px] text-left text-xs text-white/50 md:text-lg xl:text-base">
-                <span className="text-white">Short Lore:</span>{" "}
+              <p className="max-w-[700px] text-left text-xs text-white/80 md:text-lg xl:text-base">
+                <span className="text-[--fighterColor]">Short Lore:</span>{" "}
                 {fighterData.lore.short}
               </p>
-              <p className="max-w-[800px] text-left text-xss text-white/50 md:text-sm xl:text-base">
-                <span className="text-white">Long Lore:</span>{" "}
+              <p className="max-w-[800px] text-left text-xss text-white/80 md:text-sm xl:text-base">
+                <span className="text-[--fighterColor]">Long Lore:</span>{" "}
                 {fighterData.lore.long}
               </p>
             </div>

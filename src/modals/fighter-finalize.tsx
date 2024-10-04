@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 
 import { RemoveFighterAction } from "@/actions/game/fighters";
 import { useFighterContext } from "@/app/fighters/context";
+import { Button } from "@/components/button";
 import useAnimate from "../../utils/useAnimate";
 import { GameFighterSchemaType } from "../../validations/game-data/types";
 
@@ -100,7 +101,7 @@ export default function FighterFinalize({
           >
             <X className="size-10 text-white" />
           </button>
-          <h4 className="tracking-subtitle text-center text-[20px] font-bold text-green-500 md:text-[35px]">
+          <h4 className="tracking-subtitle pt-5 text-center text-base font-bold text-green-500 md:text-xl lg:text-2xl xl:pt-0">
             {" "}
             FINALIZE FIGHTER SELECTION
           </h4>
@@ -109,13 +110,13 @@ export default function FighterFinalize({
               justifyContent:
                 generatedFighters!.length > 2 ? "start" : "center",
             }}
-            className="no-scrollbar flex h-[200px] w-full flex-row items-center justify-center gap-10 overflow-x-auto overflow-y-hidden px-10"
+            className="no-scrollbar flex h-[200px] w-full flex-row items-center justify-center gap-10 overflow-x-auto overflow-y-hidden px-4 xl:px-10"
           >
             {generatedFighters &&
               generatedFighters.map((fighter, index) => (
                 <div
                   key={fighter.id + index}
-                  className="flex h-fit w-[80%] shrink-0 flex-col items-center justify-center rounded-sm bg-gradient-to-r from-[--fighterColor] from-[60%] to-[--fighterColorOpaque] px-4 py-6 xl:w-[350px]"
+                  className="flex h-fit w-[90%] shrink-0 flex-col items-center justify-center rounded-sm bg-gradient-to-r from-[--fighterColor] from-[60%] to-[--fighterColorOpaque] px-4 py-6 xl:w-[350px]"
                   style={
                     {
                       "--fighterColor": fighter.color,
@@ -136,7 +137,7 @@ export default function FighterFinalize({
                       </div>
                     </div>
                     <div className="flex h-full w-full min-w-0 flex-col items-end justify-end gap-4">
-                      <h4 className="w-full truncate text-right text-[15px] font-bold text-white md:text-[20px]">
+                      <h4 className="w-full truncate text-right text-sm font-bold text-white md:text-lg">
                         {fighterData![index].fighter_name}
                       </h4>
                       <p className="text-[15px] text-white">
@@ -148,15 +149,15 @@ export default function FighterFinalize({
               ))}
           </div>
           <div className="mt-auto flex h-fit w-[80%] flex-col flex-wrap items-center justify-center gap-5 xl:w-fit xl:flex-row xl:gap-11">
-            <button
+            <Button
               onClick={() => {
                 closeOpenMenus({}, true);
               }}
-              className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-red-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
+              className="w-full bg-red-500 text-white xl:w-fit"
             >
               RESET!
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={async () => {
                 Animate.setQueue(false);
                 const isRedirected = searchParams.get("redirected");
@@ -164,10 +165,10 @@ export default function FighterFinalize({
                   router.replace("/pregame");
                 } else router.push("/backdrop");
               }}
-              className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
+              className="w-full bg-green-500 text-white xl:w-fit"
             >
               LETS GO!
-            </button>
+            </Button>
             {isMultiplayer && (
               <button
                 onClick={async () => {

@@ -12,6 +12,7 @@ import { cn } from "../../utils/cn";
 import { SetDefaultFighterAction } from "@/actions/defaults";
 import { AddFighterAction, UpdateFighterAction } from "@/actions/game/fighters";
 import { useFighterContext } from "@/app/fighters/context";
+import { Button } from "@/components/button";
 import useAnimate from "../../utils/useAnimate";
 import { GameFighterSchemaType } from "../../validations/game-data/types";
 import { FighterNameSchema } from "../../validations/generic/schema";
@@ -92,8 +93,11 @@ export default function FighterModal({
                   FightersList.find((fighter) => fighter.id === fighterID)
                     ?.image!
                 }
-                alt="Login Image"
-                className="h-full w-full object-cover brightness-[.3] transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:brightness-75 md:object-contain xl:object-cover"
+                alt={
+                  FightersList.find((fighter) => fighter.id === fighterID)
+                    ?.name!
+                }
+                className="h-full w-full shrink-0 scale-90 object-contain brightness-[.6] transition-all duration-500 ease-in-out group-hover:scale-95 group-hover:brightness-75 xl:h-full"
                 sizes="(min-width: 1280px) 500px, 80%"
                 priority
               />
@@ -125,13 +129,15 @@ export default function FighterModal({
                   router.push("/dashboard/defaults");
                   return;
                 }
-                if (locFighterData.length === 0) {
+
+                if (locFighterData.length === 0 || !isMultiplayer) {
                   await AddFighterAction(characterData);
                 } else {
                   await UpdateFighterAction(characterData);
                 }
-
-                setLocFighterData([...locFighterData, characterData]);
+                if (isMultiplayer) {
+                  setLocFighterData([...locFighterData, characterData]);
+                } else setLocFighterData([characterData]);
 
                 finalizeAnimate.setQueue(true);
                 Animate.setQueue(false);
@@ -149,7 +155,7 @@ export default function FighterModal({
               >
                 <X className="size-10 text-white" />
               </button>
-              <h4 className="tracking-subtitle text-center text-[20px] font-bold text-green-500 md:text-3xl">
+              <h4 className="tracking-subtitle text-vase text-center font-bold text-green-500 md:text-2xl">
                 {" "}
                 SETUP FIGHTER FOR {isSettingDefaults
                   ? "DEFAULTS"
@@ -163,23 +169,19 @@ export default function FighterModal({
                   maxLength={15}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="h-10 w-full rounded-sm border-b-2 border-white/50 bg-transparent py-2 text-white outline-none"
+                  className="h-fit w-full rounded-sm border-b-2 border-white/50 bg-transparent text-sm text-white outline-none xl:text-base"
                 />
               </div>
               <div className="flex h-fit w-fit flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
-                <button
+                <Button
                   type="submit"
                   disabled={name.length === 0}
                   className={cn(
-                    {
-                      "flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-blue-500 p-2 text-[15px] text-white opacity-100 transition-all duration-200 ease-in-out hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]":
-                        true,
-                    },
-                    { "opacity-0": name.length === 0 },
+                    "bg-blue-500 px-2 text-sm text-white xl:text-base",
                   )}
                 >
                   Create {name}
-                </button>
+                </Button>
               </div>
             </form>
           </div>
