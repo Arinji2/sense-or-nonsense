@@ -59,7 +59,6 @@ export type FighterDataType = {
   id: number;
   name: string;
   image: StaticImageData;
-  transparentImage: StaticImageData;
   color: string;
 
   lore: {

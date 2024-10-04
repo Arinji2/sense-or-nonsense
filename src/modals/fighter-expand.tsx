@@ -78,7 +78,7 @@ export default function FighterExpand({
               </button>
               <Image
                 fill
-                src={fighterData.transparentImage}
+                src={fighterData.image}
                 alt="Login Image"
                 className="h-full w-full shrink-0 object-contain brightness-[.6] transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:brightness-75 xl:h-full"
                 sizes="(min-width: 1280px) 500px, 80%"

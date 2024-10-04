@@ -96,16 +96,14 @@ export default async function Page() {
               <div
                 style={
                   {
-                    "--fighterColor":
-                      selectedFighterData.secondaryColor ??
-                      selectedFighterData.color,
+                    "--fighterColor": selectedFighterData.color,
                   } as React.CSSProperties
                 }
                 className="group flex h-fit w-full flex-col items-start justify-start gap-4 rounded-md bg-[--fighterColor] p-4 xl:h-full xl:flex-row xl:items-center"
               >
                 <div className="relative size-[100px] shrink-0 xl:h-full xl:w-[30%]">
                   <Image
-                    src={selectedFighterData.transparentImage}
+                    src={selectedFighterData.image}
                     alt={`${selectedFighterData.name} Fighter`}
                     fill
                     sizes="(min-width: 1280px) 300px, 200px"

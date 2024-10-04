@@ -3,7 +3,6 @@
 import FighterModal from "@/modals/fighter-select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -12,7 +11,6 @@ import FighterExpand from "@/modals/fighter-expand";
 import { FightersList } from "../../../constants/fighters";
 import useAnimate from "../../../utils/useAnimate";
 import { FighterDataType } from "../../../validations/generic/types";
-import { useFighterContext } from "./context";
 const scroll = 400;
 
 function Scroll(
@@ -61,9 +59,7 @@ function Scroll(
 export default function Selector() {
   const scrollingDiv = useRef<HTMLDivElement | null>(null);
   const [clicked, setClicked] = useState(false);
-  const router = useRouter();
   const animate = useAnimate(800);
-  const { fighterData, isMultiplayer } = useFighterContext();
   const [fighterExpand, setFighterExpand] = useState<FighterDataType | null>(
     null,
   );
@@ -76,6 +72,24 @@ export default function Selector() {
 
   useEffect(() => {
     setDocumentDefined(true);
+  }, []);
+
+  //listen for left and right arrow key presses
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        Scroll.bind(null, scrollingDiv, clicked, setClicked, false)();
+      }
+      if (event.key === "ArrowRight") {
+        Scroll.bind(null, scrollingDiv, clicked, setClicked, true)();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, []);
 
   return (
@@ -104,16 +118,16 @@ export default function Selector() {
               setClicked,
               false,
             )}
-            className="flex h-full w-14 flex-col items-center justify-center rounded-r-md bg-white/10 shadow-md shadow-black xl:w-20"
+            className="flex h-full w-10 flex-col items-center justify-center rounded-r-md bg-white/10 shadow-md shadow-black xl:w-16"
           >
-            <ChevronLeft className="xl:size=16 size-10 text-black" />
+            <ChevronLeft className="size-7 text-black xl:size-10" />
           </button>
           <button
             disabled={clicked}
             onClick={Scroll.bind(null, scrollingDiv, clicked, setClicked, true)}
-            className="flex h-full w-14 flex-col items-center justify-center rounded-l-md bg-white/10 shadow-md shadow-black xl:w-20"
+            className="flex h-full w-10 flex-col items-center justify-center rounded-l-md bg-white/10 shadow-md shadow-black xl:w-16"
           >
-            <ChevronRight className="xl:size=16 size-10 text-black" />
+            <ChevronRight className="size-7 text-black xl:size-10" />
           </button>
         </div>
         <div
@@ -124,23 +138,23 @@ export default function Selector() {
             <div
               key={fighter.id}
               style={{ "--fighterColor": fighter.color } as React.CSSProperties}
-              className="to relative flex h-full w-full max-w-[800px] shrink-0 snap-center flex-col items-center justify-start bg-gradient-to-b from-[--fighterColor] from-60% py-28 pt-8 brightness-75 transition-all duration-300 ease-in-out hover:brightness-100 xl:py-24 xl:pt-10"
+              className="to relative flex h-full w-full max-w-[800px] shrink-0 snap-center flex-col items-center justify-start gap-5 bg-gradient-to-b from-[--fighterColor] from-60% py-28 pt-8 brightness-75 transition-all duration-300 ease-in-out hover:brightness-100 xl:py-24 xl:pt-10"
             >
-              <div className="relative size-[200px] xl:size-[300px]">
+              <div className="relative size-[200px] xl:size-[250px]">
                 <Image
-                  alt="Molly"
+                  alt={fighter.name}
                   src={fighter.image}
                   fill
-                  className=""
-                  sizes="(min-width: 1280px) 300px, 200px"
+                  className="object-contain"
+                  sizes="(min-width: 1280px) 250px, 200px"
                 />
               </div>
 
               <div className="mt-auto flex h-fit w-full flex-col items-center justify-center gap-5 px-6">
-                <h2 className="tracking-subtitle w-full truncate text-center text-base font-semibold text-white md:text-2xl xl:text-6xl">
+                <h2 className="w-full truncate text-center text-base font-bold tracking-title text-white md:text-2xl xl:text-3xl">
                   {fighter.name.toUpperCase()}
                 </h2>
-                <p className="tracking-text line-clamp-3 text-center text-sm text-white/70 md:text-base">
+                <p className="tracking-text line-clamp-3 text-center text-xs text-white/70 md:text-sm xl:max-w-[80%]">
                   {fighter.lore.short}
                 </p>
               </div>

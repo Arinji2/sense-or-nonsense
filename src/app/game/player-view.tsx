@@ -54,10 +54,7 @@ export default function PlayerView({
         <div className="shrink-0x:size-[80px] relative z-20 size-[40px]">
           <Image
             alt={FightersList[playerData[currentPlayer].fighter_id].name}
-            src={
-              FightersList[playerData[currentPlayer].fighter_id]
-                .transparentImage
-            }
+            src={FightersList[playerData[currentPlayer].fighter_id].image}
             fill
             className="object-contain"
           />
@@ -132,7 +129,7 @@ export default function PlayerView({
                   <div className="relative size-[40px] shrink-0 xl:size-[60px]">
                     <Image
                       alt={FightersList[player.fighter_id].name}
-                      src={FightersList[player.fighter_id].transparentImage}
+                      src={FightersList[player.fighter_id].image}
                       fill
                       className="object-contain"
                     />

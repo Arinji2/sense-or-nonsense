@@ -13,7 +13,7 @@ export const FightersList = [
   {
     id: 0,
     name: "Molly",
-    transparentImage: MollyTransparentImage,
+    image: MollyTransparentImage,
     color: "#a16207",
     lore: {
       short:
@@ -24,7 +24,7 @@ export const FightersList = [
   {
     id: 1,
     name: "Jesse",
-    transparentImage: JesseTransparentImage,
+    image: JesseTransparentImage,
     color: "#7c2d12",
     lore: {
       short:
@@ -35,7 +35,7 @@ export const FightersList = [
   {
     id: 2,
     name: "Leo",
-    transparentImage: LeoTransparentImage,
+    image: LeoTransparentImage,
     color: "#264F6E",
     lore: {
       short:
@@ -46,7 +46,7 @@ export const FightersList = [
   {
     id: 3,
     name: "Raven",
-    transparentImage: RavenTransparentImage,
+    image: RavenTransparentImage,
     color: "#7f1d1d",
     lore: {
       short:
@@ -57,7 +57,7 @@ export const FightersList = [
   {
     id: 4,
     name: "Elliot",
-    transparentImage: ElliotTransparentImage,
+    image: ElliotTransparentImage,
     color: "#4C93AD",
     lore: {
       short:
@@ -68,7 +68,7 @@ export const FightersList = [
   {
     id: 5,
     name: "Ethan",
-    transparentImage: EthanTransparentImage,
+    image: EthanTransparentImage,
     color: "#0e7490",
     lore: {
       short:
@@ -79,7 +79,7 @@ export const FightersList = [
   {
     id: 6,
     name: "Frosty",
-    transparentImage: FrostyTransparentImage,
+    image: FrostyTransparentImage,
     color: "#a16207",
     lore: {
       short:
@@ -90,7 +90,7 @@ export const FightersList = [
   {
     id: 7,
     name: "Avery",
-    transparentImage: AveryTransparentImage,
+    image: AveryTransparentImage,
     color: "#46275C",
     lore: {
       short:
@@ -101,7 +101,7 @@ export const FightersList = [
   {
     id: 8,
     name: "Eliana",
-    transparentImage: ElianaTransparentImage,
+    image: ElianaTransparentImage,
     color: "#065f46",
     lore: {
       short:
