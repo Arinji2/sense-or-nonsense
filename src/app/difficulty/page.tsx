@@ -1,4 +1,3 @@
-import WidthWrapper from "@/wrappers/width-wrapper";
 import { redirect } from "next/navigation";
 
 import { cookies } from "next/headers";
@@ -31,15 +30,21 @@ export default async function Page({}) {
   }
 
   return (
-    <WidthWrapper>
-      <div className="relative flex h-fit min-h-[100svh] w-full flex-col items-center justify-start gap-10 py-10">
-        <h1 className="z-20 w-full px-2 text-center text-[35px] font-bold tracking-subtitle text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
+    <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E] xl:h-[100svh] xl:min-h-1">
+      <div
+        style={{
+          minHeight: "inherit",
+        }}
+        className="flex h-full w-full max-w-full-page flex-col items-center justify-center gap-10 px-4 py-10 xl:px-0"
+      >
+        <h1 className="text-center text-lg font-bold tracking-title text-white md:text-2xl xl:text-3xl">
           SELECT A DIFFICULTY
         </h1>
+
         <div className="flex h-fit w-[95%] flex-row flex-wrap items-center justify-center gap-10 xl:w-full">
           <Selector gameID={gameID} />
         </div>
       </div>
-    </WidthWrapper>
+    </div>
   );
 }

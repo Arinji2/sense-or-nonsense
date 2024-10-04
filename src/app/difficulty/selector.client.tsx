@@ -32,19 +32,19 @@ export default function Selector({ gameID }: { gameID: string }) {
             } else router.push("/fighters");
           }}
           key={difficulty.id}
-          className="group relative flex h-[300px] w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-md bg-transparent px-3 xl:h-[450px] xl:w-[300px]"
+          className="group relative flex h-[300px] w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-md bg-transparent px-3 md:h-[450px] md:w-[300px]"
         >
           <Image
             src={difficulty.image}
             alt={`${difficulty.name} difficulty`}
-            className="object-cover object-top grayscale-[100%] transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:grayscale-[25%] xl:object-center"
+            className="object-cover object-top grayscale-[45%] transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:grayscale-[25%] xl:object-center xl:grayscale-[100%]"
             fill
             sizes="(min-width: 1280px) 450px, 90%"
           />
-          <div className="absolute left-0 top-0 z-10 h-full w-full bg-[#2C2828] bg-opacity-70"></div>
+          <div className="absolute left-0 top-0 z-10 h-full w-full bg-[#2C2828] bg-opacity-90 xl:bg-opacity-70"></div>
           <h2
             style={{ "--color": difficulty.color } as React.CSSProperties}
-            className="z-20 text-[50px] font-medium text-[--color]"
+            className="z-20 text-2xl font-bold text-[--color] md:text-2xl xl:text-3xl"
           >
             {difficulty.name.toUpperCase()}
           </h2>
