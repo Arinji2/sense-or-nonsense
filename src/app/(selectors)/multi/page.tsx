@@ -1,31 +1,32 @@
-import { notFound } from "next/navigation";
+import { GamesList } from "@/app/games";
+import WidthWrapper from "@/wrappers/width-wrapper";
+import { GetUserMode } from "../../../../utils/getMode";
+import { GameComponent } from "../GameComponent";
 
 export default async function Page() {
-  notFound();
+  const { userID, pb } = await GetUserMode();
+  return (
+    <div className="relative flex h-[1px] min-h-[100svh] w-full flex-col items-center justify-center gap-2 xl:max-h-svh">
+      <WidthWrapper>
+        <h1 className="tracking-subtitle absolute top-5 z-50 px-2 text-center text-[25px] font-bold text-white md:static md:text-[40px] xl:text-[60px]">
+          CHOOSE A GAME MODE
+        </h1>
 
-  // const { mode, userID, pb } = await GetUserMode();
-  // return (
-  //   <div className="relative flex h-[1px] min-h-[100svh] w-full flex-col items-center justify-center gap-2 xl:max-h-svh">
-  //     <WidthWrapper>
-  //       <h1 className="absolute top-5 z-50 px-2 text-center text-[25px] font-bold tracking-subtitle text-white md:static md:text-[40px] xl:text-[60px]">
-  //         CHOOSE A GAME MODE
-  //       </h1>
-
-  //       <div className="flex h-full w-full snap-x snap-mandatory flex-row items-stretch justify-start overflow-x-scroll md:h-full xl:items-center">
-  //         {GamesList.map((game) => {
-  //           if (!game.isMultiplayer) return null;
-  //           return (
-  //             <GameComponent
-  //               multi
-  //               key={game.id}
-  //               GameData={game}
-  //               userID={userID!}
-  //               pb={pb!}
-  //             />
-  //           );
-  //         })}
-  //       </div>
-  //     </WidthWrapper>
-  //   </div>
-  // );
+        <div className="flex h-full w-full snap-x snap-mandatory flex-row items-stretch justify-start overflow-x-auto md:h-full xl:items-center">
+          {GamesList.map((game) => {
+            if (!game.isMultiplayer) return null;
+            return (
+              <GameComponent
+                multi
+                key={game.id}
+                GameData={game}
+                userID={userID!}
+                pb={pb!}
+              />
+            );
+          })}
+        </div>
+      </WidthWrapper>
+    </div>
+  );
 }

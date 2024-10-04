@@ -3,6 +3,7 @@ import Image from "next/image";
 import { cn } from "../../../utils/cn";
 
 import { unstable_cache } from "next/cache";
+import Link from "next/link";
 import Client from "pocketbase";
 import { CACHED_TAGS } from "../../../constants/tags";
 import { FormatDate1 } from "../../../utils/formatting";
@@ -81,10 +82,10 @@ export async function GameComponent({
         fill
       />
       <div className="z-20 flex h-full w-full flex-col items-start justify-start gap-10 rounded-r-md bg-black/60 px-5 py-4 pt-32 md:h-full md:w-fit md:px-10 md:pt-10 xl:justify-end">
-        <h2 className="text-[25px] font-bold tracking-text text-[#DE6A38] md:text-[50px]">
+        <h2 className="tracking-text text-[25px] font-bold text-[#DE6A38] md:text-[50px]">
           {GameData.title}
         </h2>
-        <p className="text-[15px] font-medium tracking-text text-white md:text-[20px]">
+        <p className="tracking-text text-[15px] font-medium text-white md:text-[20px]">
           {GameData.description}
         </p>
         <div className="flex h-fit w-full flex-col items-start justify-start gap-5">
@@ -162,13 +163,12 @@ export async function GameComponent({
         </div>
         <div className="mt-auto flex h-fit w-full flex-row flex-wrap items-center justify-start gap-5 xl:mt-0">
           <PlayNowButton gameData={GameData} />
-          {/* <Link
-            
+          <Link
             href={multi ? "/single" : "/multi"}
             className="shrink-0 rounded-sm bg-blue-500 p-2 px-4 text-[15px] text-white transition-all duration-200 ease-in-out hover:bg-blue-600"
           >
             PLAY {multi ? "SINGLE PLAYER" : "MULTIPLAYER"}
-          </Link> */}
+          </Link>
         </div>
       </div>
     </div>
