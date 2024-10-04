@@ -18,12 +18,6 @@ export default async function Page({
 }: {
   searchParams: {
     player: StringSearchParamType;
-    round: StringSearchParamType;
-    word: StringSearchParamType;
-    analysis: StringSearchParamType;
-
-    correct: StringSearchParamType;
-    timeleft: StringSearchParamType;
   };
   params: {
     id: string;
@@ -119,11 +113,7 @@ export default async function Page({
           </div>
         </div>
 
-        <RoundStats
-          currentPlayerIndex={currentPlayerIndex}
-          game={rounds}
-          searchParams={searchParams}
-        />
+        <RoundStats currentPlayerIndex={currentPlayerIndex} game={rounds} />
       </div>
     </div>
   );
