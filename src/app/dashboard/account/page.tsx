@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ExternalAuthModel } from "pocketbase";
 import { GetUserMode } from "../../../../utils/getMode";
 import { AccountSchema } from "../../../../validations/pb/schema";
@@ -9,6 +10,10 @@ import Username from "./username.client";
 
 export default async function Page() {
   const { mode, pb, userID } = await GetUserMode();
+
+  if (userID === null) {
+    redirect("/");
+  }
   let currentUsername = "";
   let existingOauth: ExternalAuthModel[] = [];
 

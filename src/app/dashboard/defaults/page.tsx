@@ -17,6 +17,9 @@ import { BackdropReset, FighterReset } from "./fighter.client";
 
 export default async function Page() {
   const { mode, pb, userID } = await GetUserMode();
+  if (userID === null) {
+    redirect("/");
+  }
   let fighterData: GameFighterSchemaType | null = null;
   let selectedFighterData: FighterDataType | null = null;
   let backdropData: BackdropDataType | null = null;
