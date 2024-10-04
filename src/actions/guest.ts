@@ -31,8 +31,8 @@ export async function InitGuest(newSessionID?: number) {
     });
     cookies().set("guest-session", sessionID.toString(), {
       sameSite: "strict",
-      secure: true,
-      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: process.env.NODE_ENV === "production",
       //expires in 10 years
       maxAge: 60 * 60 * 24 * 365 * 10,
     });
