@@ -1,7 +1,6 @@
 import CoopImage from "../../public/modes/coop.png";
 import CPUImage from "../../public/modes/cpu.png";
 import HighScoreImage from "../../public/modes/highscore.png";
-import OnlineImage from "../../public/modes/online.png";
 import { GamesDataType } from "../../validations/generic/types";
 
 export const GamesList = [
@@ -29,15 +28,6 @@ export const GamesList = [
     title: "CO OP BATTLES",
     image: CoopImage,
     description: "Play with your friends on the same device in a 1v1 match.",
-    showLeft: false,
-    isMultiplayer: true,
-    showTime: true,
-  },
-  {
-    id: 3,
-    title: "ONLINE BATTLES",
-    image: OnlineImage,
-    description: "Play with your friends online in a 1v1 match.",
     showLeft: false,
     isMultiplayer: true,
     showTime: true,
