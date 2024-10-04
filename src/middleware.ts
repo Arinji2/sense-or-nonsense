@@ -1,6 +1,8 @@
+import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
+const UNPROTECTED_PATHS = ["/", "/credits"];
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === "/error") {
     const code = request.nextUrl.searchParams.get("code");
     const response = NextResponse.redirect(new URL("/", request.url));
@@ -9,8 +11,19 @@ export function middleware(request: NextRequest) {
     }
     return response;
   }
+
+  if (!UNPROTECTED_PATHS.includes(request.nextUrl.pathname)) {
+    const guestCookie = cookies().get("guest-session");
+    const userCookie = cookies().get("user");
+
+    if (!guestCookie && !userCookie) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
   NextResponse.next();
 }
+
 export const config = {
   matcher: [
     /*
