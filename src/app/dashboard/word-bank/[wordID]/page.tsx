@@ -16,6 +16,7 @@ import {
 } from "../../../../../validations/pb/types";
 export default async function Page({ params }: { params: { wordID: string } }) {
   const { mode, pb, userID } = await GetUserMode();
+  if (userID === null) redirect("/");
   let wordData: StoredWordSchemaType | null = null;
   let dictionaryData: DictionarySchemaType | null = null;
   let roundInfo: RoundSchemaType | null = null;

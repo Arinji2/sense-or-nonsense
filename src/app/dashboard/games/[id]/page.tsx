@@ -24,10 +24,9 @@ export default async function Page({
   };
 }) {
   const { pb, userID } = await GetUserMode();
+  if (userID === null) redirect("/");
 
   const { gameData, rounds } = await GetGameData(pb, params.id, userID!);
-
-  if (!gameData.isValidated) redirect("/dashboard/games");
 
   let { playerData, gameID } = gameData;
 

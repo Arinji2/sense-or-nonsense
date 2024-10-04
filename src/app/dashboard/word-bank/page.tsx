@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { CACHED_TAGS } from "../../../../constants/tags";
 import { GetUserMode } from "../../../../utils/getMode";
 import { RoundSchema } from "../../../../validations/pb/schema";
@@ -21,6 +22,7 @@ export default async function Page({
   };
 }) {
   const { mode, pb, userID } = await GetUserMode();
+  if (userID === null) redirect("/");
   let pageNumber = 1;
   let levelFilter = 0;
   let optionFilter = 0;
