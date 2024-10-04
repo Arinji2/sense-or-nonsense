@@ -1,13 +1,3 @@
-import AveryImage from "@/../public/fighters/avery.png";
-import ElianaImage from "@/../public/fighters/eliana.png";
-import ElliotImage from "@/../public/fighters/elliot.png";
-import EthanImage from "@/../public/fighters/ethan.png";
-import FrostyImage from "@/../public/fighters/frosty.png";
-import JesseImage from "@/../public/fighters/jesse.png";
-import LeoImage from "@/../public/fighters/leo.png";
-import MollyImage from "@/../public/fighters/molly.png";
-import RavenImage from "@/../public/fighters/raven.png";
-
 import AveryTransparentImage from "@/../public/fighters/transparent/avery.png";
 import ElianaTransparentImage from "@/../public/fighters/transparent/eliana.png";
 import ElliotTransparentImage from "@/../public/fighters/transparent/elliot.png";
@@ -23,10 +13,8 @@ export const FightersList = [
   {
     id: 0,
     name: "Molly",
-    image: MollyImage,
     transparentImage: MollyTransparentImage,
-    color: "#FFAD3B",
-    secondaryColor: "#a16207",
+    color: "#a16207",
     lore: {
       short:
         "Armed with the powers of the animal kingdom, Molly takes a special interest in reading. Oh, and she hates dark places.",
@@ -36,10 +24,8 @@ export const FightersList = [
   {
     id: 1,
     name: "Jesse",
-    image: JesseImage,
     transparentImage: JesseTransparentImage,
-    color: "#DE6A38",
-    secondaryColor: "#7c2d12",
+    color: "#7c2d12",
     lore: {
       short:
         "No matter what she is doing, you'll always hear her either singing or humming her favorite songs. Music is her passion and she's definitely got her priorities straight.",
@@ -49,7 +35,6 @@ export const FightersList = [
   {
     id: 2,
     name: "Leo",
-    image: LeoImage,
     transparentImage: LeoTransparentImage,
     color: "#264F6E",
     lore: {
@@ -61,10 +46,8 @@ export const FightersList = [
   {
     id: 3,
     name: "Raven",
-    image: RavenImage,
     transparentImage: RavenTransparentImage,
-    color: "#C93038",
-    secondaryColor: "#7f1d1d",
+    color: "#7f1d1d",
     lore: {
       short:
         "Raven, though our brave knight in shining armor, is quite a cinnamon roll. He takes great interest in archery but steers clear of large crowds and gatherings. Social anxiety, you know.",
@@ -74,7 +57,6 @@ export const FightersList = [
   {
     id: 4,
     name: "Elliot",
-    image: ElliotImage,
     transparentImage: ElliotTransparentImage,
     color: "#4C93AD",
     lore: {
@@ -86,10 +68,8 @@ export const FightersList = [
   {
     id: 5,
     name: "Ethan",
-    image: EthanImage,
     transparentImage: EthanTransparentImage,
-    color: "#63C2C9",
-    secondaryColor: "#0e7490",
+    color: "#0e7490",
     lore: {
       short:
         "A golden retriever at heart, Ethan is your friendly neighborhood chef. He likes his kitchen spick 'n' span especially when he sets about preparing absolute delicacies.",
@@ -99,10 +79,8 @@ export const FightersList = [
   {
     id: 6,
     name: "Frosty",
-    image: FrostyImage,
     transparentImage: FrostyTransparentImage,
-    color: "#FCF960",
-    secondaryColor: "#a16207",
+    color: "#a16207",
     lore: {
       short:
         "Frosty lives in freezing temperatures and loves making crystals out of snow. Warmth is his biggest nightmare but he is definitely more wholesome than any human one may come across.",
@@ -112,7 +90,6 @@ export const FightersList = [
   {
     id: 7,
     name: "Avery",
-    image: AveryImage,
     transparentImage: AveryTransparentImage,
     color: "#46275C",
     lore: {
@@ -124,10 +101,8 @@ export const FightersList = [
   {
     id: 8,
     name: "Eliana",
-    image: ElianaImage,
     transparentImage: ElianaTransparentImage,
-    color: "#309C62",
-    secondaryColor: "#065f46",
+    color: "#065f46",
     lore: {
       short:
         "Eliana is our walkie-talkie astronomer who reads the universe like a book. She spends nights stargazing but stays miles away from insects. She says science calls this 'entomophobia.'",
