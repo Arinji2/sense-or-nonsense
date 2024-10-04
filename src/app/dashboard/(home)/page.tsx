@@ -153,9 +153,12 @@ export default async function Page() {
                   </p>
                 </Link>
                 <div className="hidden w-full xl:block"></div>
-                <Button className="h-fit w-full rounded-sm bg-blue-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 xl:w-full xl:py-2">
+                <Link
+                  href="/"
+                  className="h-fit w-full rounded-sm bg-blue-500 bg-opacity-30 px-3 py-2 text-center leading-tight shadow-md shadow-black transition-all duration-200 ease-in-out hover:bg-opacity-70 xl:w-full"
+                >
                   <p className="text-xss font-bold text-white">Go To Home</p>
-                </Button>
+                </Link>
               </div>
             </div>
             <p className="mt-auto text-xss text-white/50">
