@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import toast from "react-hot-toast";
 import LoginImage from "../../public/login.png";
 import useAnimate from "../../utils/useAnimate";
 
@@ -83,7 +84,7 @@ export default function LoginModal({
             >
               <X className="size-10 text-white" />
             </button>
-            <h4 className="text-center text-[20px] font-bold tracking-subtitle text-green-500 md:text-[35px]">
+            <h4 className="tracking-subtitle text-center text-[20px] font-bold text-green-500 md:text-[35px]">
               {" "}
               CONTINUE WITH SENSE OR NONSENSE
             </h4>
@@ -98,7 +99,12 @@ export default function LoginModal({
               </button>
               <button
                 onClick={async () => {
-                  await InitGuest();
+                  await toast.promise(InitGuest(), {
+                    loading: "Loading Guest Mode...",
+                    success: "Guest Mode enabled",
+                    error: "Error enabling Guest Mode",
+                  });
+                  console.log(mode);
                   router.push(`/${mode}`);
                 }}
                 className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-blue-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"

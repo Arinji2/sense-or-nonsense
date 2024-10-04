@@ -98,7 +98,7 @@ export default function PlayNowButton({
           router.push("/backdrop");
         } else router.push("/pregame");
       }}
-      className="shrink-0 rounded-sm bg-green-500 p-2 px-4 text-[15px] text-white"
+      className="w-full shrink-0 rounded-sm bg-green-500 p-2 px-4 text-xss font-bold text-white transition-all duration-200 ease-in-out hover:bg-green-600 md:text-xs xl:w-fit xl:text-sm xl:font-normal"
     >
       PLAY NOW
     </button>

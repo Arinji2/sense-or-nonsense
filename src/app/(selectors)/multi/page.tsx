@@ -1,32 +1,36 @@
+import { GetUserMode } from "@/../utils/getMode";
 import { GamesList } from "@/app/games";
-import WidthWrapper from "@/wrappers/width-wrapper";
-import { GetUserMode } from "../../../../utils/getMode";
+
 import { GameComponent } from "../GameComponent";
 
 export default async function Page() {
   const { userID, pb } = await GetUserMode();
   return (
-    <div className="relative flex h-[1px] min-h-[100svh] w-full flex-col items-center justify-center gap-2 xl:max-h-svh">
-      <WidthWrapper>
-        <h1 className="tracking-subtitle absolute top-5 z-50 px-2 text-center text-[25px] font-bold text-white md:static md:text-[40px] xl:text-[60px]">
+    <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E] xl:h-[100svh] xl:min-h-1">
+      <div
+        style={{
+          minHeight: "inherit",
+        }}
+        className="flex h-full w-full max-w-full-page flex-col items-center justify-center gap-10 px-4 py-10 xl:px-0"
+      >
+        <h1 className="text-lg font-bold tracking-title text-white md:text-2xl xl:text-3xl">
           CHOOSE A GAME MODE
         </h1>
-
         <div className="flex h-full w-full snap-x snap-mandatory flex-row items-stretch justify-start overflow-x-auto md:h-full xl:items-center">
           {GamesList.map((game) => {
             if (!game.isMultiplayer) return null;
             return (
               <GameComponent
-                multi
                 key={game.id}
                 GameData={game}
                 userID={userID!}
                 pb={pb!}
+                multi={true}
               />
             );
           })}
         </div>
-      </WidthWrapper>
+      </div>
     </div>
   );
 }
