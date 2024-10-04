@@ -67,7 +67,7 @@ function Backdrop({
         })}
       />
       <div className="line-clamp-2 h-fit w-full bg-black/60 px-4 py-3 backdrop-blur-[1px]">
-        <p className="text-left text-[15px] font-medium text-white xl:text-[20px]">
+        <p className="text-left text-xs font-medium text-white xl:text-sm">
           {data.name}
         </p>
       </div>

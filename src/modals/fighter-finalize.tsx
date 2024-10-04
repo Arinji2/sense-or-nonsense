@@ -77,6 +77,7 @@ export default function FighterFinalize({
     document.addEventListener("mousedown", closeOpenMenus);
     return () => {
       document.removeEventListener("mousedown", closeOpenMenus);
+      document.body.style.overflow = "unset";
     };
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Animate.showComponent]);

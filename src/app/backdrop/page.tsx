@@ -1,4 +1,3 @@
-import WidthWrapper from "@/wrappers/width-wrapper";
 import Image from "next/image";
 import { ValidateGameIDCookie } from "../../../utils/game-data";
 import { BackdropSelected } from "../../../validations/generic/types";
@@ -44,7 +43,7 @@ export default async function Page({
   }
 
   return (
-    <div className="relative flex h-fit w-full flex-col items-center justify-start">
+    <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E]">
       {selectedBackdropData.verified && (
         <div className="fixed left-0 top-0 h-[100svh] w-full">
           <Image
@@ -59,9 +58,14 @@ export default async function Page({
           />
         </div>
       )}
-      <WidthWrapper>
+      <div
+        style={{
+          minHeight: "inherit",
+        }}
+        className="flex h-full w-full max-w-full-page flex-col items-center justify-center gap-10 px-4 py-10 xl:px-0"
+      >
         <div className="relative flex h-fit w-full flex-col items-center justify-start gap-10 py-10">
-          <h1 className="tracking-subtitle z-20 w-full px-2 text-center text-[35px] font-bold text-white md:text-[40px] xl:text-[60px] xl:leading-[100px]">
+          <h1 className="text-center text-lg font-bold tracking-title text-white md:text-2xl xl:text-3xl">
             SELECT A BACKDROP
           </h1>
           <Selector backdropData={selectedBackdropData} />
@@ -70,7 +74,7 @@ export default async function Page({
             backdrop={selectedBackdropData}
           />
         </div>
-      </WidthWrapper>
+      </div>
     </div>
   );
 }

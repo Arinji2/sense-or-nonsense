@@ -2,6 +2,7 @@
 
 import { SetDefaultBackdropAction } from "@/actions/defaults";
 import { AddBackdropAction } from "@/actions/game/backdrop";
+import { Button } from "@/components/button";
 import { ChevronUpCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -49,7 +50,7 @@ export default function Menu({
     <div
       ref={containerRef}
       className={cn({
-        "fixed bottom-0 left-0 z-50 flex h-[15svh] w-full translate-y-[calc(100%-50px)] flex-col items-center justify-start gap-5 bg-black py-4 transition-all duration-500 ease-in-out xl:h-[20svh]":
+        "fixed bottom-0 left-0 z-50 flex h-[35svh] w-full translate-y-[calc(100%-50px)] flex-col items-center justify-start gap-5 bg-black py-4 transition-all duration-500 ease-in-out xl:h-[20svh]":
           true,
         "translate-y-0": isActive,
       })}
@@ -58,7 +59,7 @@ export default function Menu({
         onClick={() => {
           setIsActive((prev) => !prev);
         }}
-        className="px-3 outline-none"
+        className="px-3"
       >
         <ChevronUpCircle
           size={24}
@@ -70,8 +71,8 @@ export default function Menu({
           })}
         />
       </button>
-      <div className="mt-auto flex h-fit w-full flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
-        <button
+      <div className="mt-auto flex h-fit w-full flex-row flex-wrap items-center justify-center gap-5 px-8 xl:gap-10 xl:px-0">
+        <Button
           disabled={!backdrop.verified}
           onClick={() => {
             params.delete("selected");
@@ -85,11 +86,12 @@ export default function Menu({
               toast.success("Backdrop Reset");
             }, 500);
           }}
-          className="flex h-fit w-fit shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-red-500 p-2 px-6 text-[10px] text-white transition-transform duration-200 ease-in-out will-change-transform enabled:hover:scale-100 disabled:bg-gray-500 xl:text-[15px]"
+          className="h-fit w-full bg-red-500 text-xs text-white xl:w-fit"
         >
           RESET
-        </button>
-        <button
+        </Button>
+        <Button
+          className="h-fit w-full bg-green-500 text-xs text-white xl:w-fit"
           disabled={!backdrop.verified}
           onClick={async () => {
             if (isSettingDefaults) {
@@ -113,11 +115,10 @@ export default function Menu({
               router.replace("/pregame");
             } else router.push("/pregame");
           }}
-          className="flex h-fit w-fit shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 px-6 text-[10px] text-white transition-transform duration-200 ease-in-out will-change-transform enabled:hover:scale-100 disabled:bg-gray-500 xl:text-[15px]"
         >
           LETS GO!
-        </button>
-        <button
+        </Button>
+        <Button
           disabled={randomSelected}
           onClick={async () => {
             const selectedBackdrop =
@@ -136,10 +137,10 @@ export default function Menu({
             }, 500);
             setRandomSelected(false);
           }}
-          className="flex h-fit w-fit shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-purple-500 p-2 px-6 text-[10px] text-white transition-transform duration-200 ease-in-out will-change-transform enabled:hover:scale-100 disabled:bg-gray-500 xl:text-[15px]"
+          className="h-fit w-full bg-purple-500 text-xs text-white xl:w-fit"
         >
           RANDOM
-        </button>
+        </Button>
       </div>
     </div>
   );
