@@ -52,8 +52,7 @@ export default function FighterExpand({
             ref={containerRef}
             style={
               {
-                "--fighterColor":
-                  fighterData.secondaryColor ?? fighterData.color,
+                "--fighterColor": fighterData.color,
               } as React.CSSProperties
             }
             className="group relative flex h-[80%] w-[70%] max-w-[1280px] flex-col items-center justify-start gap-5 overflow-hidden rounded-md bg-[--fighterColor] px-10 py-3 md:h-[80%] md:w-[50%] xl:h-[400px] xl:w-[80%] xl:flex-row xl:gap-20"
