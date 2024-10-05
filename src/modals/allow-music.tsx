@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/button";
 import { Slider } from "@/components/slider";
 import { Switch } from "@/components/switch";
 import {
@@ -57,7 +58,7 @@ export default function AllowMusic({
       >
         <div
           ref={containerRef}
-          className="group flex h-[80%] w-[90%] max-w-[1280px] flex-col items-center justify-start gap-5 overflow-hidden rounded-md bg-custom-black md:h-[80%] xl:h-[600px] xl:w-[80%] xl:flex-row"
+          className="group flex h-[90%] w-[90%] max-w-[1280px] flex-col items-center justify-start gap-5 overflow-hidden rounded-md bg-custom-black md:h-[80%] xl:h-[600px] xl:w-[80%] xl:flex-row"
         >
           <div className="relative h-[40%] w-full overflow-hidden xl:h-full xl:w-[30%]">
             <Image
@@ -72,15 +73,15 @@ export default function AllowMusic({
           </div>
           <div className="relative flex h-fit w-full flex-col items-center justify-center gap-16 p-6 xl:h-full xl:w-[70%] xl:py-20">
             <div className="flex h-fit w-full flex-col items-center justify-center gap-3">
-              <h4 className="text-center text-[20px] font-bold tracking-subtitle text-green-500 md:text-[35px]">
+              <h4 className="tracking-subtitle text-center text-lg font-bold text-green-500 md:text-xl xl:text-2xl">
                 {" "}
                 AUDIO SETTINGS
               </h4>
-              <p className="text-center text-[15px] tracking-text text-white xl:text-[20px]">
+              <p className="tracking-text text-center text-xss text-white/70 md:text-sm">
                 This game will play sound effects, update settings as needed.
               </p>
             </div>
-            <div className="no-scrollbar flex h-[200px] w-full flex-col items-stretch justify-start overflow-y-auto xl:h-fit xl:flex-row xl:justify-center xl:overflow-y-visible">
+            <div className="flex h-[150px] w-full flex-col items-stretch justify-start overflow-y-auto xl:h-fit xl:flex-row xl:justify-center xl:overflow-y-visible">
               <div
                 className={cn(
                   {
@@ -95,7 +96,7 @@ export default function AllowMusic({
                 <button
                   aria-label="Expand Background Music"
                   onClick={() => setIsBackgroundExpanded(!isBackgroundExpanded)}
-                  className="flex h-[28px] flex-row items-center justify-center gap-1 font-bold tracking-text text-white xl:h-fit"
+                  className="tracking-text flex h-[28px] flex-row items-center justify-center gap-1 font-bold text-white xl:h-fit"
                 >
                   <ChevronRight
                     className={cn(
@@ -105,7 +106,7 @@ export default function AllowMusic({
                       "inline size-5 text-[#FCAB3A] transition-all duration-500 ease-in-out xl:hidden",
                     )}
                   />
-                  <h2 className="">BACKGROUND MUSIC </h2>
+                  <h2 className="text-xs xl:text-sm">BACKGROUND MUSIC </h2>
                   <Music className="inline size-5 text-[#FCAB3A]" />
                 </button>
                 <div className="flex h-[34px] w-full flex-row items-center justify-center gap-2">
@@ -137,7 +138,7 @@ export default function AllowMusic({
                   </button>
                 </div>
                 <div className="flex h-fit w-fit shrink-0 flex-col items-center justify-center gap-2">
-                  <p className="text-center text-[15px] tracking-text text-white">
+                  <p className="tracking-text text-center text-xs text-white md:text-sm">
                     Adjust Volume
                   </p>
                   <div className="flex h-fit w-full flex-row items-center justify-center gap-2">
@@ -159,7 +160,7 @@ export default function AllowMusic({
                   </div>
                 </div>
                 <div className="flex h-fit w-fit shrink-0 flex-col items-center justify-center gap-2">
-                  <p className="text-center text-[15px] tracking-text text-white">
+                  <p className="tracking-text text-center text-xs text-white md:text-sm">
                     Disable Music
                   </p>
                   <div className="flex h-fit w-fit flex-row items-center justify-center gap-2">
@@ -192,7 +193,7 @@ export default function AllowMusic({
                 <button
                   aria-label="Expand SFX"
                   onClick={() => setIsSFXExpanded(!isSFXExpanded)}
-                  className="flex h-[28px] flex-row items-center justify-center gap-1 font-bold tracking-text text-white xl:h-fit"
+                  className="tracking-text flex h-[28px] flex-row items-center justify-center gap-1 font-bold text-white xl:h-fit"
                 >
                   <ChevronRight
                     className={cn(
@@ -202,33 +203,33 @@ export default function AllowMusic({
                       "inline size-5 text-[#FCAB3A] transition-all duration-500 ease-in-out xl:hidden",
                     )}
                   />
-                  <h2 className="">GAME SFX</h2>
+                  <h2 className="text-xs xl:text-sm">GAME SFX </h2>
                   <Music2 className="inline size-5 text-[#FCAB3A]" />
                 </button>
-                <div className="flex h-fit w-full flex-col items-center justify-center gap-4 px-4 xl:flex-row xl:px-0">
-                  <button
+                <div className="flex h-fit w-fit flex-col items-center justify-center gap-4 px-4 xl:px-0">
+                  <Button
                     disabled={!isCorrectAudio.isEnabled}
                     onClick={async () => {
                       if (isCorrectAudio.isPlaying) return;
                       isCorrectAudio.play();
                     }}
-                    className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500/60 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 disabled:bg-neutral-500 md:max-w-[150px] xl:w-fit xl:p-2 xl:text-[12px]"
+                    className="w-full whitespace-nowrap bg-green-500/60 text-xs text-white xl:text-xs"
                   >
                     Correct Choice
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     disabled={!isWrongAudio.isEnabled}
                     onClick={async () => {
                       if (isWrongAudio.isPlaying) return;
                       isWrongAudio.play();
                     }}
-                    className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-red-500/60 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 disabled:bg-neutral-500 md:max-w-[150px] xl:w-fit xl:p-2 xl:text-[12px]"
+                    className="w-full whitespace-nowrap bg-red-500/60 text-xs text-white xl:text-xs"
                   >
                     Incorrect Choice
-                  </button>
+                  </Button>
                 </div>
                 <div className="flex h-fit w-fit flex-col items-center justify-center gap-2">
-                  <p className="text-center text-[15px] tracking-text text-white">
+                  <p className="tracking-text text-center text-xs text-white md:text-sm">
                     Adjust Volume
                   </p>
                   <div className="flex h-fit w-full flex-row items-center justify-center gap-2">
@@ -252,7 +253,7 @@ export default function AllowMusic({
                 </div>
 
                 <div className="flex h-fit w-fit flex-col items-center justify-center gap-2">
-                  <p className="text-center text-[15px] tracking-text text-white">
+                  <p className="tracking-text text-center text-xs text-white md:text-sm">
                     Disable SFX
                   </p>
                   <div className="flex h-fit w-fit flex-row items-center justify-center gap-2">
@@ -268,7 +269,7 @@ export default function AllowMusic({
               </div>
             </div>
             <div className="flex h-fit w-fit shrink-0 flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
-              <button
+              <Button
                 onClick={async () => {
                   Animate.setQueue(false);
                   backgroundAudio.setHasErrored(false);
@@ -289,10 +290,10 @@ export default function AllowMusic({
                     } as SavedSoundSettingsSchemaType),
                   );
                 }}
-                className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-purple-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
+                className="w-full whitespace-nowrap bg-purple-500/60 text-xs text-white xl:text-xs"
               >
                 LETS GO!
-              </button>
+              </Button>
             </div>
           </div>
         </div>
