@@ -31,7 +31,7 @@ export default function PlayNowButton({
         }
 
         if (gameData.isMultiplayer) {
-          router.push("/pregame");
+          router.push("/difficulty");
           return;
         }
 
@@ -93,7 +93,7 @@ export default function PlayNowButton({
         );
 
         if (!hasSetFighter) {
-          router.push("/fighters");
+          router.push("/difficulty?redirected=true");
         } else if (!hasSetBackdrop) {
           router.push("/backdrop");
         } else router.push("/pregame");
