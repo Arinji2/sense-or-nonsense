@@ -219,25 +219,25 @@ export default function Controls({
     }
   }, [loading, aiThinking, playerName, data.isFake, level, answerSubmitted]);
 
-  // useEffect(() => {
-  //   if (loading) return;
-  //   const interval = setInterval(() => {
-  //     setTimer((prev) => prev - 1);
-  //   }, 1000);
+  useEffect(() => {
+    if (loading) return;
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
 
-  //   if (timer === 3) {
-  //     toast.success("3 seconds left!");
-  //   }
-  //   if (timer === 0) {
-  //     clearInterval(interval);
-  //     toast.error("Time's Up! The Word Was " + (data.isFake ? "Fake" : "Real"));
-  //     answerSubmitted(false);
-  //   }
+    if (timer === 3) {
+      toast.success("3 seconds left!");
+    }
+    if (timer === 0) {
+      clearInterval(interval);
+      toast.error("Time's Up! The Word Was " + (data.isFake ? "Fake" : "Real"));
+      answerSubmitted(false);
+    }
 
-  //   return () => {
-  //     if (interval) clearInterval(interval);
-  //   };
-  // }, [timer, loading, data.isFake, answerSubmitted]);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [timer, loading, data.isFake, answerSubmitted]);
 
   const timerDisplay = useMemo(() => {
     return aiThinking ? (
