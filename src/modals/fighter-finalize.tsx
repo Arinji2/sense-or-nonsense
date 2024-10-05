@@ -51,7 +51,7 @@ export default function FighterFinalize({
         }
       }
     },
-    [Animate, containerRef],
+    [Animate],
   );
 
   const generatedFighters = useMemo(() => {
@@ -75,13 +75,20 @@ export default function FighterFinalize({
       document.body.style.overflow = "unset";
     }
 
+    function escHandler(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        closeOpenMenus({});
+      }
+    }
+
     document.addEventListener("mousedown", closeOpenMenus);
+    document.addEventListener("keydown", escHandler);
     return () => {
       document.removeEventListener("mousedown", closeOpenMenus);
+      document.removeEventListener("keydown", escHandler);
       document.body.style.overflow = "unset";
     };
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Animate.showComponent]);
+  }, [Animate.showComponent, closeOpenMenus]);
 
   return (
     Animate.actualState && (
