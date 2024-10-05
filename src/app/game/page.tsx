@@ -57,7 +57,7 @@ export default async function Page() {
   const CurrentRound = rounds[rounds.length - 1].round_number;
 
   if (CurrentRound > SelectedDifficulty.rounds) {
-    redirect("/game/summary");
+    redirect(`/dashboard/games/${gameData.id}`);
   }
   const CurrentStreaks = GetCurrentStreaks({
     games: rounds.slice(0, rounds.length - 1),

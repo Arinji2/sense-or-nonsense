@@ -138,7 +138,7 @@ export default function Controls({
         await resolve;
 
         const ID = await FinishGameAction();
-        router.push(`/dashboard/game/${ID}`);
+        router.push(`/dashboard/games/${ID}`);
 
         return;
       } else {
