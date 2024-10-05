@@ -87,12 +87,13 @@ export default async function Page({
     ) => {
       try {
         const data = await pb.collection("games").getList(locPageNumber, 10, {
-          filter: `user = "${locUserID}" && completed=true && ${locFilterString}`,
+          filter: `user = "${locUserID}" && completed=true ${locFilterString}`,
           sort: locSortString.length > 2 ? locSortString : "-created",
         });
 
         return data;
       } catch (e: any) {
+        console.log(e);
         return {} as ListResult<RecordModel>;
       }
     },
