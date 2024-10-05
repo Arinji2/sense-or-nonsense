@@ -1,5 +1,5 @@
+import FooterImage from "@/../public/home/footer.png";
 import Image from "next/image";
-import FooterImage from "../../public/home/footer.png";
 import { HeroHeader } from "./hero";
 
 export default function Footer() {

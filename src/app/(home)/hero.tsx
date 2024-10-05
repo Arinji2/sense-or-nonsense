@@ -1,8 +1,8 @@
+import HomeImage from "@/../public/home/home.png";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Suspense } from "react";
 import { GetUserMode } from "../../../utils/getMode";
-import HomeImage from "../../public/home/home.png";
 import GamemodeSelector from "./gamemode-selector.client";
 
 export default function Hero() {

@@ -1,11 +1,11 @@
 "use client";
 
+import FakeImage from "@/../public/game/fake.png";
+import RealImage from "@/../public/game/real.png";
 import Image from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { cn } from "../../../utils/cn";
-import FakeImage from "../../public/game/fake.png";
-import RealImage from "../../public/game/real.png";
 
 export function InstructionButton({ isFake }: { isFake: boolean }) {
   const [hasClicked, setHasClicked] = useState(false);
