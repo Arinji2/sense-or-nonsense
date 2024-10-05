@@ -4,7 +4,7 @@ import { FightersList } from "@/../constants/fighters";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
 import { cn } from "../../utils/cn";
@@ -31,6 +31,19 @@ export default function FighterModal({
   const [locFighterData, setLocFighterData] =
     useState<GameFighterSchemaType[]>(fighterData);
 
+  const closeOpenMenus = useCallback(
+    (e: any) => {
+      if (
+        containerRef.current &&
+        Animate.showComponent &&
+        !containerRef.current.contains(e.target)
+      ) {
+        Animate.setQueue(false);
+      }
+    },
+    [Animate],
+  );
+
   useEffect(() => {
     if (Animate.showComponent) {
       document.body.style.overflow = "hidden";
@@ -38,22 +51,20 @@ export default function FighterModal({
       document.body.style.overflow = "unset";
     }
 
+    function escHandler(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        closeOpenMenus({});
+      }
+    }
+
     document.addEventListener("mousedown", closeOpenMenus);
+    document.addEventListener("keydown", escHandler);
     return () => {
       document.removeEventListener("mousedown", closeOpenMenus);
+      document.removeEventListener("keydown", escHandler);
+      document.body.style.overflow = "unset";
     };
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Animate.showComponent]);
-
-  const closeOpenMenus = (e: any) => {
-    if (
-      containerRef.current &&
-      Animate.showComponent &&
-      !containerRef.current.contains(e.target)
-    ) {
-      Animate.setQueue(false);
-    }
-  };
+  }, [Animate.showComponent, closeOpenMenus]);
 
   const router = useRouter();
   const finalizeAnimate = useAnimate(800);
