@@ -242,11 +242,13 @@ export default function Controls({
 
   const timerDisplay = useMemo(() => {
     return aiThinking ? (
-      <Bot className="size-[40px] animate-pulse text-black" />
+      <Bot className="size-[15px] animate-pulse text-black md:size-[25px]" />
     ) : loading ? (
-      <Loader2 className="size-[40px] animate-spin text-black" />
+      <Loader2 className="size-[15px] animate-spin text-black md:size-[25px]" />
     ) : (
-      <p className="text-[40px] font-bold text-black">{timer}</p>
+      <p className="text-center text-[15px] font-bold text-black md:text-[25px]">
+        {timer}
+      </p>
     );
   }, [loading, timer, aiThinking]);
 
@@ -279,17 +281,19 @@ export default function Controls({
             answerSubmitted(true);
           }
         }}
-        className="group flex size-20 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale"
+        className="group flex size-16 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale xl:size-20"
       >
-        <Image
-          src={"/game/real.png"}
-          className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
-          alt="Real"
-          width={40}
-          height={40}
-        />
+        <div className="relative size-[30px] xl:size-[40px]">
+          <Image
+            src={"/game/real.png"}
+            className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
+            alt="Real"
+            fill
+            sizes="(min-width: 1280px) 40px, 30px"
+          />
+        </div>
       </button>
-      <div className="flex size-20 flex-col items-center justify-center rounded-full bg-[#FCAB3A] shadow-xl shadow-white/10">
+      <div className="flex size-16 flex-col items-center justify-center rounded-full bg-[#FCAB3A] p-3 tracking-number shadow-xl shadow-white/10 md:size-20">
         {timerDisplay}
       </div>
       <button
@@ -315,15 +319,17 @@ export default function Controls({
             answerSubmitted(true);
           }
         }}
-        className="group flex size-20 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale"
+        className="group flex size-16 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale xl:size-20"
       >
-        <Image
-          className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
-          src={"/game/fake.png"}
-          alt="Fake"
-          width={40}
-          height={40}
-        />
+        <div className="relative size-[30px] xl:size-[40px]">
+          <Image
+            className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
+            src={"/game/fake.png"}
+            alt="Fake"
+            fill
+            sizes="(min-width: 1280px) 40px, 30px"
+          />
+        </div>
       </button>
     </div>
   );

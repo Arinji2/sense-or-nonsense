@@ -64,9 +64,7 @@ export default function PlayerView({
         </div>
         <div className="flex h-fit w-full flex-col items-start justify-start">
           <p className="line-clamp-2 text-sm text-white">
-            {playerData[currentPlayer].fighter_name} Lorem ipsum dolor sit amet
-            consectetur adipisicing elit. Modi commodi cum eos doloribus dicta
-            officia libero maiores inventore sit nesciunt.
+            {playerData[currentPlayer].fighter_name}
           </p>
           <p className="text-xss font-medium text-white/60">
             Streak:{" "}
@@ -143,8 +141,8 @@ export default function PlayerView({
                       className="object-contain"
                     />
                   </div>
-                  <div className="flex h-fit w-[100px] flex-col items-start justify-start">
-                    <p className="line-clamp-2 w-full text-xs text-white">
+                  <div className="flex h-fit w-[100px] flex-col items-end justify-start">
+                    <p className="line-clamp-2 w-full text-right text-xs text-white">
                       {player.fighter_name}
                     </p>
                     <p className="text-xs text-white/60">

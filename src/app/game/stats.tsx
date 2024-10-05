@@ -34,13 +34,13 @@ function Stat({
   id: number;
 }) {
   return (
-    <div className="flex h-fit w-fit min-w-0 max-w-full flex-row items-center justify-start gap-2">
-      <p className="text-2xl font-bold text-[#FCAB3A]">{id}.</p>
-      <div className="flex h-fit w-full flex-col items-start justify-center">
-        <p className="w-full truncate text-2xl font-bold text-[#FCAB3A]">
+    <div className="flex h-fit w-fit min-w-0 max-w-full flex-row items-center justify-start gap-2 opacity-80">
+      <p className="text-sm font-bold text-[#FCAB3A] xl:text-lg">{id}.</p>
+      <div className="flex h-fit w-full flex-col items-start justify-center gap-2">
+        <p className="w-full truncate text-sm font-bold text-[#FCAB3A] xl:text-lg">
           {title}
         </p>
-        <p className="-mt-2 w-full truncate text-2xl font-bold text-white">
+        <p className="-mt-2 w-full truncate text-sm font-bold text-white xl:text-lg">
           {value}
         </p>
       </div>

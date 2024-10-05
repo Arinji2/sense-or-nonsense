@@ -11,7 +11,6 @@ import Controls from "./controls.client";
 import Menu from "./menu.client";
 import { MusicProvider } from "./music-context";
 import PlayerView from "./player-view";
-import Report from "./report.client";
 import Settings from "./settings";
 import { RenderStats } from "./stats";
 import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
@@ -92,24 +91,22 @@ export default async function Page() {
           className="hidden xl:flex"
         />
         <div className="top-5 z-30 flex flex-row items-center justify-center gap-2 rounded-md bg-black px-3 py-2 xl:fixed xl:right-5">
-          <span className="text-lg font-medium text-green-500">SENSE</span>
-          <span className="text-lg font-medium text-white">OR</span>
-          <span className="text-lg font-medium text-red-500">NONSENSE</span>
+          <span className="text-sm font-medium text-green-500">SENSE</span>
+          <span className="text-sm font-medium text-white">OR</span>
+          <span className="text-sm font-medium text-red-500">NONSENSE</span>
         </div>
         <Settings />
 
         <div className="relative z-20 flex h-full w-full flex-col justify-end">
-          <div className="flex h-[80%] w-full flex-col items-center justify-start gap-10 pb-5 xl:h-[60%]">
-            <h1 className="line-clamp-2 max-w-[800px] p-2 text-center text-[25px] font-medium tracking-subtitle text-white xl:truncate xl:text-[40px]">
+          <div className="flex h-[80%] w-full flex-col items-center justify-start gap-5 overflow-hidden pb-5 xl:h-[60%] xl:gap-10">
+            <h1 className="line-clamp-2 w-full max-w-[800px] p-2 py-0 text-center text-sm font-bold tracking-title text-white md:text-lg xl:line-clamp-1 xl:text-3xl">
               {wordData.word.toUpperCase()}
             </h1>
-            <div className="relative flex w-fit max-w-[80%] flex-col items-center justify-center rounded-md bg-[#FCAB3A] p-3">
-              <p className="line-clamp-4 text-center text-[15px] tracking-text text-black xl:line-clamp-2 xl:text-[20px]">
+            <div className="relative flex w-fit max-w-[80%] flex-col items-center justify-center rounded-md bg-[#FCAB3A]/90 p-3">
+              <p className="tracking-text line-clamp-4 text-center text-xs text-black md:text-base xl:line-clamp-2 xl:text-sm">
                 {wordData.definition}
               </p>
-              <Report />
             </div>
-
             <Controls
               data={wordData}
               previousGames={rounds}
@@ -119,7 +116,6 @@ export default async function Page() {
               fighters={playerData}
               maxRounds={SelectedDifficulty.rounds}
             />
-
             <div className="mt-auto hidden flex-row items-center justify-center gap-20 xl:flex">
               <RenderStats
                 {...{
@@ -129,7 +125,6 @@ export default async function Page() {
                 }}
               />
             </div>
-            <Report isStatic />
             <PlayerView
               playerData={playerData}
               CurrentStreaks={CurrentStreaks}
