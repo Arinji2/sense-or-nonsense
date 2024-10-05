@@ -1,9 +1,23 @@
 import { GetUserMode } from "@/../utils/getMode";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Instructions from "../(home)/instructions";
+import { GetGameData } from "../../../utils/game-data";
 import { DeleteGameButton, StartGameButton } from "./buttons.client";
 
 export default async function Page() {
   const { userID, pb } = await GetUserMode();
+  const gameID = cookies().get("game-id")?.value;
+  if (!gameID) redirect("/");
+  const { gameData } = await GetGameData(pb, gameID, userID!);
+
+  if (!gameData.difficulty) {
+    redirect("/difficulty?redirected=true");
+  } else if (gameData.playerData.length === 0) {
+    redirect("/fighters?redirected=true");
+  } else if (gameData.backdrop === "") {
+    redirect("/backdrop?redirected=true");
+  }
   return (
     <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E]">
       <div

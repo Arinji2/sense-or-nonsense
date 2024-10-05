@@ -1,6 +1,7 @@
 "use client";
 
 import { RemoveGameAction } from "@/actions/game/setup";
+import { Button } from "@/components/button";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -134,32 +135,42 @@ export default function OngoingGame({
               <X className="size-10 text-white" />
             </button>
             <div className="flex h-fit w-full flex-col items-center justify-center gap-3">
-              <h4 className="tracking-subtitle text-center text-[20px] font-bold text-green-500 md:text-[35px]">
+              <h4 className="tracking-subtitle text-center text-lg font-bold text-green-500 md:text-xl xl:text-2xl">
                 {" "}
                 ONGOING GAME
               </h4>
-              <p className="tracking-text text-center text-[20px] text-white">
+              <p className="tracking-text text-center text-sm text-white/70 xl:text-base">
                 You can continue to the game or delete the game
               </p>
             </div>
             <div className="flex h-fit w-fit flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
-              <button
+              <Button
                 onClick={async () => {
                   Animate.setQueue(false);
-                  router.refresh();
+                  if (isDeleting) {
+                    router.refresh();
+                  } else {
+                    router.push("/game");
+                  }
                 }}
-                className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-purple-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
+                className="w-full bg-green-500 text-xs text-white xl:w-fit xl:text-sm"
               >
                 {isDeleting ? "RETURN" : "CONTINUE"} TO GAME
-              </button>
-              <button
+              </Button>
+              <Button
                 onClick={async () => {
-                  closeOpenMenus({}, true);
+                  await toast.promise(RemoveGameAction(), {
+                    loading: "Deleting game...",
+                    success: "Game deleted",
+                    error: "Failed to delete game",
+                  });
+
+                  router.push("/");
                 }}
-                className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-blue-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
+                className="w-full bg-red-500 text-xs text-white xl:w-fit xl:text-sm"
               >
                 DELETE GAME
-              </button>
+              </Button>
             </div>
           </div>
         </div>
