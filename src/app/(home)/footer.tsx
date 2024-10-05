@@ -1,4 +1,5 @@
 import Image from "next/image";
+import FooterImage from "../../public/home/footer.png";
 import { HeroHeader } from "./hero";
 
 export default function Footer() {
@@ -6,7 +7,7 @@ export default function Footer() {
     <div className="relative flex h-[100svh] w-full flex-col items-center justify-center gap-20">
       <div className="absolute left-0 top-0 h-[100svh] w-full">
         <Image
-          src="/home/footer.png"
+          src={FooterImage}
           quality={30}
           alt="Books"
           fill

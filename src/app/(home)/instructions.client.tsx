@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { cn } from "../../../utils/cn";
+import FakeImage from "../../public/game/fake.png";
+import RealImage from "../../public/game/real.png";
 
 export function InstructionButton({ isFake }: { isFake: boolean }) {
   const [hasClicked, setHasClicked] = useState(false);
@@ -21,7 +23,7 @@ export function InstructionButton({ isFake }: { isFake: boolean }) {
       className="relative flex size-[60px] flex-col items-center justify-center rounded-full bg-black"
     >
       <Image
-        src={isFake ? "/game/fake.png" : "/game/real.png"}
+        src={isFake ? FakeImage : RealImage}
         alt="Real"
         width={30}
         height={30}

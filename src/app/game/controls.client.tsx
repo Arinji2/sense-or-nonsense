@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 
 import { CreateNewRound, UpdateRound } from "@/actions/game/rounds";
 import { FinishGameAction } from "@/actions/game/setup";
+import FakeImage from "../../../public/game/fake.png";
+import RealImage from "../../../public/game/real.png";
 import { useRouterRefresh } from "../../../utils/useRouterRefresh";
 import {
   GameFighterSchemaType,
@@ -284,7 +286,7 @@ export default function Controls({
       >
         <div className="relative size-[30px] xl:size-[40px]">
           <Image
-            src={"/game/real.png"}
+            src={RealImage}
             className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
             alt="Real"
             fill
@@ -323,7 +325,7 @@ export default function Controls({
         <div className="relative size-[30px] xl:size-[40px]">
           <Image
             className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
-            src={"/game/fake.png"}
+            src={FakeImage}
             alt="Fake"
             fill
             sizes="(min-width: 1280px) 40px, 30px"

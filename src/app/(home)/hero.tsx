@@ -2,6 +2,7 @@ import { ChevronDown } from "lucide-react";
 import Image from "next/image";
 import { Suspense } from "react";
 import { GetUserMode } from "../../../utils/getMode";
+import HomeImage from "../../public/home/home.png";
 import GamemodeSelector from "./gamemode-selector.client";
 
 export default function Hero() {
@@ -9,7 +10,7 @@ export default function Hero() {
     <div className="flex min-h-[100svh] w-full flex-col items-stretch justify-start gap-20 py-5 md:h-[100svh]">
       <div className="fixed left-0 top-0 h-[100svh] w-full">
         <Image
-          src="/home/home.png"
+          src={HomeImage}
           quality={30}
           alt="Books"
           fill
