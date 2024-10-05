@@ -26,6 +26,7 @@ export default async function Page() {
   const isFake = GetIsFakeSelected();
 
   const currentPlayer = rounds[rounds.length - 1].player_index;
+  const currentPlayerUID = playerData[currentPlayer].fighter_uid;
 
   const pb = await ConnectPBAdmin();
   const SelectedGame = GamesList.find(
@@ -111,7 +112,7 @@ export default async function Page() {
               data={wordData}
               previousGames={rounds}
               level={SelectedDifficulty.level}
-              streak={CurrentStreaks[currentPlayer]}
+              streak={CurrentStreaks[currentPlayerUID]}
               playerName={SelectedPlayer.fighter_name!}
               fighters={playerData}
               maxRounds={SelectedDifficulty.rounds}
