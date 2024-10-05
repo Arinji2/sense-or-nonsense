@@ -1,4 +1,4 @@
-import { unstable_cache } from "next/cache";
+import { unstable_noStore } from "next/cache";
 import Client from "pocketbase";
 import {
   GameFighterSchemaType,
@@ -62,44 +62,35 @@ export async function GetWordData({
   currentPlayer: number;
   pb: Client;
 }) {
-  const wordData = await unstable_cache(
-    async () => {
-      let wordData = {} as WordSchemaType;
-      if (isFake) {
-        const data = await pb
-          .collection("fake_words")
-          .getFirstListItem(`level="${difficulty}"${filteredIDs}`, {
-            sort: "@random",
-          });
-        wordData = {
-          word: data.word,
-          definition: data.definition,
-          id: data.id,
-          difficulty: data.level,
-          isFake: true,
-        } as WordSchemaType;
-      } else {
-        const data = await pb
-          .collection("real_words")
-          .getFirstListItem(`level="${difficulty}"${filteredIDs}`, {
-            sort: "@random",
-          });
-        wordData = {
-          word: data.word,
-          definition: data.definition,
-          id: data.id,
-          difficulty: data.level,
-          isFake: false,
-        } as WordSchemaType;
-      }
-      return wordData;
-    },
-    [currentPlayer.toString(), filteredIDs],
-    {
-      revalidate: 5,
-    },
-  )();
-
+  unstable_noStore();
+  let wordData: WordSchemaType;
+  if (isFake) {
+    const data = await pb
+      .collection("fake_words")
+      .getFirstListItem(`level="${difficulty}"${filteredIDs}`, {
+        sort: "@random",
+      });
+    wordData = {
+      word: data.word,
+      definition: data.definition,
+      id: data.id,
+      difficulty: data.level,
+      isFake: true,
+    } as WordSchemaType;
+  } else {
+    const data = await pb
+      .collection("real_words")
+      .getFirstListItem(`level="${difficulty}"${filteredIDs}`, {
+        sort: "@random",
+      });
+    wordData = {
+      word: data.word,
+      definition: data.definition,
+      id: data.id,
+      difficulty: data.level,
+      isFake: false,
+    } as WordSchemaType;
+  }
   return wordData;
 }
 
