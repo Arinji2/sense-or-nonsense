@@ -4,7 +4,7 @@ import { InitGuest } from "@/actions/guest";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import LoginImage from "../../public/login.png";
 import useAnimate from "../../utils/useAnimate";
@@ -18,6 +18,19 @@ export default function LoginModal({
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  const closeOpenMenus = useCallback(
+    (e: any) => {
+      if (
+        containerRef.current &&
+        Animate.showComponent &&
+        !containerRef.current.contains(e.target)
+      ) {
+        Animate.setQueue(false);
+      }
+    },
+    [Animate],
+  );
+
   useEffect(() => {
     if (Animate.showComponent) {
       document.body.style.overflow = "hidden";
@@ -25,22 +38,22 @@ export default function LoginModal({
       document.body.style.overflow = "unset";
     }
 
+    function escHandler(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        closeOpenMenus({});
+      }
+    }
+
     document.addEventListener("mousedown", closeOpenMenus);
+    document.addEventListener("keydown", escHandler);
+
     return () => {
       document.removeEventListener("mousedown", closeOpenMenus);
+      document.removeEventListener("keydown", escHandler);
+      document.body.style.overflow = "unset";
     };
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Animate.showComponent]);
-
-  const closeOpenMenus = (e: any) => {
-    if (
-      containerRef.current &&
-      Animate.showComponent &&
-      !containerRef.current.contains(e.target)
-    ) {
-      Animate.setQueue(false);
-    }
-  };
 
   const router = useRouter();
 
