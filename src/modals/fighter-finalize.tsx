@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { RemoveFighterAction } from "@/actions/game/fighters";
 import { useFighterContext } from "@/app/fighters/context";
 import { Button } from "@/components/button";
+import { cn } from "../../utils/cn";
 import useAnimate from "../../utils/useAnimate";
 import { GameFighterSchemaType } from "../../validations/game-data/types";
 
@@ -107,11 +108,14 @@ export default function FighterFinalize({
             FINALIZE FIGHTER SELECTION
           </h4>
           <div
-            style={{
-              justifyContent:
-                generatedFighters!.length > 2 ? "start" : "center",
-            }}
-            className="no-scrollbar flex h-[200px] w-full flex-row items-center justify-center gap-10 overflow-x-auto overflow-y-hidden px-4 xl:px-10"
+            className={cn(
+              "no-scrollbar flex h-[200px] w-full flex-row items-center justify-center gap-10 overflow-x-auto overflow-y-hidden px-4 xl:px-10",
+              {
+                "justify-start xl:justify-center":
+                  generatedFighters!.length > 1,
+                "justify-start xl:justify-start": generatedFighters!.length > 2,
+              },
+            )}
           >
             {generatedFighters &&
               generatedFighters.map((fighter, index) => (
@@ -138,10 +142,10 @@ export default function FighterFinalize({
                       </div>
                     </div>
                     <div className="flex h-full w-full min-w-0 flex-col items-end justify-end gap-4">
-                      <h4 className="w-full truncate text-right text-sm font-bold text-white md:text-lg">
+                      <h4 className="w-full truncate text-right text-xs font-bold text-white md:text-lg">
                         {fighterData![index].fighter_name}
                       </h4>
-                      <p className="text-[15px] text-white">
+                      <p className="text-xs text-white xl:text-sm">
                         PLAYER {index + 1}
                       </p>
                     </div>
@@ -171,14 +175,14 @@ export default function FighterFinalize({
               LETS GO!
             </Button>
             {isMultiplayer && (
-              <button
+              <Button
                 onClick={async () => {
                   Animate.setQueue(false);
                 }}
-                className="flex h-fit w-full shrink-0 scale-105 flex-col items-center justify-center rounded-md bg-green-500 p-2 text-[15px] text-white transition-transform duration-200 ease-in-out will-change-transform hover:scale-100 xl:w-fit xl:p-4 xl:text-[20px]"
+                className="w-full bg-purple-500 text-xs text-white xl:w-fit xl:text-base"
               >
                 CREATE PLAYER {fighterData.length + 1}
-              </button>
+              </Button>
             )}
           </div>
         </div>
