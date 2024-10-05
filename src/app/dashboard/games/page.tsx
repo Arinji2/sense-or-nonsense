@@ -84,7 +84,7 @@ export default async function Page({
       locSortString: string,
     ) => {
       return await pb.collection("games").getList(locPageNumber, 10, {
-        filter: `user = "${locUserID}" ${locFilterString}`,
+        filter: `user = "${locUserID}" && completed=true && ${locFilterString}`,
         sort: locSortString.length > 2 ? locSortString : "-created",
       });
     },
