@@ -18,24 +18,6 @@ export default function OngoingGame({
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
-  useEffect(() => {
-    if (Animate.showComponent) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-
-    document.addEventListener("mousedown", (e) => {
-      closeOpenMenus(e, true);
-    });
-    return () => {
-      document.removeEventListener("mousedown", (e) => {
-        closeOpenMenus(e, true);
-      });
-    };
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Animate.showComponent]);
-
   const closeOpenMenus = useCallback(
     async (e: any, isEventlistener?: boolean, override?: boolean) => {
       if (
@@ -75,6 +57,30 @@ export default function OngoingGame({
     },
     [Animate, containerRef, router],
   );
+  useEffect(() => {
+    if (Animate.showComponent) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    function escHandler(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        closeOpenMenus({});
+      }
+    }
+
+    document.addEventListener("mousedown", (e) => {
+      closeOpenMenus(e, true);
+    });
+    document.addEventListener("keydown", escHandler);
+    return () => {
+      document.removeEventListener("mousedown", (e) => {
+        closeOpenMenus(e, true);
+      });
+      document.removeEventListener("keydown", escHandler);
+      document.body.style.overflow = "unset";
+    };
+  }, [Animate.showComponent, closeOpenMenus]);
 
   return (
     Animate.actualState && (
@@ -128,11 +134,11 @@ export default function OngoingGame({
               <X className="size-10 text-white" />
             </button>
             <div className="flex h-fit w-full flex-col items-center justify-center gap-3">
-              <h4 className="text-center text-[20px] font-bold tracking-subtitle text-green-500 md:text-[35px]">
+              <h4 className="tracking-subtitle text-center text-[20px] font-bold text-green-500 md:text-[35px]">
                 {" "}
                 ONGOING GAME
               </h4>
-              <p className="text-center text-[20px] tracking-text text-white">
+              <p className="tracking-text text-center text-[20px] text-white">
                 You can continue to the game or delete the game
               </p>
             </div>
