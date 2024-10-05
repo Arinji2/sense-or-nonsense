@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 import Image from "next/image";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import useAnimate from "../../utils/useAnimate";
 import { FighterDataType } from "../../validations/generic/types";
@@ -16,6 +16,19 @@ export default function FighterExpand({
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  const closeOpenMenus = useCallback(
+    (e: any) => {
+      if (
+        containerRef.current &&
+        Animate.showComponent &&
+        !containerRef.current.contains(e.target)
+      ) {
+        Animate.setQueue(false);
+      }
+    },
+    [Animate],
+  );
+
   useEffect(() => {
     if (Animate.showComponent) {
       document.body.style.overflow = "hidden";
@@ -23,22 +36,20 @@ export default function FighterExpand({
       document.body.style.overflow = "unset";
     }
 
+    function escHandler(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        closeOpenMenus({});
+      }
+    }
+
     document.addEventListener("mousedown", closeOpenMenus);
+    document.addEventListener("keydown", escHandler);
     return () => {
       document.removeEventListener("mousedown", closeOpenMenus);
+      document.removeEventListener("keydown", escHandler);
+      document.body.style.overflow = "unset";
     };
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Animate.showComponent]);
-
-  const closeOpenMenus = (e: any) => {
-    if (
-      containerRef.current &&
-      Animate.showComponent &&
-      !containerRef.current.contains(e.target)
-    ) {
-      Animate.setQueue(false);
-    }
-  };
+  }, [Animate.showComponent, closeOpenMenus]);
 
   return (
     <>
