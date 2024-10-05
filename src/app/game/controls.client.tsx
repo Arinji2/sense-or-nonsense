@@ -6,10 +6,10 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
+import FakeImage from "@/../../public/game/fake.png";
+import RealImage from "@/../../public/game/real.png";
 import { CreateNewRound, UpdateRound } from "@/actions/game/rounds";
 import { FinishGameAction } from "@/actions/game/setup";
-import FakeImage from "../../../public/game/fake.png";
-import RealImage from "../../../public/game/real.png";
 import { useRouterRefresh } from "../../../utils/useRouterRefresh";
 import {
   GameFighterSchemaType,
