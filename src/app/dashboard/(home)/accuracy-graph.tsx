@@ -17,6 +17,7 @@ export default async function AccuracyGraph({
 
   userID: string;
 }) {
+  console.log(gameData);
   const { points, maxAccuracy } = await unstable_cache(
     async (games: GameSchemaType[], rounds: RoundSchemaType[]) => {
       const difficultyAccuracyMap = new Map();
@@ -46,6 +47,16 @@ export default async function AccuracyGraph({
           y: accuracy.toFixed(2),
         }),
       );
+
+      if (graph.length === 0) {
+        return {
+          points: [],
+          maxAccuracy: {
+            value: 0,
+            key: 0,
+          },
+        };
+      }
 
       const maxAccuracy = {
         value: Math.max(...graph.map((data) => Number(data.y))),

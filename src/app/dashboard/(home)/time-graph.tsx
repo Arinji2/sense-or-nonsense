@@ -49,6 +49,16 @@ export default async function TimeGraph({
         }),
       );
 
+      if (graph.length === 0) {
+        return {
+          points: [] as any as DashboardGraphPoints[],
+          maxTimeTaken: {
+            value: 0,
+            key: "0",
+          },
+        };
+      }
+
       const maxTimeTaken = {
         value: Math.max(...graph.map((data) => Number(data.y))),
         key: graph[graph.length - 1].x,

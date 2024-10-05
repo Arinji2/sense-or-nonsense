@@ -1,7 +1,7 @@
 "use client";
 import { Loader2 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { cn } from "../../../../utils/cn";
 export default function Search() {
@@ -9,7 +9,10 @@ export default function Search() {
   const [value] = useDebounce(inputSearch, 1000);
 
   const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
+  const params = useMemo(
+    () => new URLSearchParams(searchParams),
+    [searchParams],
+  );
   const router = useRouter();
   const pathname = usePathname();
 
@@ -21,7 +24,7 @@ export default function Search() {
       params.set("search", value);
       router.push(`${pathname}?${params.toString()}`);
     }
-  }, [value]);
+  }, [value, params, router, pathname]);
 
   return (
     <div className="flex h-fit w-full flex-row items-center justify-between gap-3 rounded-md bg-blue-500/10 p-2 shadow-md shadow-black">

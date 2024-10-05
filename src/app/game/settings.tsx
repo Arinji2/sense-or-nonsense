@@ -22,7 +22,7 @@ export default function Settings() {
     if (!animate.queue && showDelete) {
       setShowDelete(false);
     }
-  }, [animate.queue]);
+  }, [animate.queue, showDelete]);
 
   return (
     <>

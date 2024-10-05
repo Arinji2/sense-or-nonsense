@@ -10,38 +10,57 @@ export const StoredWordSchema = z.object({
   id: z.string(),
 });
 
-export const GameSchema = z.object({
-  id: z.string(),
-  user: z.string(),
+export const GameSchema = z
+  .object({
+    id: z.string(),
+    user: z.string(),
 
-  gameID: z.string(),
-  difficulty: z.string(),
-  backdrop: z.string(),
-  playerData: z.string().transform((val) => {
-    if (!val.includes(":")) {
-      return [];
-    }
-
-    const players = val.split(";").map((entry) => {
-      const [fighters_uid, fighter_id, fighter_name] = entry.split(":");
-
-      if (!fighters_uid || !fighter_id || !fighter_name) {
-        return null;
+    gameID: z.string(),
+    difficulty: z.string(),
+    backdrop: z.string(),
+    playerData: z.string().transform((val) => {
+      if (!val.includes(":")) {
+        return [];
       }
 
-      return {
-        fighter_uid: Number(fighters_uid),
-        fighter_id: Number(fighter_id),
-        fighter_name,
-      };
-    });
+      const players = val.split(";").map((entry) => {
+        const [fighters_uid, fighter_id, fighter_name] = entry.split(":");
 
-    return players.filter((player) => player !== null);
-  }),
-  completed: z.boolean(),
-  created: z.string().transform((val) => new Date(val)),
-  updated: z.string().transform((val) => new Date(val)),
-});
+        if (!fighters_uid || !fighter_id || !fighter_name) {
+          return null;
+        }
+
+        return {
+          fighter_uid: Number(fighters_uid),
+          fighter_id: Number(fighter_id),
+          fighter_name,
+        };
+      });
+
+      return players.filter((player) => player !== null);
+    }),
+    completed: z.boolean(),
+    created: z.string().transform((val) => new Date(val)),
+    updated: z.string().transform((val) => new Date(val)),
+  })
+  .transform((val) => {
+    if (
+      val.backdrop === "" ||
+      val.difficulty === "" ||
+      val.gameID === "" ||
+      val.playerData.length === 0
+    ) {
+      return {
+        ...val,
+        isValidated: false,
+      };
+    } else {
+      return {
+        ...val,
+        isValidated: true,
+      };
+    }
+  });
 
 export const RoundSchema = z.object({
   id: z.string(),

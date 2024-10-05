@@ -1,9 +1,11 @@
 import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ListResult, RecordModel } from "pocketbase";
 import { CACHED_TAGS } from "../../../../constants/tags";
 import { GetUserMode } from "../../../../utils/getMode";
 import { GameSchema } from "../../../../validations/pb/schema";
+import { GameSchemaType } from "../../../../validations/pb/types";
 import FiltersContainer from "./filters.client";
 import Words from "./items.client";
 import Pagination from "./pagination.client";
@@ -83,26 +85,34 @@ export default async function Page({
       locFilterString: string,
       locSortString: string,
     ) => {
-      return await pb.collection("games").getList(locPageNumber, 10, {
-        filter: `user = "${locUserID}" && completed=true && ${locFilterString}`,
-        sort: locSortString.length > 2 ? locSortString : "-created",
-      });
+      try {
+        const data = await pb.collection("games").getList(locPageNumber, 10, {
+          filter: `user = "${locUserID}" && completed=true && ${locFilterString}`,
+          sort: locSortString.length > 2 ? locSortString : "-created",
+        });
+
+        return data;
+      } catch (e: any) {
+        return {} as ListResult<RecordModel>;
+      }
     },
     [],
     {
       tags: [`${CACHED_TAGS.user_games}-${userID}`],
     },
   )(pageNumber, userID!, filterString, sortString);
-
-  const parsedGames = gamesRecords.items
-    .map((word) => {
-      const parse = GameSchema.safeParse(word);
-      if (parse.success) {
-        return parse.data;
-      }
-      return null;
-    })
-    .filter((word) => word !== null);
+  let parsedGames: GameSchemaType[] = [];
+  if (Object.keys(gamesRecords).length > 0) {
+    parsedGames = gamesRecords.items
+      .map((word) => {
+        const parse = GameSchema.safeParse(word);
+        if (parse.success) {
+          return parse.data;
+        }
+        return null;
+      })
+      .filter((word) => word !== null);
+  }
 
   return (
     <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E]">

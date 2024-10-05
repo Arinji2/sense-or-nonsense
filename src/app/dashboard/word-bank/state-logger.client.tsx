@@ -11,7 +11,10 @@ export default function StateLogger() {
     return searchParams.get("state");
   }, [searchParams]);
   const pathname = usePathname();
-  const params = new URLSearchParams(searchParams);
+  const params = useMemo(
+    () => new URLSearchParams(searchParams),
+    [searchParams],
+  );
   const router = useRouter();
 
   const isLogging = useRef(false);
@@ -29,7 +32,7 @@ export default function StateLogger() {
         router.replace(`${pathname}?${params.toString()}`);
       }, 500);
     }
-  }, [state]);
+  }, [state, params, router, pathname]);
 
   return <></>;
 }

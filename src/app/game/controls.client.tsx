@@ -167,7 +167,6 @@ export default function Controls({
       router,
       data.isFake,
       loading,
-      aiThinking,
     ],
   );
 

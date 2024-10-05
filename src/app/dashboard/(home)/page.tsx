@@ -34,7 +34,7 @@ export default async function Page() {
 
       const gameData = await pb.collection("games").getFullList({
         batch: 100,
-        filter: `user = "${userID}" && (gameID = "1" || gameID = "0") && created > "${minDate.toISOString()}"`,
+        filter: `user = "${userID}" && (gameID = "1" || gameID = "0") && created > "${minDate.toISOString()}" && completed=true`,
         sort: "-created",
       });
 

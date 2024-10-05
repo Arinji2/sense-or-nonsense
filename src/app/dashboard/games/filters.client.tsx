@@ -4,6 +4,7 @@ import { Button } from "@/components/button";
 import { ChevronDown } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -30,13 +31,12 @@ export function Filter({
 }) {
   const [filter, setFiltering] = useState<0 | 1 | 2>(0);
   const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
   const router = useRouter();
   const pathname = usePathname();
 
   const filterValue = useMemo(() => {
     return searchParams.get(filterKey);
-  }, [searchParams]);
+  }, [searchParams, filterKey]);
 
   useEffect(() => {
     const filter = parseInt(filterValue ?? "0");
@@ -49,19 +49,24 @@ export function Filter({
     } else setFiltering(0);
   }, [filterValue]);
 
-  useEffect(() => {
-    if (filter === 0) {
-      params.delete(filterKey);
-      window.history.pushState(null, "", `?${params.toString()}`);
-    } else {
-      params.set(filterKey, String(filter));
-      window.history.pushState(null, "", `?${params.toString()}`);
-    }
+  const updateFilter = useCallback(
+    (newFilter: 0 | 1 | 2) => {
+      const params = new URLSearchParams(searchParams);
+      if (newFilter === 0) {
+        params.delete(filterKey);
+      } else {
+        params.set(filterKey, String(newFilter));
+      }
+      startLoading(() => {
+        router.replace(`${pathname}?${params.toString()}`);
+      });
+    },
+    [searchParams, filterKey, startLoading, router, pathname],
+  );
 
-    startLoading(() => {
-      router.replace(`${pathname}?${params.toString()}`);
-    });
-  }, [filter, filterKey]);
+  useEffect(() => {
+    updateFilter(filter);
+  }, [filter, updateFilter]);
 
   return (
     <Button
@@ -119,7 +124,7 @@ export default function FiltersContainer({
     if (!isLogging.current) {
       isLogging.current = true;
 
-      toast.success(`Found ${results} results`);
+      toast.success(`Found ${results ?? 0} results`);
 
       setTimeout(() => {
         isLogging.current = false;

@@ -90,7 +90,7 @@ export default function Selector() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [clicked]);
 
   return (
     <>

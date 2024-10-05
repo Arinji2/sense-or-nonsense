@@ -65,7 +65,7 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     if (backgroundMusic.hasErrored) {
       animate.setQueue(true);
     }
-  }, [backgroundMusic]);
+  }, [animate, backgroundMusic]);
 
   return (
     <MusicContext.Provider
