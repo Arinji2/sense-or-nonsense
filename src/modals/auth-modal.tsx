@@ -9,6 +9,9 @@ import Pocketbase from "pocketbase";
 import { useCallback, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import LoginImage from "../../public/auth.webp";
+import DiscordBrand from "../../public/brands/discord.svg";
+import GithubBrand from "../../public/brands/github.svg";
+import GoogleBrand from "../../public/brands/google.svg";
 import useAnimate from "../../utils/useAnimate";
 
 export default function AuthModal({
@@ -144,12 +147,20 @@ export default function AuthModal({
                   key={provider}
                   onClick={() => oauthHandler(provider)}
                   className={`flex h-fit w-full flex-row items-center justify-center gap-5 bg-white/10 text-xs text-white md:gap-3 md:text-xs xl:p-4 ${
-                    enabledProviders.length === 1 ? "xl:col-span-2" : ""
+                    enabledProviders.length === 1 || provider === "github"
+                      ? "xl:col-span-2"
+                      : ""
                   }`}
                 >
                   AUTH WITH{" "}
                   <Image
-                    src={`/brands/${provider}.svg`}
+                    src={
+                      provider === "google"
+                        ? GoogleBrand
+                        : provider === "discord"
+                          ? DiscordBrand
+                          : GithubBrand
+                    }
                     alt={`${provider} logo`}
                     width={20}
                     height={20}
