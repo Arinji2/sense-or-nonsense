@@ -82,6 +82,15 @@ export function useAudio(
     }
   };
 
+  const stop = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setIsPlaying(false);
+      isPlayingRef.current = false;
+    }
+  };
+
   return {
     play,
     pause,
@@ -92,5 +101,6 @@ export function useAudio(
     setHasErrored,
     hasErrored,
     isPlaying,
+    stop,
   };
 }

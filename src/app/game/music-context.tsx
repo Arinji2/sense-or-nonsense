@@ -65,6 +65,12 @@ export function MusicProvider({ children }: { children: React.ReactNode }) {
     if (backgroundMusic.hasErrored) {
       animate.setQueue(true);
     }
+
+    return () => {
+      backgroundMusic.stop();
+      isCorrectAudio.stop();
+      isWrongAudio.stop();
+    };
   }, [animate, backgroundMusic]);
 
   return (
