@@ -1,4 +1,5 @@
 import { Button } from "@/components/button";
+import Link from "next/link";
 
 export default function Credits() {
   return (
@@ -7,19 +8,21 @@ export default function Credits() {
         <h3 className="text-2xl font-bold tracking-title text-white md:text-5xl xl:text-6xl">
           CREDITS
         </h3>
-        <p className="text-xss max-w-[700px] text-center text-white/70 md:text-lg">
+        <p className="max-w-[700px] text-center text-xss text-white/70 md:text-lg">
           This site would not have been possible without the wonderful people
           who helped :D
         </p>
         <div className="mt-auto flex h-fit flex-col items-center justify-center gap-5">
-          <p className="text-center text-xs font-bold tracking-title text-purple-500 md:text-xl xl:text-2xl">
+          <p className="text-center text-xs font-bold tracking-title text-purple-500 md:text-lg xl:text-xl">
             FROM FIGHTER LORE TO THE SOUNDTRACKS
           </p>
-          <Button className="bg-purple-500 px-3 py-2">
-            <p className="whitespace-nowrap text-xs font-bold text-white">
-              SHOW ME MORE!
-            </p>
-          </Button>
+          <Link href="/credits" className="h-fit w-fit">
+            <Button className="bg-purple-500 px-3 py-2">
+              <p className="whitespace-nowrap text-xs font-bold text-white">
+                SHOW ME MORE!
+              </p>
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
