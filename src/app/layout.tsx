@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
+import { ValidateGameIDCookie } from "../../utils/game-data";
 import GameInProgress from "./game-in-progress";
 import "./globals.css";
 
@@ -31,17 +32,17 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   let showGameModal = false;
-  // try {
-  //   const game = await ValidateGameIDCookie({
-  //     disableRedirect: true,
-  //   });
-  // } catch (error: any) {
-  //   if (error.message === "Exiting for error") {
-  //     showGameModal = false;
-  //   } else {
-  //     showGameModal = true;
-  //   }
-  // }
+  try {
+    const game = await ValidateGameIDCookie({
+      disableRedirect: true,
+    });
+  } catch (error: any) {
+    if (error.message === "Exiting for error") {
+      showGameModal = false;
+    } else {
+      showGameModal = true;
+    }
+  }
 
   return (
     <html lang="en" className="bg-[#2C2828]">
