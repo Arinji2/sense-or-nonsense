@@ -1,3 +1,4 @@
+import OGImage from "@/../public/og.png";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
@@ -31,11 +32,27 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Sense Or Nonsense`,
     description: "Mandela Effect on basic English Words amplified",
+    images: [
+      {
+        url: OGImage.src,
+        width: OGImage.width,
+        height: OGImage.height,
+        alt: "Sense Or Nonsense",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: `Sense Or Nonsense`,
     description: "Mandela Effect on basic English Words amplified",
+    images: [
+      {
+        url: OGImage.src,
+        width: OGImage.width,
+        height: OGImage.height,
+        alt: "Sense Or Nonsense",
+      },
+    ],
   },
   metadataBase: new URL("https://sense.arinji.com"),
 };
