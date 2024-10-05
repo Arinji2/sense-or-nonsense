@@ -66,16 +66,18 @@ export async function UpdateFighterAction(fighterData: GameFighterSchemaType) {
   }
   if (typeof gameData.playerData === "boolean")
     throw new Error("Player data deformed");
+  const uid = Math.floor(Math.random() * 100000);
   const updatedPlayerData = [
     ...gameData.playerData,
     {
       fighter_id: fighterData.fighter_id,
       fighter_name: fighterData.fighter_name,
+      fighter_uid: uid,
     },
   ] as GameFighterSchemaType[];
-  const uid = Math.floor(Math.random() * 100000);
+
   const formattedData = updatedPlayerData.map((player) => {
-    return `${uid}:${player.fighter_id}:${player.fighter_name}`;
+    return `${player.fighter_uid}:${player.fighter_id}:${player.fighter_name}`;
   });
   const game = await pb!.collection("games").update(gameData.id, {
     playerData: formattedData.join(";"),
