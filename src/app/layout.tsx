@@ -28,6 +28,16 @@ export const metadata: Metadata = {
     name: "Arinji",
     url: "https://arinji.com",
   },
+  openGraph: {
+    title: `Sense Or Nonsense`,
+    description: "Mandela Effect on basic English Words amplified",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `Sense Or Nonsense`,
+    description: "Mandela Effect on basic English Words amplified",
+  },
+  metadataBase: new URL("https://sense.arinji.com"),
 };
 
 export default async function RootLayout({
