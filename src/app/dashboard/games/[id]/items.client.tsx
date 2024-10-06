@@ -46,24 +46,31 @@ function RoundItem({
   round: RoundSchemaType;
 }) {
   const color = useRef(`${getColor()}30`);
-  const word =
-    round.expand?.fake_word?.word ?? (round.expand?.real_word?.word as string);
+  let word =
+    round.expand?.fake_word?.word ??
+    (round.expand?.real_word?.word as string) ??
+    "Unknown";
+
+  let status =
+    word === "Unknown"
+      ? "unknown"
+      : round.is_fake
+        ? "fake"
+        : ("real" as "fake" | "real" | "unknown");
+
+  if (status === "unknown") {
+    word = "Unknown";
+    round.time_elapsed = 0;
+    round.correct = false;
+    round.is_fake = false;
+    status = "fake";
+  }
 
   return (
-    <Link
-      href={`${round.is_fake ? "#" : `/dashboard/word-bank/${round.expand?.real_word?.id}`}`}
-      tabIndex={round.is_fake ? -1 : 0}
-      style={
-        {
-          "--color": color.current,
-        } as React.CSSProperties
-      }
-      className={cn(
-        "flex h-fit w-full shrink-0 flex-col items-start justify-end gap-3 rounded-md bg-[--color] p-4 px-8 shadow-md shadow-black xl:h-[100px] xl:flex-row xl:items-center xl:gap-8",
-        {
-          "cursor-text": round.is_fake,
-        },
-      )}
+    <WordWrapper
+      status={status}
+      realID={round.expand?.real_word?.id!}
+      color={color.current}
     >
       <h2 className="shrink-0 truncate text-lg font-bold tracking-number text-white md:text-xl xl:w-[70px]">
         {index + 1} .
@@ -86,15 +93,60 @@ function RoundItem({
           Is Nonsense:
         </p>
         <p className="line-clamp-1 text-sm text-white">
-          {round.is_fake ? "Yes" : "No"}
+          {word === "Unknown" ? "-" : round.is_fake ? "Yes" : "No"}
         </p>
       </div>
       <div className="flex h-fit w-full shrink-0 flex-col items-start justify-start gap-2 py-2 xl:h-full xl:w-[10%]">
         <p className="mb-auto line-clamp-1 text-xs text-white/50">Correct:</p>
         <p className="line-clamp-1 text-sm text-white">
-          {round.correct ? "Yes" : "No"}
+          {word === "Unknown" ? "-" : round.correct ? "Yes" : "No"}
         </p>
       </div>
-    </Link>
+    </WordWrapper>
   );
+}
+
+function WordWrapper({
+  status,
+  children,
+  realID,
+  color,
+}: {
+  status: "fake" | "real" | "unknown";
+  children: React.ReactNode;
+  realID: string;
+  color: string;
+}) {
+  if (status === "real") {
+    return (
+      <Link
+        href={`/dashboard/word-bank/${realID}`}
+        style={
+          {
+            "--color": color,
+          } as React.CSSProperties
+        }
+        className={cn(
+          "flex h-fit w-full shrink-0 scale-95 flex-col items-start justify-end gap-3 rounded-md bg-[--color] p-4 px-8 shadow-md shadow-black transition-all duration-300 ease-in-out will-change-transform hover:scale-100 xl:h-[100px] xl:flex-row xl:items-center xl:gap-8",
+        )}
+      >
+        {children}
+      </Link>
+    );
+  } else {
+    return (
+      <div
+        style={
+          {
+            "--color": color,
+          } as React.CSSProperties
+        }
+        className={cn(
+          "flex h-fit w-full shrink-0 scale-95 flex-col items-start justify-end gap-3 rounded-md bg-[--color] p-4 px-8 shadow-md shadow-black xl:h-[100px] xl:flex-row xl:items-center xl:gap-8",
+        )}
+      >
+        {children}
+      </div>
+    );
+  }
 }
