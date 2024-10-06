@@ -26,6 +26,7 @@ export default function Menu({
   const pathname = usePathname();
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const firstTimeClicked = useRef(false);
 
   useEffect(() => {
     const closeOpenMenus = (e: any) => {
@@ -45,6 +46,21 @@ export default function Menu({
       window.removeEventListener("mousedown", closeOpenMenus);
     };
   }, []);
+
+  useEffect(() => {
+    if (firstTimeClicked.current) {
+      return;
+    }
+    if (!backdrop.verified) {
+      return;
+    }
+    firstTimeClicked.current = true;
+    setIsActive(true);
+
+    return () => {
+      firstTimeClicked.current = false;
+    };
+  }, [backdrop.verified]);
 
   return (
     <div
