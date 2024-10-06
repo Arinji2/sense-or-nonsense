@@ -9,7 +9,7 @@ export default async function Page() {
   const { userID, pb } = await GetUserMode();
   const gameID = cookies().get("game-id")?.value;
   if (!gameID) redirect("/");
-  const { gameData } = await GetGameData(pb, gameID, userID!);
+  const { gameData, rounds } = await GetGameData(pb, gameID, userID!);
 
   if (!gameData.difficulty) {
     redirect("/difficulty?redirected=true");
@@ -17,6 +17,10 @@ export default async function Page() {
     redirect("/fighters?redirected=true");
   } else if (gameData.backdrop === "") {
     redirect("/backdrop?redirected=true");
+  }
+
+  if (rounds.length > 0) {
+    redirect("/game");
   }
   return (
     <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E]">

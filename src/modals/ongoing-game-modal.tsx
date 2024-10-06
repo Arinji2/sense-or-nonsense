@@ -150,7 +150,7 @@ export default function OngoingGame({
                   if (isDeleting) {
                     router.refresh();
                   } else {
-                    router.push("/game");
+                    router.push("/pregame");
                   }
                 }}
                 className="w-full bg-green-500 text-xs text-white xl:w-fit xl:text-sm"
