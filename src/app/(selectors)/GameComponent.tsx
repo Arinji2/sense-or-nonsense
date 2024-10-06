@@ -68,7 +68,7 @@ export async function GameComponent({
   let lastPlayed = results.length > 0 ? results[0].created : null;
 
   return (
-    <div className="group relative flex w-full shrink-0 grow snap-center flex-col items-start justify-center overflow-hidden rounded-md xl:h-[95%]">
+    <div className="group relative flex w-full shrink-0 grow snap-center flex-col items-start justify-center overflow-hidden rounded-md xl:h-[600px]">
       <Image
         className={cn(
           "absolute left-0 top-0 object-cover blur-sm brightness-[0.3] transition-all duration-700 ease-in-out group-hover:scale-105 group-hover:brightness-[0.4]",

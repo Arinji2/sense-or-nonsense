@@ -6,7 +6,7 @@ import { GameComponent } from "../GameComponent";
 export default async function Page() {
   const { userID, pb } = await GetUserMode();
   return (
-    <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E] xl:h-[100svh] xl:min-h-1">
+    <div className="flex min-h-[100svh] w-full flex-col items-center justify-start bg-[#1E1E1E]">
       <div
         style={{
           minHeight: "inherit",
@@ -16,7 +16,7 @@ export default async function Page() {
         <h1 className="text-center text-lg font-bold tracking-title text-white md:text-2xl xl:text-3xl">
           CHOOSE A GAME MODE
         </h1>
-        <div className="flex h-fit w-full snap-x snap-mandatory flex-row items-stretch justify-start overflow-x-auto md:h-full xl:items-center">
+        <div className="flex h-fit w-full flex-col items-stretch justify-start gap-10 md:h-full xl:items-center">
           {GamesList.map((game) => {
             if (game.isMultiplayer) return null;
             return (
