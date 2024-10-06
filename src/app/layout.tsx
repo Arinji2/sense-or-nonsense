@@ -62,7 +62,7 @@ export default async function RootLayout({
         <meta property="og:url" content="https://sense.arinji.com" />
         <meta
           property="og:image"
-          content="https://sense.arinji.com/opengraph-image.png"
+          content="https://cdn.arinji.com/u/g5LhXx.png"
         ></meta>
         <meta property="og:image:type" content="image/png"></meta>
         <meta property="og:image:width" content="1200"></meta>
@@ -70,7 +70,7 @@ export default async function RootLayout({
         <meta name="twitter:card" content="summary_large_image"></meta>
         <meta
           name="twitter:image"
-          content="https://sense.arinji.com/opengraph-image.png"
+          content="https://cdn.arinji.com/u/g5LhXx.png"
         ></meta>
         <meta name="twitter:image:width" content="1200"></meta>
         <meta name="twitter:image:height" content="630"></meta>
