@@ -158,22 +158,26 @@ export default function Selector() {
                   {fighter.lore.short}
                 </p>
               </div>
-              <button
-                className="absolute left-0 top-0 h-full w-full"
-                onClick={async () => {
-                  setSelectedFighterID(fighter.id);
-                  animate.setQueue(true);
-                }}
-              />
-              <Button
-                onClick={() => {
-                  setFighterExpand(fighter);
-                  expandAnimate.setQueue(true);
-                }}
-                className="absolute bottom-8 h-fit w-[80%] bg-white/40 text-sm xl:bottom-5 xl:w-fit"
-              >
-                LEARN MORE
-              </Button>
+              <div className="absolute bottom-8 flex h-fit w-full flex-row items-center justify-center gap-4 xl:bottom-5">
+                <Button
+                  className="h-fit w-fit whitespace-nowrap bg-teal-500/40 text-[8px] text-white xl:text-sm"
+                  onClick={async () => {
+                    setSelectedFighterID(fighter.id);
+                    animate.setQueue(true);
+                  }}
+                >
+                  SELECT
+                </Button>
+                <Button
+                  onClick={() => {
+                    setFighterExpand(fighter);
+                    expandAnimate.setQueue(true);
+                  }}
+                  className="h-fit w-fit whitespace-nowrap bg-white/40 text-[8px] text-white xl:text-sm"
+                >
+                  LEARN MORE
+                </Button>
+              </div>
             </div>
           ))}
         </div>
