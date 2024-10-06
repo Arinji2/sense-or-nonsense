@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     url: "https://arinji.com",
   },
 
-  metadataBase: new URL("https://sense.arinji.com"),
+  metadataBase: new URL(process.env.METADATA_BASE ?? "localhost:3000"),
 };
 
 export default async function RootLayout({
