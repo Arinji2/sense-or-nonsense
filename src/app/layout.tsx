@@ -1,4 +1,3 @@
-import OGImage from "@/../public/og.png";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
@@ -29,31 +28,6 @@ export const metadata: Metadata = {
     name: "Arinji",
     url: "https://arinji.com",
   },
-  openGraph: {
-    title: `Sense Or Nonsense`,
-    description: "Mandela Effect on basic English Words amplified",
-    images: [
-      {
-        url: OGImage.src,
-        width: OGImage.width,
-        height: OGImage.height,
-        alt: "Sense Or Nonsense",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `Sense Or Nonsense`,
-    description: "Mandela Effect on basic English Words amplified",
-    images: [
-      {
-        url: OGImage.src,
-        width: OGImage.width,
-        height: OGImage.height,
-        alt: "Sense Or Nonsense",
-      },
-    ],
-  },
 
   metadataBase: new URL("https://sense.arinji.com"),
 };
@@ -78,6 +52,22 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="bg-[#2C2828]">
+      <head>
+        <meta
+          property="og:image"
+          content="https://sense.arinji.com/opengraph-image.png"
+        ></meta>
+        <meta property="og:image:type" content="image/png"></meta>
+        <meta property="og:image:width" content="1200"></meta>
+        <meta property="og:image:height" content="630"></meta>
+        <meta name="twitter:card" content="summary_large_image"></meta>
+        <meta
+          name="twitter:image"
+          content="https://sense.arinji.com/opengraph-image.png"
+        ></meta>
+        <meta name="twitter:image:width" content="1200"></meta>
+        <meta name="twitter:image:height" content="630"></meta>
+      </head>
       <body className={dogicalPixelFont.className}>
         <Toaster
           position="top-right"
