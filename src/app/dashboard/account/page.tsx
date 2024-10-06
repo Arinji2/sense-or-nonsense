@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { ExternalAuthModel } from "pocketbase";
 import { GetUserMode } from "../../../../utils/getMode";
 import { AccountSchema } from "../../../../validations/pb/schema";
+import CTAHeader from "../cta";
 import Account from "./account.client";
 import Delete from "./delete.client";
 import LinkOauth from "./link.client";
@@ -41,6 +42,7 @@ export default async function Page() {
           </Link>
           /ACCOUNT
         </h1>
+        <CTAHeader />
         <div
           style={{
             minHeight: "inherit",

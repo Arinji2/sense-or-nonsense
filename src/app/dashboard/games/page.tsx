@@ -6,6 +6,7 @@ import { CACHED_TAGS } from "../../../../constants/tags";
 import { GetUserMode } from "../../../../utils/getMode";
 import { GameSchema } from "../../../../validations/pb/schema";
 import { GameSchemaType } from "../../../../validations/pb/types";
+import CTAHeader from "../cta";
 import FiltersContainer from "./filters.client";
 import Words from "./items.client";
 import Pagination from "./pagination.client";
@@ -132,6 +133,8 @@ export default async function Page({
           </Link>
           /GAMES
         </h1>
+
+        <CTAHeader />
 
         <p className="pb-5 text-sm text-white/70">
           View all of the games you have played.

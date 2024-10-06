@@ -14,6 +14,7 @@ import {
   RoundSchemaType,
   StoredWordSchemaType,
 } from "../../../../../validations/pb/types";
+import CTAHeader from "../../cta";
 export default async function Page({ params }: { params: { wordID: string } }) {
   const { mode, pb, userID } = await GetUserMode();
   if (userID === null) redirect("/");
@@ -104,6 +105,7 @@ export default async function Page({ params }: { params: { wordID: string } }) {
           </Link>
           /{wordData.word}
         </h1>
+        <CTAHeader />
         <div className="flex h-fit w-full flex-col items-start justify-start gap-8 pt-8">
           <div className="flex h-fit w-fit flex-col items-start justify-start gap-2">
             <p className="text-sm text-white/60 md:text-base xl:text-lg">

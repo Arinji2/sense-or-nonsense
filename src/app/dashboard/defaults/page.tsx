@@ -13,6 +13,7 @@ import {
   FighterDataType,
 } from "../../../../validations/generic/types";
 import { AccountSchema } from "../../../../validations/pb/schema";
+import CTAHeader from "../cta";
 import { BackdropReset, FighterReset } from "./fighter.client";
 
 export default async function Page() {
@@ -82,6 +83,7 @@ export default async function Page() {
           </Link>
           /DEFAULTS
         </h1>
+        <CTAHeader />
         <div
           style={{
             minHeight: "inherit",

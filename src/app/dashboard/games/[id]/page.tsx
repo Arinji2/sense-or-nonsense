@@ -9,6 +9,7 @@ import { GameInfo, GameStats } from "./stats";
 import { GetGameData } from "../../../../../utils/game-data";
 import { GetUserMode } from "../../../../../utils/getMode";
 import { GameFighterSchemaType } from "../../../../../validations/game-data/types";
+import CTAHeader from "../../cta";
 import RoundStats from "./round";
 import { GetPlayerGraphs } from "./utils";
 
@@ -79,6 +80,8 @@ export default async function Page({
           </Link>
           /Analysis
         </h1>
+
+        <CTAHeader />
         {gameIsMultiplayer && (
           <MultiplayerNavigator
             previousPlayerExists={previousPlayerExists}

@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { CACHED_TAGS } from "../../../../constants/tags";
 import { GetUserMode } from "../../../../utils/getMode";
 import { RoundSchema } from "../../../../validations/pb/schema";
+import CTAHeader from "../cta";
 import FiltersContainer from "./filters.client";
 import Words from "./items.client";
 import Pagination from "./pagination.client";
@@ -130,6 +131,7 @@ export default async function Page({
           </Link>
           /WORD BANK
         </h1>
+        <CTAHeader />
 
         <p className="pb-5 text-sm text-white/70">
           This is the word bank, it contains all the correct words you have
