@@ -53,6 +53,13 @@ export default async function RootLayout({
   return (
     <html lang="en" className="bg-[#2C2828]">
       <head>
+        <meta property="og:title" content="Sense Or Nonsense" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:description"
+          content="Mandela Effect on basic English Words amplified"
+        />
+        <meta property="og:url" content="https://sense.arinji.com" />
         <meta
           property="og:image"
           content="https://sense.arinji.com/opengraph-image.png"
