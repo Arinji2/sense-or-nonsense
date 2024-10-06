@@ -128,7 +128,7 @@ export default async function Page() {
               </Link>
             </div>
             <div className="flex h-fit w-full flex-col items-center justify-start gap-5 border-y-2 border-white/10 py-4">
-              <h2 className="text-center text-sm font-bold text-white">
+              <h2 className="text-center text-xs font-bold text-white">
                 QUICK LINKS
               </h2>
               <div className="grid h-fit w-full grid-cols-1 items-center justify-between gap-x-2 gap-y-6 xl:grid-cols-3 xl:gap-y-4">
