@@ -82,6 +82,7 @@ export default function Controls({
     async (correct?: boolean) => {
       if (loading) return;
       setLoading(true);
+      const startTime = new Date();
       const previousGame = previousGames[previousGames.length - 1];
 
       let fakeWord = "";
@@ -130,7 +131,10 @@ export default function Controls({
       } as RoundSchemaType;
 
       previousGames.pop();
-
+      console.log(
+        "Time taken for non blocking",
+        new Date().getTime() - startTime.getTime(),
+      );
       if (nextRoundData.round_number > maxRounds) {
         const resolve = toast.promise(UpdateRound(currentRoundData), {
           loading: "Finishing game...",
@@ -139,19 +143,34 @@ export default function Controls({
         });
         await resolve;
 
+        console.log(
+          "Time taken for Updating Round",
+          new Date().getTime() - startTime.getTime(),
+        );
+
         const ID = await FinishGameAction();
+        console.log(
+          "Time taken for Finishing Game",
+          new Date().getTime() - startTime.getTime(),
+        );
         router.push(`/dashboard/games/${ID}`);
 
         return;
       } else {
         try {
-          UpdateRound(currentRoundData);
+          UpdateRound(currentRoundData)
           CreateNewRound(nextRoundData);
         } catch (e) {
           toast.error("Failed to update round");
           router.refresh();
           return;
         }
+
+        console.log(
+          "Time taken for Creating New Round",
+          new Date().getTime() - startTime.getTime(),
+          "ms",
+        );
         await refresh();
         setTimer(10);
       }

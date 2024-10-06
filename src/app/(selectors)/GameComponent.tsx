@@ -61,7 +61,6 @@ export async function GameComponent({
     },
     {
       revalidateTags: [`${CACHED_TAGS.mode_select}-${userID}-${GameData.id}`],
-      log: ["datacache", "verbose"],
     },
   )(userID, GameData.id);
 

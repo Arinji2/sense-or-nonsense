@@ -32,7 +32,6 @@ export default async function Page({ params }: { params: { wordID: string } }) {
       },
       {
         revalidateTags: [`${CACHED_TAGS.global_words}`],
-        log: ["datacache", "verbose"],
       },
     )(params.wordID);
   } catch (error) {
@@ -41,22 +40,17 @@ export default async function Page({ params }: { params: { wordID: string } }) {
   }
 
   try {
-    dictionaryData = await memoize(
-      async (word: string) => {
-        const res = await fetch(
-          `https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`,
-        );
-        const json = await res.json();
-        if (!Array.isArray(json)) throw new Error("Invalid JSON");
+    dictionaryData = await memoize(async (word: string) => {
+      const res = await fetch(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`,
+      );
+      const json = await res.json();
+      if (!Array.isArray(json)) throw new Error("Invalid JSON");
 
-        let parsed = DictonarySchema.parse(json[0]);
-        parsed.meanings = parsed.meanings.filter((meaning) => meaning !== null);
-        return parsed;
-      },
-      {
-        log: ["datacache", "verbose"],
-      },
-    )(wordData.word);
+      let parsed = DictonarySchema.parse(json[0]);
+      parsed.meanings = parsed.meanings.filter((meaning) => meaning !== null);
+      return parsed;
+    }, {})(wordData.word);
   } catch (error) {
     console.log(error);
     redirect("/dashboard/word-bank?state=dictionary_not_found");
@@ -74,7 +68,6 @@ export default async function Page({ params }: { params: { wordID: string } }) {
       },
       {
         revalidateTags: [`${CACHED_TAGS.user_games}`],
-        log: ["datacache", "verbose"],
       },
     )(wordData.id, userID!);
   } catch (error) {

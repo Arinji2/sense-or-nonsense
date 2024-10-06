@@ -1,8 +1,8 @@
 "use server";
 
-import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { memoize } from "nextjs-better-unstable-cache";
 import { ConnectPBAdmin } from "../../utils/connectPB";
 
 export async function InitGuest(newSessionID?: number) {
@@ -46,7 +46,7 @@ export async function GuestToUser() {
     throw new Error("No guest session found");
   }
   try {
-    const { guestID, userID } = await unstable_cache(
+    const { guestID, userID } = await memoize(
       async (sessionID: string) => {
         const record = await pbAdmin
           .collection("guests")
@@ -61,9 +61,8 @@ export async function GuestToUser() {
           guestID: record.id,
         };
       },
-      [],
       {
-        revalidate: 60 * 5,
+        duration: 60 * 5, // 5 minutes
       },
     )(sessionID.value);
 

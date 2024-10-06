@@ -1,6 +1,6 @@
-import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { memoize } from "nextjs-better-unstable-cache";
 import Client from "pocketbase";
 import { CACHED_TAGS } from "../constants/tags";
 import { GameSchema, RoundsSchema } from "../validations/pb/schema";
@@ -36,7 +36,7 @@ export async function ValidateGameIDCookie(
 }
 
 export async function GetGameData(pb: Client, gameID: string, userID: string) {
-  return await unstable_cache(
+  return await memoize(
     async (id: string, user: string) => {
       try {
         const gameRecord = await pb?.collection("games").getOne(id);
@@ -64,9 +64,9 @@ export async function GetGameData(pb: Client, gameID: string, userID: string) {
         redirect("/unauthorized");
       }
     },
-    [],
+
     {
-      tags: [`${CACHED_TAGS.game_data}-${userID}-${gameID}`],
+      revalidateTags: [`${CACHED_TAGS.game_data}-${userID}-${gameID}`],
     },
   )(gameID!, userID!);
 }

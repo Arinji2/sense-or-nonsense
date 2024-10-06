@@ -1,6 +1,6 @@
-import { unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { memoize } from "nextjs-better-unstable-cache";
 import {
   default as Pocketbase,
   RecordAuthResponse,
@@ -12,17 +12,16 @@ export async function ConnectPBAdmin() {
   const email = process.env.PB_EMAIL!;
   const password = process.env.PB_PASSWORD!;
 
-  const cachedTokenData = await unstable_cache(
+  const cachedTokenData = await memoize(
     async (email: string, password: string) => {
       const pb = new Pocketbase("https://db-word.arinji.com/");
       await pb.admins.authWithPassword(email, password);
       const token = await pb.admins.authRefresh();
       return token;
     },
-    [],
     {
-      revalidate: 60 * 2, // 2 minutes
-      tags: [CACHED_TAGS.guest_client],
+      duration: 60 * 2, // 2 minutes
+      revalidateTags: [CACHED_TAGS.guest_client],
     },
   )(email, password);
 
@@ -38,7 +37,7 @@ export async function ConnectPBUser() {
     throw new Error("User not logged in");
   }
 
-  const cachedTokenData = await unstable_cache(
+  const cachedTokenData = await memoize(
     async (token: string) => {
       const pb = new Pocketbase("https://db-word.arinji.com/");
       pb.authStore.save(token);
@@ -52,10 +51,10 @@ export async function ConnectPBUser() {
 
       return authData;
     },
-    [],
+
     {
-      revalidate: 60 * 2, // 2 minutes
-      tags: [CACHED_TAGS.user_client],
+      duration: 60 * 2, // 2 minutes
+      revalidateTags: [CACHED_TAGS.user_client],
     },
   )(userCookie.value);
 
