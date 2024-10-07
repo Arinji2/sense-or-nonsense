@@ -147,9 +147,7 @@ export default function OngoingGame({
               <Button
                 onClick={async () => {
                   Animate.setQueue(false);
-                  if (isDeleting) {
-                    router.refresh();
-                  } else {
+                  if (!isDeleting) {
                     router.push("/pregame");
                   }
                 }}
