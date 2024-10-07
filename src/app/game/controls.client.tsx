@@ -256,6 +256,7 @@ export default function Controls({
     if (timer === 0) {
       toast.error("Time's Up! The Word Was " + (data.isFake ? "Fake" : "Real"));
       answerSubmitted(false);
+      setIsCorrect(1);
     }
   }, [timer, data.isFake, isActive]);
   useEffect(() => {
@@ -313,10 +314,10 @@ export default function Controls({
         >
           {streakCopy > 0
             ? isCorrect === 2
-              ? `${playerName} is on a ${streakCopy + 1} word streak!`
-              : `${playerName} has lost their streak`
+              ? `${fighters.length > 1 ? `${playerName} is` : "You are"} on a ${streakCopy + 1} word streak!`
+              : `${fighters.length > 1 ? `${playerName} has lost their` : "You have lost your"} streak`
             : isCorrect === 2
-              ? `${playerName} has started a streak!`
+              ? `${fighters.length > 1 ? `${playerName} has` : "You have"} started a streak!`
               : ""}
         </p>
       </div>
