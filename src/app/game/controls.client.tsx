@@ -10,6 +10,8 @@ import FakeImage from "@/../../public/game/fake.png";
 import RealImage from "@/../../public/game/real.png";
 import { CreateNewRound, UpdateRound } from "@/actions/game/rounds";
 import { FinishGameAction } from "@/actions/game/setup";
+import useTimer from "@/hooks/useTimer";
+import { cn } from "../../../utils/cn";
 import { useRouterRefresh } from "../../../utils/useRouterRefresh";
 import {
   GameFighterSchemaType,
@@ -70,17 +72,24 @@ export default function Controls({
   fighters: GameFighterSchemaType[];
   maxRounds: number;
 }) {
-  const [timer, setTimer] = useState(10);
   const [loading, setLoading] = useState(false);
   const refresh = useRouterRefresh();
   const router = useRouter();
   const [aiThinking, setAiThinking] = useState(false);
   const trueButtonRef = useRef<HTMLButtonElement | null>(null);
   const falseButtonRef = useRef<HTMLButtonElement | null>(null);
+  const [isCorrect, setIsCorrect] = useState<0 | 1 | 2>(0);
+  const [streakCopy, setStreakCopy] = useState(streak);
+  const [timer, startTimer, stopTimer, resetTimer, isActive] = useTimer(
+    10,
+    data.id,
+  );
 
   const answerSubmitted = useCallback(
     async (correct?: boolean) => {
       if (loading) return;
+      setStreakCopy(streak);
+      stopTimer();
       setLoading(true);
       const startTime = new Date();
       const previousGame = previousGames[previousGames.length - 1];
@@ -131,10 +140,7 @@ export default function Controls({
       } as RoundSchemaType;
 
       previousGames.pop();
-      console.log(
-        "Time taken for non blocking",
-        new Date().getTime() - startTime.getTime(),
-      );
+
       if (nextRoundData.round_number > maxRounds) {
         const resolve = toast.promise(UpdateRound(currentRoundData), {
           loading: "Finishing game...",
@@ -143,22 +149,14 @@ export default function Controls({
         });
         await resolve;
 
-        console.log(
-          "Time taken for Updating Round",
-          new Date().getTime() - startTime.getTime(),
-        );
-
         const ID = await FinishGameAction();
-        console.log(
-          "Time taken for Finishing Game",
-          new Date().getTime() - startTime.getTime(),
-        );
+
         router.push(`/dashboard/games/${ID}`);
 
         return;
       } else {
         try {
-          UpdateRound(currentRoundData)
+          UpdateRound(currentRoundData);
           CreateNewRound(nextRoundData);
         } catch (e) {
           toast.error("Failed to update round");
@@ -166,13 +164,21 @@ export default function Controls({
           return;
         }
 
-        console.log(
-          "Time taken for Creating New Round",
-          new Date().getTime() - startTime.getTime(),
-          "ms",
-        );
-        await refresh();
-        setTimer(10);
+        const currentTime = new Date().getTime();
+
+        if (currentTime - startTime.getTime() < 2000) {
+          setTimeout(async () => {
+            await refresh();
+            setStreakCopy(0);
+            setIsCorrect(0);
+            resetTimer();
+          }, 2000);
+        } else {
+          await refresh();
+          setStreakCopy(0);
+          setIsCorrect(0);
+          resetTimer();
+        }
       }
 
       setAiThinking(false);
@@ -241,24 +247,20 @@ export default function Controls({
   }, [loading, aiThinking, playerName, data.isFake, level, answerSubmitted]);
 
   useEffect(() => {
-    if (loading) return;
-    const interval = setInterval(() => {
-      setTimer((prev) => prev - 1);
-    }, 1000);
+    if (!isActive) return;
 
     if (timer === 3) {
       toast.success("3 seconds left!");
     }
+
     if (timer === 0) {
-      clearInterval(interval);
       toast.error("Time's Up! The Word Was " + (data.isFake ? "Fake" : "Real"));
       answerSubmitted(false);
     }
-
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [timer, loading, data.isFake, answerSubmitted]);
+  }, [timer, data.isFake, isActive]);
+  useEffect(() => {
+    startTimer();
+  }, [data, resetTimer, startTimer]);
 
   const timerDisplay = useMemo(() => {
     return aiThinking ? (
@@ -275,82 +277,113 @@ export default function Controls({
   const { isCorrectAudio, isWrongAudio } = useMusic();
 
   return (
-    <div className="flex h-fit w-full flex-row items-center justify-center gap-10 xl:gap-20">
-      <button
-        ref={trueButtonRef}
-        disabled={loading || aiThinking}
-        onClick={() => {
-          if (loading) return;
-          if (data.isFake) {
-            toast.error("Incorrect, The Word Is Fake!");
-
-            isWrongAudio.play();
-            if (streak > 0) {
-              toast.error(`${playerName} lost their streak!`);
-            }
-            answerSubmitted(false);
-          } else {
-            toast.success("Correct, The Word Is Real!");
-
-            isCorrectAudio.play();
-            if (streak > 0) {
-              toast.success(`${playerName} is on a ${streak + 1} word streak!`);
-            } else {
-              toast.success(`${playerName} has started a streak!`);
-            }
-            answerSubmitted(true);
-          }
-        }}
-        className="group flex size-16 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale xl:size-20"
+    <>
+      <div
+        className={cn(
+          "fixed left-0 top-0 z-50 flex h-[100svh] w-full -translate-y-full flex-col items-center justify-center gap-10 bg-neutral-700 transition-all duration-500 ease-in-out",
+          {
+            "translate-y-0": isCorrect !== 0,
+            "bg-green-800": isCorrect === 2,
+            "bg-red-800": isCorrect === 1,
+          },
+        )}
       >
-        <div className="relative size-[30px] xl:size-[40px]">
-          <Image
-            src={RealImage}
-            className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
-            alt="Real"
-            fill
-            sizes="(min-width: 1280px) 40px, 30px"
-          />
-        </div>
-      </button>
-      <div className="flex size-16 flex-col items-center justify-center rounded-full bg-[#FCAB3A] p-3 tracking-number shadow-xl shadow-white/10 md:size-20">
-        {timerDisplay}
+        <h2
+          className={cn(
+            "text-lg font-bold text-white opacity-100 transition-all delay-700 duration-200 ease-pop-in md:text-xl xl:text-2xl",
+            {
+              "opacity-0": isCorrect === 0,
+            },
+          )}
+        >
+          {isCorrect === 2
+            ? "Answer Correct!"
+            : isCorrect === 1
+              ? "Answer Incorrect!"
+              : ""}
+        </h2>
+
+        <p
+          className={cn(
+            "text-xs font-bold text-white/70 opacity-100 transition-all delay-[750ms] duration-200 ease-pop-in md:text-lg xl:text-xl",
+            {
+              "opacity-0": isCorrect === 0,
+            },
+          )}
+        >
+          {streakCopy > 0
+            ? isCorrect === 2
+              ? `${playerName} is on a ${streakCopy + 1} word streak!`
+              : `${playerName} has lost their streak`
+            : isCorrect === 2
+              ? `${playerName} has started a streak!`
+              : ""}
+        </p>
       </div>
-      <button
-        ref={falseButtonRef}
-        disabled={loading || aiThinking}
-        onClick={() => {
-          if (loading) return;
-          if (!data.isFake) {
-            toast.error("Incorrect, The Word Is Real!");
-            isWrongAudio.play();
-            if (streak > 0) {
-              toast.error(`${playerName} lost their streak!`);
-            }
-            answerSubmitted(false);
-          } else {
-            toast.success("Correct, The Word Is Fake!");
-            isCorrectAudio.play();
-            if (streak > 0) {
-              toast.success(`${playerName} is on a ${streak + 1} word streak!`);
+      <div className="flex h-fit w-full flex-row items-center justify-center gap-10 xl:gap-20">
+        <button
+          ref={trueButtonRef}
+          disabled={loading || aiThinking}
+          onClick={() => {
+            if (loading) return;
+            if (data.isFake) {
+              setIsCorrect(1);
+
+              isWrongAudio.play();
+
+              answerSubmitted(false);
             } else {
-              toast.success(`${playerName} has started a streak!`);
+              setIsCorrect(2);
+
+              isCorrectAudio.play();
+
+              answerSubmitted(true);
             }
-            answerSubmitted(true);
-          }
-        }}
-        className="group flex size-16 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale xl:size-20"
-      >
-        <div className="relative size-[30px] xl:size-[40px]">
-          <Image
-            className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
-            src={FakeImage}
-            alt="Fake"
-            fill
-            sizes="(min-width: 1280px) 40px, 30px"
-          />
+          }}
+          className="group flex size-16 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale xl:size-20"
+        >
+          <div className="relative size-[30px] xl:size-[40px]">
+            <Image
+              src={RealImage}
+              className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
+              alt="Real"
+              fill
+              sizes="(min-width: 1280px) 40px, 30px"
+            />
+          </div>
+        </button>
+        <div className="flex size-16 flex-col items-center justify-center rounded-full bg-[#FCAB3A] p-3 tracking-number shadow-xl shadow-white/10 md:size-20">
+          {timerDisplay}
         </div>
-      </button>
-    </div>
+        <button
+          ref={falseButtonRef}
+          disabled={loading || aiThinking}
+          onClick={() => {
+            if (loading) return;
+            if (!data.isFake) {
+              setIsCorrect(1);
+              isWrongAudio.play();
+
+              answerSubmitted(false);
+            } else {
+              setIsCorrect(2);
+              isCorrectAudio.play();
+              answerSubmitted(true);
+            }
+          }}
+          className="group flex size-16 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale xl:size-20"
+        >
+          <div className="relative size-[30px] xl:size-[40px]">
+            <Image
+              className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
+              src={FakeImage}
+              alt="Fake"
+              fill
+              sizes="(min-width: 1280px) 40px, 30px"
+            />
+          </div>
+        </button>
+      </div>
+    </>
   );
 }

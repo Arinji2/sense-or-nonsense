@@ -26,6 +26,9 @@ const config: Config = {
         title: "0.1875rem",
         number: "-0.225rem",
       },
+      transitionTimingFunction: {
+        "pop-in": "cubic-bezier(0.35 , 0 , 1 , 0.6)",
+      },
       maxWidth: {
         "full-page": "1280px",
       },
