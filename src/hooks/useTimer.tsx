@@ -1,69 +1,71 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function useTimer(defaultValue: number, updateKey: string) {
   const [timer, setTimer] = useState(defaultValue);
   const [isActive, setIsActive] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const timerID = useRef<NodeJS.Timeout | null>(null);
-  const lastUpdatedTime = useRef<number | null>(null);
+  const intervalRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
+  const remainingTimeRef = useRef(defaultValue);
 
   const startTimer = useCallback(() => {
-    if (timerID.current) return;
-
     setIsActive(true);
-    setIsPaused(false);
-    lastUpdatedTime.current = Date.now();
-
-    const newTimerId = setInterval(() => {
-      const now = Date.now();
-      const delta = now - (lastUpdatedTime.current || now);
-      lastUpdatedTime.current = now;
-
-      setTimer((prevTimer) =>
-        Math.max(prevTimer - Math.floor(delta / 1000), 0),
-      );
-    }, 100);
-
-    timerID.current = newTimerId;
-  }, []);
+    startTimeRef.current =
+      Date.now() - (defaultValue - remainingTimeRef.current) * 1000;
+  }, [defaultValue]);
 
   const stopTimer = useCallback(() => {
-    if (!timerID.current) return;
-    clearInterval(timerID.current);
-    timerID.current = null;
-    lastUpdatedTime.current = null;
     setIsActive(false);
-    setIsPaused(false);
-  }, []);
+    if (intervalRef.current) {
+      cancelAnimationFrame(intervalRef.current);
+      intervalRef.current = null;
+    }
+    remainingTimeRef.current = timer;
+  }, [timer]);
 
-  const pauseTimer = useCallback(() => {
-    if (!isActive || isPaused) return;
-    clearInterval(timerID.current!);
-    timerID.current = null;
-    lastUpdatedTime.current = null;
-    setIsPaused(true);
-  }, [isActive, isPaused]);
+  useEffect(() => {
+    if (isActive) {
+      const updateTimer = () => {
+        const currentTime = Date.now();
+        const elapsedTime = Math.floor(
+          (currentTime - (startTimeRef.current || currentTime)) / 1000,
+        );
+        const newRemainingTime = Math.max(defaultValue - elapsedTime, 0);
 
-  const resumeTimer = useCallback(() => {
-    if (!isPaused) return;
-    startTimer();
-  }, [isPaused, startTimer]);
+        if (newRemainingTime !== timer) {
+          setTimer(newRemainingTime);
+        }
+
+        if (newRemainingTime === 0) {
+          setIsActive(false);
+        } else {
+          intervalRef.current = requestAnimationFrame(updateTimer);
+        }
+      };
+
+      intervalRef.current = requestAnimationFrame(updateTimer);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        cancelAnimationFrame(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isActive, timer, defaultValue]);
 
   const resetTimer = useCallback(() => {
     stopTimer();
     setTimer(defaultValue);
+    remainingTimeRef.current = defaultValue;
   }, [defaultValue, stopTimer]);
 
   return {
     timer,
     startTimer,
     stopTimer,
-    pauseTimer,
-    resumeTimer,
     resetTimer,
     isActive,
-    isPaused,
   };
 }

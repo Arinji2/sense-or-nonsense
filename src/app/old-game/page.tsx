@@ -7,9 +7,9 @@ import { BackdropsList } from "../backdrop/backdrops";
 import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
 
+import { MusicProvider } from "../game/context/music-context";
 import Controls from "./controls.client";
 import Menu from "./menu.client";
-import { MusicProvider } from "./music-context";
 import PlayerView from "./player-view";
 import Settings from "./settings";
 import { RenderStats } from "./stats";

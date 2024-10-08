@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../../utils/cn";
 import useAnimate from "../../../utils/useAnimate";
-import { useMusic } from "./music-context";
+import { useMusic } from "../game/context/music-context";
 
 export default function Settings() {
   const [isExpanded, setIsExpanded] = useState(false);

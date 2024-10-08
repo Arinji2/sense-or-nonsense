@@ -4,9 +4,10 @@ import { GetUserMode } from "../../../utils/getMode";
 import { BackdropsList } from "../backdrop/backdrops";
 import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
-import { MusicProvider } from "../old-game/music-context";
+import { MusicProvider } from "./context/music-context";
 import { TimerProvider } from "./context/timer-context";
-import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
+import Controls from "./game-controls/controls";
+import { GetCurrentStreaks, GetIsFakeSelected } from "./utils";
 
 export default async function Page() {
   const { gameData, rounds } = await ValidateGameIDCookie();
@@ -25,22 +26,24 @@ export default async function Page() {
 
   const filteredIDs = (() => {
     if (rounds.length === 0) return "";
-    const ids = rounds.map((game) => {
-      if (isFake && game.is_fake) {
-        return `id!="${game.id}"`;
-      } else if (!isFake && !game.is_fake) {
-        return `id!="${game.id}"`;
-      }
-    });
+    const ids = rounds
+      .map((game) => {
+        if (isFake && game.is_fake) {
+          return `id!="${game.id}"`;
+        } else if (!isFake && !game.is_fake) {
+          return `id!="${game.id}"`;
+        }
+      })
+      .filter((id) => id !== undefined);
     return "&&".concat(ids.join("&&"));
   })();
 
-  const wordData = await GetWordData({
-    isFake,
-    difficulty,
-    filteredIDs,
-    pb,
-  });
+  // const wordData = await GetWordData({
+  //   isFake,
+  //   difficulty,
+  //   filteredIDs,
+  //   pb,
+  // });
 
   const selectedBackdrop = BackdropsList.find(
     (backdrops) => backdrops.id === Number.parseInt(backdrop),
@@ -63,9 +66,8 @@ export default async function Page() {
   return (
     <TimerProvider defaultTimer={10} uniqueIdentifier={gameData.id}>
       <MusicProvider allowedPaths={["/game"]}>
-        <div className="flex h-fit min-h-[100svh] w-full flex-col items-center justify-center gap-10 overflow-x-hidden py-10 pb-20 xl:h-[100svh] xl:gap-0 xl:py-0 xl:pb-0">
-          <div className="fixed left-0 top-0 h-[100svh] w-full"></div>
-        </div>
+        <Controls />
+        <div></div>
       </MusicProvider>
     </TimerProvider>
   );

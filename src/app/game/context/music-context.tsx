@@ -11,11 +11,11 @@ import React, {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { AUDIOLIST } from "../../../constants/audio";
-import useAnimate from "../../../utils/useAnimate";
-import { useAudio } from "../../../utils/useAudio";
-import { AudioHookReturn } from "../../../validations/generic/types";
-import { useTimerContext } from "../game/context/timer-context";
+import { AUDIOLIST } from "../../../../constants/audio";
+import useAnimate from "../../../../utils/useAnimate";
+import { useAudio } from "../../../../utils/useAudio";
+import { AudioHookReturn } from "../../../../validations/generic/types";
+import { useTimerContext } from "./timer-context";
 
 type MusicContextType = {
   backgroundMusic: AudioHookReturn;
@@ -25,10 +25,10 @@ type MusicContextType = {
 
 const MusicContext = createContext<MusicContextType | undefined>(undefined);
 
-export function useMusic() {
+export function useMusicContext() {
   const context = useContext(MusicContext);
   if (context === undefined) {
-    throw new Error("useMusic must be used within a MusicProvider");
+    throw new Error("useMusicContext must be used within a MusicProvider");
   }
   return context;
 }
@@ -61,7 +61,7 @@ export function MusicProvider({
   );
   const [documentDefined, setDocumentDefined] = useState(false);
   const animate = useAnimate(800);
-  const { pauseTimer } = useTimerContext();
+  const { stopTimer } = useTimerContext();
 
   useEffect(() => {
     setDocumentDefined(true);
@@ -77,12 +77,13 @@ export function MusicProvider({
 
   useEffect(() => {
     if (!backgroundMusic.isPlaying && !backgroundMusic.hasErrored) {
+      console.log("HERE");
       backgroundMusic.play();
     }
 
     if (backgroundMusic.hasErrored) {
       animate.setQueue(true);
-      pauseTimer();
+      stopTimer();
     }
   }, [animate, backgroundMusic]);
 

@@ -37,7 +37,7 @@ export default function AllowMusic({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isBackgroundExpanded, setIsBackgroundExpanded] = useState(false);
   const [isSFXExpanded, setIsSFXExpanded] = useState(false);
-  const { resumeTimer } = useTimerContext();
+  const { startTimer } = useTimerContext();
 
   useEffect(() => {
     if (Animate.showComponent) {
@@ -114,7 +114,7 @@ export default function AllowMusic({
                 <div className="flex h-[34px] w-full flex-row items-center justify-center gap-2">
                   <button
                     disabled={backgroundAudio.isPlaying}
-                    onClick={() => backgroundAudio.play()}
+                    onClick={() => backgroundAudio.resume()}
                   >
                     <Play
                       className={cn(
@@ -172,9 +172,6 @@ export default function AllowMusic({
                         backgroundAudio.setIsEnabled(!value);
                         if (value) {
                           backgroundAudio.pause();
-                        } else {
-                          if (!backgroundAudio.isPlaying)
-                            backgroundAudio.play();
                         }
                       }}
                     />
@@ -292,7 +289,7 @@ export default function AllowMusic({
                     } as SavedSoundSettingsSchemaType),
                   );
 
-                  resumeTimer();
+                  startTimer();
                 }}
                 className="w-full whitespace-nowrap bg-purple-500/60 text-xs text-white xl:text-xs"
               >

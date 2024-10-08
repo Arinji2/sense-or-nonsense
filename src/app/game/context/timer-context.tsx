@@ -8,15 +8,10 @@ type TimerContextType = {
   stopTimer: () => void;
   isActive: boolean;
   timer: number;
-  isPaused: boolean;
-  pauseTimer: () => void;
-  resumeTimer: () => void;
   resetTimer: () => void;
 };
 
-export const TimerContext = createContext<TimerContextType | undefined>(
-  undefined,
-);
+const TimerContext = createContext<TimerContextType | undefined>(undefined);
 
 export function useTimerContext() {
   const context = useContext(TimerContext);
@@ -40,9 +35,7 @@ export function TimerProvider({
     stopTimer,
     isActive,
     timer,
-    isPaused,
-    pauseTimer,
-    resumeTimer,
+
     resetTimer,
   } = useTimer(defaultTimer, uniqueIdentifier);
 
@@ -53,9 +46,7 @@ export function TimerProvider({
         stopTimer,
         isActive,
         timer,
-        isPaused,
-        pauseTimer,
-        resumeTimer,
+
         resetTimer,
       }}
     >

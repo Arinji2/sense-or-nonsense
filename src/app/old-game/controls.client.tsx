@@ -18,7 +18,7 @@ import {
   WordSchemaType,
 } from "../../../validations/game-data/types";
 import { RoundSchemaType } from "../../../validations/pb/types";
-import { useMusic } from "./music-context";
+import { useMusic } from "../game/context/music-context";
 
 function GetRoundChange({
   previousGames,
