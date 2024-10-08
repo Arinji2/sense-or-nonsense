@@ -13,9 +13,11 @@ import useAnimate from "../../utils/useAnimate";
 export default function OngoingGame({
   Animate,
   isDeleting,
+  resetTimer,
 }: {
   Animate: ReturnType<typeof useAnimate>;
   isDeleting?: boolean;
+  resetTimer?: () => void;
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
@@ -29,6 +31,7 @@ export default function OngoingGame({
         if (isDeleting && isEventlistener) {
           Animate.setQueue(false);
           router.refresh();
+          if (resetTimer) resetTimer();
           return;
         }
         let confirmation = override ?? false;

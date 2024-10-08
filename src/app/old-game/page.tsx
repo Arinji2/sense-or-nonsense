@@ -8,11 +8,11 @@ import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
 
 import { MusicProvider } from "../game/context/music-context";
+import Menu from "../game/menu.client";
+import PlayerView from "../game/player-view";
+import Settings from "../game/settings.client";
+import { RenderStats } from "../game/stats";
 import Controls from "./controls.client";
-import Menu from "./menu.client";
-import PlayerView from "./player-view";
-import Settings from "./settings";
-import { RenderStats } from "./stats";
 import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
 
 export default async function Page() {

@@ -3,23 +3,23 @@ import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
 
 export function RenderStats({
-  CurrentRound,
-  SelectedDifficulty,
-  SelectedGame,
+  currentRound,
+  selectedDifficulty,
+  selectedGame,
 }: {
-  CurrentRound: number;
-  SelectedDifficulty: (typeof DifficultyList)[0];
-  SelectedGame: (typeof GamesList)[0];
+  currentRound: number;
+  selectedDifficulty: (typeof DifficultyList)[0];
+  selectedGame: (typeof GamesList)[0];
 }) {
   return (
     <>
       <Stat
         title="Level"
-        value={`${CurrentRound}/${SelectedDifficulty.rounds}`}
+        value={`${currentRound}/${selectedDifficulty.rounds}`}
         id={1}
       />
-      <Stat title="Difficulty" value={SelectedDifficulty.name} id={2} />
-      <Stat title="Mode" value={NameFormat(SelectedGame.title)} id={3} />
+      <Stat title="Difficulty" value={selectedDifficulty.name} id={2} />
+      <Stat title="Mode" value={NameFormat(selectedGame.title)} id={3} />
     </>
   );
 }

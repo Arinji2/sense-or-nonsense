@@ -26,7 +26,7 @@ export async function GetWordData({
 }) {
   unstable_noStore();
   let wordData: WordSchemaType;
-  console.log(filteredIDs);
+  if (filteredIDs === "&&") filteredIDs = "";
 
   const data = await pb
     .collection(isFake ? "fake_words" : "real_words")

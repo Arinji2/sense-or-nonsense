@@ -14,6 +14,7 @@ import {
   VolumeX,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import MusicGif from "../../public/music.gif";
 import { cn } from "../../utils/cn";
@@ -50,6 +51,8 @@ export default function AllowMusic({
       document.body.style.overflow = "unset";
     };
   }, [Animate.showComponent]);
+
+  const router = useRouter();
 
   return (
     Animate.actualState && (
@@ -288,7 +291,7 @@ export default function AllowMusic({
                       isEnabled: isCorrectAudio.isEnabled,
                     } as SavedSoundSettingsSchemaType),
                   );
-
+                  router.refresh();
                   startTimer();
                 }}
                 className="w-full whitespace-nowrap bg-purple-500/60 text-xs text-white xl:text-xs"

@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../../utils/cn";
 import useAnimate from "../../../utils/useAnimate";
-import { useMusic } from "../game/context/music-context";
+import { useMusicContext } from "./context/music-context";
+import { useTimerContext } from "./context/timer-context";
 
 export default function Settings() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -16,7 +17,8 @@ export default function Settings() {
   useEffect(() => {
     setDocumentDefined(true);
   }, []);
-  const { backgroundMusic } = useMusic();
+  const { backgroundMusic } = useMusicContext();
+  const { stopTimer, resetTimer } = useTimerContext();
 
   useEffect(() => {
     if (!animate.queue && showDelete) {
@@ -28,7 +30,11 @@ export default function Settings() {
     <>
       {documentDefined &&
         createPortal(
-          <OngoingGame Animate={animate} isDeleting={true} />,
+          <OngoingGame
+            Animate={animate}
+            isDeleting={true}
+            resetTimer={resetTimer}
+          />,
           document.body,
         )}
       <div
@@ -71,6 +77,7 @@ export default function Settings() {
           <button
             onClick={() => {
               backgroundMusic.setHasErrored(true);
+              stopTimer();
             }}
             className="mt-4 flex h-[20px] w-full shrink-0 flex-col items-center justify-center rounded-sm"
           >
@@ -80,6 +87,7 @@ export default function Settings() {
             onClick={() => {
               setShowDelete(true);
               animate.setQueue(true);
+              stopTimer();
             }}
             className="flex h-[20px] w-full shrink-0 flex-col items-center justify-center rounded-sm"
           >
