@@ -33,12 +33,6 @@ export default async function Page() {
     (game) => game.id === Number.parseInt(gameID),
   )!;
 
-  const filteredIDs = (() => {
-    if (rounds.length === 0) return "";
-    const ids = rounds.map((game) => `id!="${game.id}"`);
-    return "&&".concat(ids.join("&&"));
-  })();
-
   const wordData = await GetWordData({
     isFake,
     difficulty: Number.parseInt(difficulty),
