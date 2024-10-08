@@ -1,5 +1,6 @@
 "use client";
 
+import { useTimerContext } from "@/app/game/context/timer-context";
 import { Button } from "@/components/button";
 import { Slider } from "@/components/slider";
 import { Switch } from "@/components/switch";
@@ -36,6 +37,7 @@ export default function AllowMusic({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isBackgroundExpanded, setIsBackgroundExpanded] = useState(false);
   const [isSFXExpanded, setIsSFXExpanded] = useState(false);
+  const { resumeTimer } = useTimerContext();
 
   useEffect(() => {
     if (Animate.showComponent) {
@@ -289,6 +291,8 @@ export default function AllowMusic({
                       isEnabled: isCorrectAudio.isEnabled,
                     } as SavedSoundSettingsSchemaType),
                   );
+
+                  resumeTimer();
                 }}
                 className="w-full whitespace-nowrap bg-purple-500/60 text-xs text-white xl:text-xs"
               >

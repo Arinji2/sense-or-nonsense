@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { SavedSoundSettingsSchema } from "../validations/generic/schema";
 
 export function useAudio(
@@ -7,11 +7,12 @@ export function useAudio(
   localStorageKey?: string,
 ) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const isPlayingRef = useRef<boolean>(false);
-  const [volume, setVolume] = useState(1);
-  const [isEnabled, setIsEnabled] = useState(true);
-  const [hasErrored, setHasErrored] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [state, setState] = useState({
+    volume: 1,
+    isEnabled: true,
+    hasErrored: false,
+    isPlaying: false,
+  });
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -19,88 +20,93 @@ export function useAudio(
       audioRef.current.preload = "auto";
     }
 
-    if (isPlayingRef.current) {
-      audioRef.current.play().catch((e) => {
-        setHasErrored(true);
-      });
-    }
+    const audio = audioRef.current;
 
     const handleAudioEnd = () => {
-      setIsPlaying(false);
-      isPlayingRef.current = false;
+      setState((prev) => ({ ...prev, isPlaying: false }));
     };
 
-    audioRef.current.addEventListener("ended", handleAudioEnd);
+    audio.addEventListener("ended", handleAudioEnd);
 
     return () => {
-      audioRef.current?.removeEventListener("ended", handleAudioEnd);
+      audio.removeEventListener("ended", handleAudioEnd);
+      audio.pause();
       audioRef.current = null;
     };
   }, [url]);
 
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = volume;
+      audioRef.current.volume = state.volume;
       if (localStorageKey) {
         const storedData = localStorage.getItem(localStorageKey);
         if (storedData) {
           const jsonData = JSON.parse(storedData);
           const parse = SavedSoundSettingsSchema.safeParse(jsonData);
           if (parse.success) {
-            setVolume(parse.data.volume);
-            setIsEnabled(parse.data.isEnabled);
+            setState((prev) => ({
+              ...prev,
+              volume: parse.data.volume,
+              isEnabled: parse.data.isEnabled,
+            }));
           }
         }
       }
     }
-  }, [volume]);
+  }, [localStorageKey, state.volume]);
 
-  const play = () => {
-    if (isEnabled && audioRef.current) {
+  const play = useCallback(() => {
+    if (state.isEnabled && audioRef.current) {
       audioRef.current.currentTime = 0;
       audioRef.current
         .play()
         .then(() => {
-          setIsPlaying(true);
-          isPlayingRef.current = true;
+          setState((prev) => ({ ...prev, isPlaying: true }));
         })
-        .catch((e) => {
-          setHasErrored(true);
+        .catch(() => {
+          setState((prev) => ({ ...prev, hasErrored: true }));
         });
 
       if (isLoopable) {
         audioRef.current.loop = true;
       }
     }
-  };
+  }, [state.isEnabled, isLoopable]);
 
-  const pause = () => {
+  const pause = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
-      setIsPlaying(false);
-      isPlayingRef.current = false; // Persist pause state
+      setState((prev) => ({ ...prev, isPlaying: false }));
     }
-  };
+  }, []);
 
-  const stop = () => {
+  const stop = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
-      setIsPlaying(false);
-      isPlayingRef.current = false;
+      setState((prev) => ({ ...prev, isPlaying: false }));
     }
-  };
+  }, []);
+
+  const setVolume = useCallback((newVolume: number) => {
+    setState((prev) => ({ ...prev, volume: newVolume }));
+  }, []);
+
+  const setIsEnabled = useCallback((enabled: boolean) => {
+    setState((prev) => ({ ...prev, isEnabled: enabled }));
+  }, []);
+
+  const setHasErrored = useCallback((errored: boolean) => {
+    setState((prev) => ({ ...prev, hasErrored: errored }));
+  }, []);
 
   return {
     play,
     pause,
+    stop,
     setVolume,
-    volume,
-    isEnabled,
     setIsEnabled,
     setHasErrored,
-    hasErrored,
-    isPlaying,
-    stop,
+    ...state,
   };
 }

@@ -4,6 +4,8 @@ import { GetUserMode } from "../../../utils/getMode";
 import { BackdropsList } from "../backdrop/backdrops";
 import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
+import { MusicProvider } from "../old-game/music-context";
+import { TimerProvider } from "./context/timer-context";
 import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
 
 export default async function Page() {
@@ -57,4 +59,14 @@ export default async function Page() {
   if (currentRound > selectedDifficulty.rounds) {
     redirect(`/dashboard/games/${gameData.id}`);
   }
+
+  return (
+    <TimerProvider defaultTimer={10} uniqueIdentifier={gameData.id}>
+      <MusicProvider allowedPaths={["/game"]}>
+        <div className="flex h-fit min-h-[100svh] w-full flex-col items-center justify-center gap-10 overflow-x-hidden py-10 pb-20 xl:h-[100svh] xl:gap-0 xl:py-0 xl:pb-0">
+          <div className="fixed left-0 top-0 h-[100svh] w-full"></div>
+        </div>
+      </MusicProvider>
+    </TimerProvider>
+  );
 }
