@@ -7,7 +7,10 @@ import { GetUserMode } from "../../../utils/getMode";
 import { RoundSchemaType } from "../../../validations/pb/types";
 import { AddCPUAction } from "./fighters";
 
-export async function CreateNewRound(nextRoundData?: RoundSchemaType) {
+export async function CreateNewRound(
+  nextRoundData?: RoundSchemaType,
+  disableRevalidate?: boolean,
+) {
   const { gameData, rounds } = await ValidateGameIDCookie();
   const { pb, userID } = await GetUserMode();
 
@@ -33,10 +36,15 @@ export async function CreateNewRound(nextRoundData?: RoundSchemaType) {
   roundData.game = gameData.id;
 
   await pb.collection("rounds").create(roundData);
-  revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
+  if (!disableRevalidate) {
+    revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
+  }
 }
 
-export async function UpdateRound(roundData: RoundSchemaType) {
+export async function UpdateRound(
+  roundData: RoundSchemaType,
+  disableRevalidate?: boolean,
+) {
   const { gameData, rounds } = await ValidateGameIDCookie();
   const { pb, userID } = await GetUserMode();
   try {
@@ -52,6 +60,8 @@ export async function UpdateRound(roundData: RoundSchemaType) {
   } catch (e) {
     throw new Error("Failed to update round");
   }
-  revalidateTag(`${CACHED_TAGS.user_games}-${userID}`);
-  revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
+  if (!disableRevalidate) {
+    revalidateTag(`${CACHED_TAGS.user_games}-${userID}`);
+    revalidateTag(`${CACHED_TAGS.game_data}-${userID}-${gameData.id}`);
+  }
 }

@@ -19,6 +19,7 @@ import { useEffect, useRef, useState } from "react";
 import MusicGif from "../../public/music.gif";
 import { cn } from "../../utils/cn";
 import useAnimate from "../../utils/useAnimate";
+import { useRouterRefresh } from "../../utils/useRouterRefresh";
 import {
   AudioHookReturn,
   SavedSoundSettingsSchemaType,
@@ -38,7 +39,8 @@ export default function AllowMusic({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isBackgroundExpanded, setIsBackgroundExpanded] = useState(false);
   const [isSFXExpanded, setIsSFXExpanded] = useState(false);
-  const { startTimer } = useTimerContext();
+  const { resetTimer } = useTimerContext();
+  const refresh = useRouterRefresh();
 
   useEffect(() => {
     if (Animate.showComponent) {
@@ -291,8 +293,12 @@ export default function AllowMusic({
                       isEnabled: isCorrectAudio.isEnabled,
                     } as SavedSoundSettingsSchemaType),
                   );
+
+                  if (!backgroundAudio.isPlaying && backgroundAudio.isEnabled) {
+                    backgroundAudio.play();
+                  }
                   router.refresh();
-                  startTimer();
+                  resetTimer();
                 }}
                 className="w-full whitespace-nowrap bg-purple-500/60 text-xs text-white xl:text-xs"
               >

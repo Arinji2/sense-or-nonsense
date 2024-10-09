@@ -66,6 +66,7 @@ export async function GetGameData(pb: Client, gameID: string, userID: string) {
     },
 
     {
+      log: ["datacache", "verbose"],
       revalidateTags: [`${CACHED_TAGS.game_data}-${userID}-${gameID}`],
     },
   )(gameID!, userID!);

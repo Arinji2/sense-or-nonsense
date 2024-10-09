@@ -77,7 +77,6 @@ export function MusicProvider({
 
   useEffect(() => {
     if (!backgroundMusic.isPlaying && !backgroundMusic.hasErrored) {
-      console.log("HERE");
       backgroundMusic.play();
     }
 

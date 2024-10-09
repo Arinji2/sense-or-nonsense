@@ -73,3 +73,38 @@ export function GetCurrentStreaks({
     Object.entries(streaks).map(([key, value]) => [key, Math.max(value, 0)]),
   );
 }
+
+export function GetRoundChange({
+  previousGames,
+  fighters,
+}: {
+  previousGames: RoundSchemaType[];
+  fighters: GameFighterSchemaType[];
+}) {
+  const hasPlayed = new Set<number>();
+  let goToNextRound = true;
+  let previousRound = previousGames[previousGames.length - 1];
+
+  if (previousGames.length < fighters.length) return false;
+
+  for (let i = previousGames.length - 1; i >= 0; i--) {
+    if (hasPlayed.size === fighters.length) break;
+    const game = previousGames[i];
+
+    const round = game;
+    const player = game.player_index;
+
+    if (hasPlayed.has(player)) continue;
+
+    hasPlayed.add(player);
+
+    if (round.round_number !== previousRound.round_number) {
+      goToNextRound = false;
+
+      break;
+    }
+    previousRound = round;
+  }
+
+  return goToNextRound;
+}

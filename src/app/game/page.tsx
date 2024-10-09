@@ -2,20 +2,27 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { ValidateGameIDCookie } from "../../../utils/game-data";
 import { GetUserMode } from "../../../utils/getMode";
+import { RoundSchemaType } from "../../../validations/pb/types";
 import { BackdropsList } from "../backdrop/backdrops";
 import { DifficultyList } from "../difficulty/difficully";
 import { GamesList } from "../games";
 import { MusicProvider } from "./context/music-context";
 import { TimerProvider } from "./context/timer-context";
+import Controls from "./game-controls/controls";
 import Menu from "./menu.client";
 import PlayerView from "./player-view";
 import Settings from "./settings.client";
 import { RenderStats } from "./stats";
-import { GetCurrentStreaks, GetIsFakeSelected, GetWordData } from "./utils";
+import {
+  GetCurrentStreaks,
+  GetIsFakeSelected,
+  GetRoundChange,
+  GetWordData,
+} from "./utils";
 
 export default async function Page() {
   const { gameData, rounds } = await ValidateGameIDCookie();
-  const { pb } = await GetUserMode();
+  const { pb, userID } = await GetUserMode();
   if (!gameData.isValidated || typeof gameData.playerData === "boolean")
     throw new Error("Game not found");
   const { backdrop, difficulty, playerData, gameID } = gameData;
@@ -67,6 +74,41 @@ export default async function Page() {
     redirect(`/dashboard/games/${gameData.id}`);
   }
 
+  const previousRound = rounds[rounds.length - 1];
+  const goToNextRound = GetRoundChange({
+    previousGames: rounds,
+    fighters: playerData,
+  });
+  const currentRoundData = {
+    round_number: previousRound.round_number,
+    player_index: previousRound.player_index,
+    is_correct: false,
+    is_fake: wordData.isFake,
+    time_elapsed: 10,
+    fake_word: wordData.isFake ? wordData.id : "",
+    real_word: wordData.isFake ? "" : wordData.id,
+    correct: false,
+    id: previousRound.id,
+    created: new Date(),
+    updated: new Date(),
+    game: gameData.id,
+  } as RoundSchemaType;
+
+  const newPlayerIndex = goToNextRound ? 0 : currentRoundData.player_index + 1;
+
+  const nextRoundData = {
+    round_number: goToNextRound
+      ? currentRoundData.round_number + 1
+      : currentRoundData.round_number,
+    player_index: newPlayerIndex,
+    correct: false,
+    id: "",
+    time_elapsed: 10,
+    is_fake: false,
+    fake_word: "",
+    real_word: "",
+  } as RoundSchemaType;
+
   return (
     <TimerProvider defaultTimer={10} uniqueIdentifier={gameData.id}>
       <MusicProvider allowedPaths={["/game"]}>
@@ -105,15 +147,18 @@ export default async function Page() {
                   {wordData.definition}
                 </p>
               </div>
-              {/* <Controls
-                data={wordData}
-                previousGames={rounds}
-                level={SelectedDifficulty.level}
-                streak={CurrentStreaks[currentPlayerUID]}
-                playerName={SelectedPlayer.fighter_name!}
-                fighters={playerData}
-                maxRounds={SelectedDifficulty.rounds}
-              /> */}
+
+              <Controls
+                currentRoundData={currentRoundData}
+                currentStreak={currentStreaks[currentPlayerData.fighter_uid]}
+                nextRoundData={nextRoundData}
+                maxRounds={selectedDifficulty.rounds}
+                difficultyLevel={selectedDifficulty.level}
+                wordData={wordData}
+                currentPlayer={currentPlayerData}
+                isMultiPlayer={playerData.length > 1}
+                userID={userID!}
+              />
               <div className="mt-auto hidden flex-row items-center justify-center gap-20 xl:flex">
                 <RenderStats
                   {...{
