@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { SavedSoundSettingsSchema } from "../validations/generic/schema";
+import { SavedSoundSettingsSchema } from "../../validations/generic/schema";
 
 export function useAudio(
   url: string,

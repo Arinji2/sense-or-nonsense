@@ -1,6 +1,6 @@
 import { StaticImageData } from "next/image";
 import { z } from "zod";
-import { useAudio } from "../../utils/useAudio";
+import { useAudio } from "../../src/hooks/useAudio";
 import { DictonarySchema, SavedSoundSettingsSchema } from "./schema";
 
 export type COOPSupportForFighterSelect = {

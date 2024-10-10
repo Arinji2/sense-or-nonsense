@@ -13,8 +13,8 @@ import React, {
 import { createPortal } from "react-dom";
 import { AUDIOLIST } from "../../../../constants/audio";
 import useAnimate from "../../../../utils/useAnimate";
-import { useAudio } from "../../../../utils/useAudio";
 import { AudioHookReturn } from "../../../../validations/generic/types";
+import { useAudio } from "../../../hooks/useAudio";
 import { useTimerContext } from "./timer-context";
 
 type MusicContextType = {
@@ -76,7 +76,11 @@ export function MusicProvider({
   }, [pathname, allowedPaths, backgroundMusic]);
 
   useEffect(() => {
-    if (!backgroundMusic.isPlaying && !backgroundMusic.hasErrored) {
+    if (
+      !backgroundMusic.isPlaying &&
+      !backgroundMusic.hasErrored &&
+      backgroundMusic.isEnabled
+    ) {
       backgroundMusic.play();
     }
 
