@@ -101,8 +101,9 @@ export default function OngoingGame({
             <button
               aria-label="Close Modal"
               onClick={() => {
-                if (isDeleting) {
+                if (isDeleting && resetTimer) {
                   Animate.setQueue(false);
+                  resetTimer();
                   router.refresh();
                 } else {
                   closeOpenMenus({}, true);
@@ -126,8 +127,9 @@ export default function OngoingGame({
             <button
               aria-label="Close Modal"
               onClick={() => {
-                if (isDeleting) {
+                if (isDeleting && resetTimer) {
                   Animate.setQueue(false);
+                  resetTimer();
                   router.refresh();
                 } else {
                   closeOpenMenus({}, true);
@@ -149,7 +151,11 @@ export default function OngoingGame({
             <div className="flex h-fit w-fit flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
               <Button
                 onClick={async () => {
-                  Animate.setQueue(false);
+                  if (isDeleting && resetTimer) {
+                    Animate.setQueue(false);
+                    resetTimer();
+                    router.refresh();
+                  }
                   if (!isDeleting) {
                     router.push("/pregame");
                   }

@@ -199,34 +199,34 @@ export default function Controls({
           </div>
         </button>
         <TImerDisplay aiThinking={false} loading={loading} />
-      </div>
-      <button
-        disabled={loading}
-        onClick={() => {
-          if (loading) return;
-          if (!currentRoundData.is_fake) {
-            setIsCorrect(1);
-            isWrongAudio.play();
+        <button
+          disabled={loading}
+          onClick={() => {
+            if (loading) return;
+            if (!currentRoundData.is_fake) {
+              setIsCorrect(1);
+              isWrongAudio.play();
 
-            answerSubmitted(false);
-          } else {
-            setIsCorrect(2);
-            isCorrectAudio.play();
-            answerSubmitted(true);
-          }
-        }}
-        className="group flex size-16 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale xl:size-20"
-      >
-        <div className="relative size-[30px] xl:size-[40px]">
-          <Image
-            className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
-            src={FakeImage}
-            alt="Fake"
-            fill
-            sizes="(min-width: 1280px) 40px, 30px"
-          />
-        </div>
-      </button>
+              answerSubmitted(false);
+            } else {
+              setIsCorrect(2);
+              isCorrectAudio.play();
+              answerSubmitted(true);
+            }
+          }}
+          className="group flex size-16 flex-col items-center justify-center rounded-full bg-black shadow-xl shadow-white/10 disabled:grayscale xl:size-20"
+        >
+          <div className="relative size-[30px] xl:size-[40px]">
+            <Image
+              className="transition-all duration-300 ease-in-out group-hover:-translate-y-1"
+              src={FakeImage}
+              alt="Fake"
+              fill
+              sizes="(min-width: 1280px) 40px, 30px"
+            />
+          </div>
+        </button>
+      </div>
     </>
   );
 }
