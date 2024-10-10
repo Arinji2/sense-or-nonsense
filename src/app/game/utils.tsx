@@ -49,29 +49,30 @@ export function GetCurrentStreaks({
 }: {
   games: RoundSchemaType[];
   fighters: GameFighterSchemaType[];
-}) {
-  const streaks: Record<number, number> = Object.fromEntries(
-    fighters.map((fighter) => [fighter.fighter_uid, 0]),
-  );
+}): { [k: string]: number } {
+  const streaks: { [k: string]: number } = {};
+  fighters.forEach((fighter) => {
+    streaks[fighter.fighter_uid.toString()] = 0;
+  });
+  const stopCounting: string[] = [];
+  games.reverse();
 
-  for (let i = games.length - 1; i >= 0; i--) {
+  for (let i = 0; i < games.length; i++) {
     const game = games[i];
+
     if (game.id === "") continue;
 
-    const fighterUid = fighters[game.player_index].fighter_uid;
-
-    if (streaks[fighterUid] === -1) continue;
+    const uid = fighters[game.player_index].fighter_uid.toString();
+    if (stopCounting.includes(uid)) continue;
 
     if (game.correct) {
-      streaks[fighterUid]++;
+      streaks[uid]++;
     } else {
-      streaks[fighterUid] = -1;
+      stopCounting.push(uid);
     }
   }
 
-  return Object.fromEntries(
-    Object.entries(streaks).map(([key, value]) => [key, Math.max(value, 0)]),
-  );
+  return streaks;
 }
 
 export function GetRoundChange({

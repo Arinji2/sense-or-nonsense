@@ -64,6 +64,7 @@ export default async function Page() {
   )!;
 
   const currentRound = rounds[rounds.length - 1].round_number;
+  const reveredRounds = rounds.toReversed();
 
   const currentStreaks = GetCurrentStreaks({
     games: rounds.slice(0, rounds.length - 1),

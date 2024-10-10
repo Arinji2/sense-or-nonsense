@@ -91,11 +91,6 @@ export default function Controls({
         const currentTime = new Date().getTime();
 
         const reset = async () => {
-          setStreakCopy(0);
-          setIsCorrect(0);
-          resetTimer();
-
-          setLoading(false);
           await Promise.all([
             RevalidateAction(
               "tag",
@@ -105,6 +100,10 @@ export default function Controls({
             RevalidateAction("tag", `${CACHED_TAGS.user_games}-${userID}`),
           ]);
           await refresh();
+          setLoading(false);
+          setStreakCopy(0);
+          setIsCorrect(0);
+          resetTimer();
 
           isSubmittingRef.current = false;
         };
@@ -143,7 +142,7 @@ export default function Controls({
     if (wordIDCopy.current === wordData.id) return;
     if (loading) return;
     wordIDCopy.current = wordData.id;
-    startTimer();
+    // startTimer();
 
     if (currentPlayer.fighter_name === "CPU") handleCPUTurn();
   }, [
