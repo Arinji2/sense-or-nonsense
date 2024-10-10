@@ -3,7 +3,7 @@
 import FighterModal from "@/modals/fighter-select";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { Button } from "@/components/button";
@@ -11,16 +11,17 @@ import FighterExpand from "@/modals/fighter-expand";
 import { FightersList } from "../../../constants/fighters";
 import useAnimate from "../../../utils/useAnimate";
 import { FighterDataType } from "../../../validations/generic/types";
-const scroll = 400;
 
 function Scroll(
   scrollingDiv: React.MutableRefObject<HTMLDivElement | null>,
   clicked: boolean,
   setClicked: React.Dispatch<React.SetStateAction<boolean>>,
+  width: number,
   right?: boolean,
 ) {
   if (clicked) return;
   setClicked(true);
+
   if (!scrollingDiv.current) return;
 
   if (right) {
@@ -34,8 +35,9 @@ function Scroll(
         behavior: "smooth",
       });
     } else {
+      console;
       scrollingDiv.current.scrollBy({
-        left: scroll,
+        left: width,
         behavior: "smooth",
       });
     }
@@ -47,7 +49,7 @@ function Scroll(
       });
     } else
       scrollingDiv.current.scrollBy({
-        left: -scroll,
+        left: -width,
         behavior: "smooth",
       });
   }
@@ -69,6 +71,10 @@ export default function Selector() {
   const [selectedFighterID, setSelectedFighterID] = useState<number | null>(
     null,
   );
+  const fighterDiv = useRef<HTMLDivElement | null>(null);
+  const scrollWidth = useMemo(() => {
+    return fighterDiv.current?.scrollWidth ?? 0;
+  }, [fighterDiv]);
 
   useEffect(() => {
     setDocumentDefined(true);
@@ -78,10 +84,24 @@ export default function Selector() {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowLeft") {
-        Scroll.bind(null, scrollingDiv, clicked, setClicked, false)();
+        Scroll.bind(
+          null,
+          scrollingDiv,
+          clicked,
+          setClicked,
+          scrollWidth,
+          false,
+        )();
       }
       if (event.key === "ArrowRight") {
-        Scroll.bind(null, scrollingDiv, clicked, setClicked, true)();
+        Scroll.bind(
+          null,
+          scrollingDiv,
+          clicked,
+          setClicked,
+          scrollWidth,
+          true,
+        )();
       }
     };
 
@@ -116,6 +136,7 @@ export default function Selector() {
               scrollingDiv,
               clicked,
               setClicked,
+              scrollWidth,
               false,
             )}
             className="flex h-full w-10 flex-col items-center justify-center rounded-r-md bg-white/10 shadow-md shadow-black xl:w-16"
@@ -124,7 +145,14 @@ export default function Selector() {
           </button>
           <button
             disabled={clicked}
-            onClick={Scroll.bind(null, scrollingDiv, clicked, setClicked, true)}
+            onClick={Scroll.bind(
+              null,
+              scrollingDiv,
+              clicked,
+              setClicked,
+              scrollWidth,
+              true,
+            )}
             className="flex h-full w-10 flex-col items-center justify-center rounded-l-md bg-white/10 shadow-md shadow-black xl:w-16"
           >
             <ChevronRight className="size-7 text-black xl:size-10" />
@@ -136,6 +164,7 @@ export default function Selector() {
         >
           {FightersList.map((fighter) => (
             <div
+              ref={fighterDiv}
               key={fighter.id}
               style={{ "--fighterColor": fighter.color } as React.CSSProperties}
               className="to relative flex h-full w-full max-w-[800px] shrink-0 snap-center flex-col items-center justify-start gap-5 bg-gradient-to-b from-[--fighterColor] from-60% py-28 pt-8 brightness-75 transition-all duration-300 ease-in-out hover:brightness-100 xl:py-24 xl:pt-10"
