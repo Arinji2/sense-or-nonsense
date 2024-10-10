@@ -14,7 +14,7 @@ export const useCpuTurn = ({
 
   return useCallback(() => {
     if (isProcessingRef.current) return;
-    console.log("RUN CPU");
+
     isProcessingRef.current = true;
 
     toast.success("CPU is thinking...");

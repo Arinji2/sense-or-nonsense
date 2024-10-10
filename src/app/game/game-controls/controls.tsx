@@ -55,7 +55,6 @@ export default function Controls({
   const refresh = useRouterRefresh();
   const answerSubmitted = useCallback(
     async (correct?: boolean) => {
-      console.log("Starting");
       if (loading || isSubmittingRef.current) return;
       isSubmittingRef.current = true;
       setStreakCopy(currentStreak);
@@ -92,7 +91,6 @@ export default function Controls({
         const currentTime = new Date().getTime();
 
         const reset = async () => {
-          console.log("RUNNING");
           setStreakCopy(0);
           setIsCorrect(0);
           resetTimer();
@@ -113,12 +111,10 @@ export default function Controls({
         const timeElapsed = currentTime - startTime.getTime();
 
         if (timeElapsed < 2000) {
-          console.log("HERE");
           setTimeout(async () => {
             await reset();
           }, 2000 - timeElapsed);
         } else {
-          console.log("there");
           await reset();
         }
       }

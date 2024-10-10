@@ -133,7 +133,7 @@ export default function LoginModal({
                       success: "Guest Mode enabled",
                       error: "Error enabling Guest Mode",
                     });
-                    console.log(mode);
+
                     router.push(`/${mode}`);
                   }}
                   className="w-full bg-blue-500 text-xs text-white xl:w-fit xl:text-sm"

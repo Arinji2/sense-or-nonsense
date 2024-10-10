@@ -56,7 +56,6 @@ export function useAudio(
   }, [localStorageKey, state.volume]);
 
   const resume = useCallback(() => {
-    console.log(state.isEnabled, audioRef.current);
     if (state.isEnabled && audioRef.current) {
       audioRef.current.play();
       setState((prev) => ({ ...prev, isPlaying: true, isPaused: false }));
@@ -64,13 +63,9 @@ export function useAudio(
   }, [state.isEnabled]);
 
   const play = useCallback(() => {
-    console.log(state.isEnabled);
     if (state.isEnabled && audioRef.current) {
-      console.log("HERE");
-
       // Only play if the audio is currently paused, no resetting the current time
       if (audioRef.current.paused && !state.isPaused) {
-        console.log("OMG HERE");
         audioRef.current
           .play()
           .then(() => {
@@ -88,15 +83,7 @@ export function useAudio(
   }, [state.isEnabled, state.isPaused, isLoopable]);
 
   const pause = useCallback(() => {
-    console.log(
-      "PAUSE",
-      audioRef.current,
-      !audioRef.current?.paused,
-      audioRef.current && !audioRef.current.paused,
-    );
-
     if (audioRef.current && !audioRef.current.paused) {
-      console.log("HERE");
       audioRef.current.pause();
       setState((prev) => ({ ...prev, isPlaying: false, isPaused: true }));
     }
@@ -111,9 +98,7 @@ export function useAudio(
   }, []);
 
   const setVolume = useCallback((newVolume: number) => {
-    console.log("HERE");
     if (audioRef.current) {
-      console.log(audioRef.current.volume);
       audioRef.current.volume = newVolume;
     }
     setState((prev) => ({ ...prev, volume: newVolume }));
