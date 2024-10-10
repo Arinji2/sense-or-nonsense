@@ -59,7 +59,7 @@ export default function OngoingGame({
         }
       }
     },
-    [Animate, containerRef, router, isDeleting],
+    [Animate, containerRef, router, isDeleting, resetTimer],
   );
   useEffect(() => {
     if (Animate.showComponent) {

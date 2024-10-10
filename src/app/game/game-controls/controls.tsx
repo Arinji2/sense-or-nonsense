@@ -127,6 +127,10 @@ export default function Controls({
       router,
       currentStreak,
       loading,
+      refresh,
+      resetTimer,
+      stopTimer,
+      userID,
     ],
   );
   const handleCPUTurn = useCpuTurn({
@@ -142,7 +146,13 @@ export default function Controls({
     startTimer();
 
     if (currentPlayer.fighter_name === "CPU") handleCPUTurn();
-  }, [wordData.id, loading, currentPlayer.fighter_name]);
+  }, [
+    wordData.id,
+    loading,
+    currentPlayer.fighter_name,
+    handleCPUTurn,
+    startTimer,
+  ]);
 
   useEffect(() => {
     if (timer === 3) toast.success("3 seconds left!");
@@ -152,7 +162,7 @@ export default function Controls({
       );
       answerSubmitted(false);
     }
-  }, [timer, wordData.isFake]);
+  }, [timer, wordData.isFake, answerSubmitted]);
 
   return (
     <>
