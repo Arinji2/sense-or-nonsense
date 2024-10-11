@@ -4,6 +4,7 @@ import AllowMusic from "@/modals/allow-music";
 import { usePathname } from "next/navigation";
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -13,7 +14,11 @@ import React, {
 import { createPortal } from "react-dom";
 import { AUDIOLIST } from "../../../../constants/audio";
 import useAnimate from "../../../../utils/useAnimate";
-import { AudioHookReturn } from "../../../../validations/generic/types";
+import { SavedSoundSettingsSchema } from "../../../../validations/generic/schema";
+import {
+  AudioHookReturn,
+  SavedSoundSettingsSchemaType,
+} from "../../../../validations/generic/types";
 import { useAudio } from "../../../hooks/useAudio";
 import { useTimerContext } from "./timer-context";
 
@@ -62,6 +67,22 @@ export function MusicProvider({
   const [documentDefined, setDocumentDefined] = useState(false);
   const animate = useAnimate(800);
   const { stopTimer } = useTimerContext();
+  const [backgroundMusicSettings, setBackgroundMusicSettings] =
+    useState<SavedSoundSettingsSchemaType>();
+
+  const getBackgroundMusicSettings = useCallback(() => {
+    const backgroundMusicSettings = localStorage.getItem(
+      "backgroundMusicSettings",
+    );
+    if (backgroundMusicSettings) {
+      const jsonData = JSON.parse(backgroundMusicSettings);
+      const parse = SavedSoundSettingsSchema.safeParse(jsonData);
+      if (parse.success) {
+        return parse.data;
+      }
+    }
+    return null;
+  }, []);
 
   useEffect(() => {
     setDocumentDefined(true);
@@ -76,10 +97,12 @@ export function MusicProvider({
   }, [pathname, allowedPaths, backgroundMusic]);
 
   useEffect(() => {
+    const settings = getBackgroundMusicSettings();
     if (
       !backgroundMusic.isPlaying &&
       !backgroundMusic.hasErrored &&
-      backgroundMusic.isEnabled
+      backgroundMusic.isEnabled &&
+      settings?.isEnabled
     ) {
       backgroundMusic.play();
     }
