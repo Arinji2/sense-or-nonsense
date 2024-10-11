@@ -15,45 +15,6 @@ export const FighterNameSchema = z
     return true;
   });
 
-/*
-  
-  [
-    {
-      "word": "hello",
-      "meanings": [
-        {
-          "partOfSpeech": "exclamation",
-          "definitions": [
-            {
-              "definition": "used as a greeting or to begin a phone conversation.",
-              "example": "hello there, Katie!",
-            }
-          ]
-        },
-        {
-          "partOfSpeech": "noun",
-          "definitions": [
-            {
-              "definition": "an utterance of ‘hello’; a greeting.",
-              "example": "she was getting polite nods and hellos from people",
-            }
-          ]
-        },
-        {
-          "partOfSpeech": "verb",
-          "definitions": [
-            {
-              "definition": "say or shout ‘hello’.",
-              "example": "I pressed the phone button and helloed",
-            }
-          ]
-        }
-      ]
-    }
-  ]
-
-  */
-
 export const DictonarySchema = z.object({
   word: z.string(),
   meanings: z.array(

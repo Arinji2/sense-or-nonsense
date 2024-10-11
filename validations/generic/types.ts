@@ -81,6 +81,7 @@ export type GamesDataType = {
   showLeft: boolean;
   isMultiplayer: boolean;
   showTime: boolean;
+  hasQuickPlaySupport?: boolean;
 };
 
 export type DictionarySchemaType = z.infer<typeof DictonarySchema>;

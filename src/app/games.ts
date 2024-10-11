@@ -13,6 +13,7 @@ export const GamesList = [
     showLeft: true,
     isMultiplayer: false,
     showTime: false,
+    hasQuickPlaySupport: true,
   },
   {
     id: 1,
@@ -22,6 +23,7 @@ export const GamesList = [
     isMultiplayer: false,
     showLeft: false,
     showTime: false,
+    hasQuickPlaySupport: true,
   },
   {
     id: 2,

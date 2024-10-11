@@ -1,13 +1,13 @@
 "use client";
 
-import {
-  CheckDefaultBackdropAction,
-  CheckDefaultFighterAction,
-} from "@/actions/defaults";
 import { SetupGameAction } from "@/actions/game/setup";
 import { GamesList } from "@/app/games";
+import QuickplayModal from "@/modals/quickplay";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import toast from "react-hot-toast";
+import useAnimate from "../../../utils/useAnimate";
 
 export default function PlayNowButton({
   gameData,
@@ -16,91 +16,45 @@ export default function PlayNowButton({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const animate = useAnimate(800);
+  const [documentDefined, setDocumentDefined] = useState(false);
+  const [showQuickPlayModal, setShowQuickPlayModal] = useState(false);
+
+  useEffect(() => {
+    setDocumentDefined(true);
+  }, []);
   return (
-    <button
-      onClick={async () => {
-        await toast.promise(SetupGameAction(gameData.id.toString()), {
-          loading: "Setting up game...",
-          success: "Game selected successfully!",
-          error: "Failed to select game",
-        });
+    <>
+      {documentDefined &&
+        showQuickPlayModal &&
+        createPortal(
+          <QuickplayModal Animate={animate} gameData={gameData} />,
+          document.body,
+        )}
+      <button
+        onClick={async () => {
+          if (gameData.hasQuickPlaySupport) {
+            animate.setQueue(true);
+            setShowQuickPlayModal(true);
+            return;
+          }
+          await toast.promise(SetupGameAction(gameData.id.toString()), {
+            loading: "Setting up game...",
+            success: "Game selected successfully!",
+            error: "Failed to select game",
+          });
 
-        const isRedirected = searchParams.get("redirected");
-        if (isRedirected && isRedirected === "true") {
-          router.replace("/pregame");
-        }
+          const isRedirected = searchParams.get("redirected");
+          if (isRedirected && isRedirected === "true") {
+            router.replace("/pregame");
+          }
 
-        if (gameData.isMultiplayer) {
           router.push("/difficulty");
-          return;
-        }
-
-        let hasSetFighter = false;
-        let hasSetBackdrop = false;
-
-        await toast.promise(
-          new Promise(async (resolve) => {
-            try {
-              hasSetFighter = await CheckDefaultFighterAction();
-
-              if (!hasSetFighter) {
-                resolve({
-                  success: false,
-                  error: "Failed to set default backdrop",
-                });
-              } else {
-                resolve({ success: true });
-              }
-            } catch (err: any) {
-              resolve({ success: false, error: err.message });
-            }
-          }),
-          {
-            loading: "Checking default fighter...",
-            success: (data: any) =>
-              data.success
-                ? "Default fighter set successfully!"
-                : "Default fighter not found!",
-            error: (data) => data.error || "An error occurred",
-          },
-        );
-
-        await toast.promise(
-          new Promise(async (resolve) => {
-            try {
-              hasSetBackdrop = await CheckDefaultBackdropAction();
-
-              if (!hasSetBackdrop) {
-                resolve({
-                  success: false,
-                  error: "Failed to set default backdrop",
-                });
-              } else {
-                resolve({ success: true });
-              }
-            } catch (err: any) {
-              resolve({ success: false, error: err.message });
-            }
-          }),
-          {
-            loading: "Checking default backdrop...",
-            success: (data: any) =>
-              data.success
-                ? "Default backdrop set successfully!"
-                : "Default backdrop not found!",
-            error: (data) => data.error || "An error occurred",
-          },
-        );
-
-        if (!hasSetFighter) {
-          router.push("/difficulty?redirected=true");
-        } else if (!hasSetBackdrop) {
-          router.push("/backdrop");
-        } else router.push("/pregame");
-      }}
-      className="w-full shrink-0 rounded-sm bg-green-500 p-2 px-4 text-xss font-bold text-white transition-all duration-200 ease-in-out hover:bg-green-600 md:text-xs xl:w-fit xl:text-sm xl:font-normal"
-    >
-      PLAY NOW
-    </button>
+        }}
+        className="w-full shrink-0 rounded-sm bg-green-500 p-2 px-4 text-xss font-bold text-white transition-all duration-200 ease-in-out hover:bg-green-600 md:text-xs xl:w-fit xl:text-sm xl:font-normal"
+      >
+        PLAY NOW
+      </button>
+    </>
   );
 }
