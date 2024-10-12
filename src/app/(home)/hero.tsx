@@ -1,6 +1,8 @@
 import HomeImage from "@/../public/home/home.png";
+import { Button } from "@/components/button";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { Suspense } from "react";
 import { GetUserMode } from "../../../utils/getMode";
 import GamemodeSelector from "./gamemode-selector.client";
@@ -58,25 +60,36 @@ export async function HeroHeader() {
       <p className="text-center text-sm text-white/70 md:text-lg">
         "Mandela Effect on basic English Words amplified"
       </p>
-      <div className="flex h-fit w-full flex-col items-center justify-center gap-6 py-8 md:flex-row">
-        <GamemodeSelector
-          className="w-full bg-green-500 md:w-fit"
-          tag="single"
-          isLoggedIn={userID !== null}
-        >
-          <p className="text-base font-bold tracking-title text-white md:text-sm">
-            SINGLE PLAYER
-          </p>
-        </GamemodeSelector>
-        <GamemodeSelector
-          className="w-full bg-teal-500 md:w-fit"
-          tag="multi"
-          isLoggedIn={userID !== null}
-        >
-          <p className="text-base font-bold tracking-title text-white md:text-sm">
-            MULTI PLAYER
-          </p>
-        </GamemodeSelector>
+      <div className="flex h-fit w-fit flex-col items-center justify-center gap-6 py-8">
+        <div className="flex h-fit w-full flex-col items-center justify-center gap-6 md:flex-row">
+          <GamemodeSelector
+            className="w-full bg-green-500 md:w-fit"
+            tag="single"
+            isLoggedIn={userID !== null}
+          >
+            <p className="text-xs font-bold tracking-title text-white md:text-sm">
+              SINGLE PLAYER
+            </p>
+          </GamemodeSelector>
+          <GamemodeSelector
+            className="w-full bg-teal-500 md:w-fit"
+            tag="multi"
+            isLoggedIn={userID !== null}
+          >
+            <p className="text-xs font-bold tracking-title text-white md:text-sm">
+              MULTI PLAYER
+            </p>
+          </GamemodeSelector>
+        </div>
+        {userID && (
+          <Link href="/dashboard" className="h-fit w-full md:w-fit">
+            <Button className="w-full bg-purple-500 md:w-fit">
+              <p className="text-xs font-bold tracking-title text-white md:text-sm">
+                DASHBOARD
+              </p>
+            </Button>
+          </Link>
+        )}
       </div>
     </div>
   );
