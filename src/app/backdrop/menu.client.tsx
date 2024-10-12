@@ -126,10 +126,7 @@ export default function Menu({
               error: "Failed to select backdrop",
             });
 
-            const isRedirected = searchParams.get("redirected");
-            if (isRedirected && isRedirected === "true") {
-              router.replace("/pregame");
-            } else router.push("/pregame");
+            router.push("/pregame");
           }}
         >
           LETS GO!

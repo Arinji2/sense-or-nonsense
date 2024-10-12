@@ -8,6 +8,7 @@ import Selector from "./selector.client";
 
 export default async function Page({}) {
   const { pb, userID } = await GetUserMode();
+  let isMultiplayer = false;
   const gameID = cookies().get("game-id")?.value;
   if (!gameID) {
     redirect("/single");
@@ -18,13 +19,14 @@ export default async function Page({}) {
     if (parsedGame.user !== userID) {
       throw new Error();
     }
-    if (
-      GamesList.find(
-        (game) => game.id === Number.parseInt(parsedGame.gameID),
-      ) === undefined
-    ) {
+
+    const game = GamesList.find(
+      (game) => game.id.toString() === parsedGame.gameID,
+    );
+    if (game === undefined) {
       throw new Error();
     }
+    isMultiplayer = game.isMultiplayer;
   } catch (e) {
     redirect("/unauthorized");
   }
@@ -42,7 +44,7 @@ export default async function Page({}) {
         </h1>
 
         <div className="flex h-fit w-[95%] flex-row flex-wrap items-center justify-center gap-10 xl:w-full">
-          <Selector gameID={gameID} />
+          <Selector gameID={gameID} isMultiplayer={isMultiplayer} />
         </div>
       </div>
     </div>

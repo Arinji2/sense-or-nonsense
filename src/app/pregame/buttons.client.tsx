@@ -32,12 +32,11 @@ export function DeleteGameButton() {
   return (
     <Button
       onClick={async () => {
-        const resolve = toast.promise(RemoveGameAction(), {
+        await toast.promise(RemoveGameAction(), {
           loading: "Deleting game...",
           success: "Game deleted",
           error: "Failed to delete game",
         });
-        await resolve;
 
         router.push("/");
       }}

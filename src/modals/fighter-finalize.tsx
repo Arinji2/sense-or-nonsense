@@ -173,9 +173,16 @@ export default function FighterFinalize({
               onClick={async () => {
                 Animate.setQueue(false);
                 const isRedirected = searchParams.get("redirected");
-                if (isRedirected && isRedirected === "true") {
+                const completed = searchParams.get("completed") === "backdrop";
+                if (!isRedirected && !completed) {
+                  router.push("/backdrop");
+                }
+                if (isRedirected === "true") {
                   router.replace("/pregame");
-                } else router.push("/backdrop");
+                }
+                if (completed) {
+                  router.push("/pregame");
+                }
               }}
               className="w-full bg-green-500 text-white xl:w-fit"
             >
