@@ -34,10 +34,12 @@ export default function Selector({
             const isRedirected = searchParams.get("redirected");
             if (isRedirected && isRedirected === "true") {
               router.replace("/pregame");
+              return;
             }
 
             if (isMultiplayer) {
               router.push("/fighters");
+              return;
             }
 
             const fighterDefaults = await CheckDefaultFighterAction();
@@ -48,23 +50,27 @@ export default function Selector({
               toast.success("Default backdrop selected successfully!");
               toast.success("Default fighter selected successfully!");
               router.push("/pregame");
+              return;
             }
 
             if (!backdropDefaults && fighterDefaults) {
               toast.success("Default fighter selected successfully!");
               toast.error("Default backdrop not found.");
               router.push("/backdrop");
+              return;
             }
 
             if (backdropDefaults && !fighterDefaults) {
               toast.success("Default backdrop selected successfully!");
               toast.error("Default fighter not found.");
               router.push("/fighters?completed=backdrop");
+              return;
             }
             if (!backdropDefaults && !fighterDefaults) {
               toast.error("Default backdrop not found.");
               toast.error("Default fighter not found.");
               router.push("/fighters");
+              return;
             }
           }}
           key={difficulty.id}

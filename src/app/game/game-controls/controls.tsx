@@ -142,7 +142,7 @@ export default function Controls({
     if (wordIDCopy.current === wordData.id) return;
     if (loading) return;
     wordIDCopy.current = wordData.id;
-    // startTimer();
+    startTimer();
 
     if (currentPlayer.fighter_name === "CPU") handleCPUTurn();
   }, [
