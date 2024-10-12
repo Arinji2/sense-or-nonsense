@@ -1,6 +1,15 @@
 import z from "zod";
 import { REGEX } from "../../constants/regex";
 
+export const AccountSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  email: z.string(),
+  default_fighter: z.string(),
+  default_backdrop: z.number(),
+  guest_data: z.string(),
+});
+
 export const StoredWordSchema = z.object({
   level: z.number(),
   word: z.string(),
@@ -18,6 +27,11 @@ export const GameSchema = z
     gameID: z.string(),
     difficulty: z.string(),
     backdrop: z.string(),
+    expand: z.optional(
+      z.object({
+        user: AccountSchema.optional(),
+      }),
+    ),
     playerData: z.string().transform((val) => {
       if (!val.includes(":")) {
         return [];
@@ -84,15 +98,6 @@ export const RoundSchema = z.object({
 });
 
 export const RoundsSchema = z.array(RoundSchema);
-
-export const AccountSchema = z.object({
-  id: z.string(),
-  username: z.string(),
-  email: z.string(),
-  default_fighter: z.string(),
-  default_backdrop: z.number(),
-  guest_data: z.string(),
-});
 
 export const UsernameSchema = z
   .string()

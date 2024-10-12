@@ -10,4 +10,7 @@ export const CACHED_TAGS = {
   user_games: "user_games",
   //user_games-userID
   global_words: "global_words",
+  //global_words
+  leaderboard: "leaderboard",
+  //leaderboard
 };
