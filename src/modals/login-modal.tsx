@@ -2,6 +2,7 @@
 
 import { InitGuest } from "@/actions/guest";
 import { Button } from "@/components/button";
+import useLoading from "@/hooks/useLoading";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -61,12 +62,12 @@ export default function LoginModal({
       document.removeEventListener("keydown", escHandler);
       document.body.style.overflow = "unset";
     };
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Animate.showComponent]);
+  }, [Animate.showComponent, closeOpenMenus]);
 
   const router = useRouter();
 
   const loginAnimate = useAnimate(800);
+  const { isGlobalLoading, startLoading, startAsyncLoading } = useLoading();
 
   return (
     Animate.actualState && (
@@ -118,23 +119,30 @@ export default function LoginModal({
               </h4>
               <div className="flex h-fit w-fit flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
                 <Button
+                  disabled={isGlobalLoading}
                   onClick={async () => {
-                    setShowLogin(true);
-                    loginAnimate.setQueue(true);
+                    startLoading(() => {
+                      setShowLogin(true);
+                      loginAnimate.setQueue(true);
+                    });
                   }}
                   className="w-full bg-purple-500 text-xs text-white xl:w-fit xl:text-sm"
                 >
                   LOGIN TO ACCOUNT
                 </Button>
                 <Button
+                  disabled={isGlobalLoading}
                   onClick={async () => {
-                    await toast.promise(InitGuest(), {
-                      loading: "Loading Guest Mode...",
-                      success: "Guest Mode enabled",
-                      error: "Error enabling Guest Mode",
+                    await startAsyncLoading(async () => {
+                      await toast.promise(InitGuest(), {
+                        loading: "Loading Guest Mode...",
+                        success: "Guest Mode enabled",
+                        error: "Error enabling Guest Mode",
+                      });
                     });
-
-                    router.push(`/${mode}`);
+                    startLoading(() => {
+                      router.push(`/${mode}`);
+                    });
                   }}
                   className="w-full bg-blue-500 text-xs text-white xl:w-fit xl:text-sm"
                 >
