@@ -2,6 +2,7 @@ import { GamesList } from "@/app/games";
 import Image from "next/image";
 import { cn } from "../../../utils/cn";
 
+import { Button } from "@/components/button";
 import Link from "next/link";
 import { memoize } from "nextjs-better-unstable-cache";
 import Client from "pocketbase";
@@ -161,9 +162,11 @@ export async function GameComponent({
           <PlayNowButton gameData={GameData} />
           <Link
             href={multi ? "/single" : "/multi"}
-            className="w-full shrink-0 rounded-sm bg-blue-500 p-2 px-4 text-center text-xss font-bold text-white transition-all duration-200 ease-in-out hover:bg-blue-600 md:w-fit md:text-xs xl:text-sm xl:font-normal"
+            className="h-fit w-full xl:w-fit"
           >
-            PLAY {multi ? "SINGLE PLAYER" : "MULTIPLAYER"}
+            <Button className="w-full bg-blue-500 text-xs text-white xl:w-fit xl:text-sm">
+              PLAY {multi ? "SINGLE PLAYER" : "MULTIPLAYER"}
+            </Button>
           </Link>
         </div>
       </div>
