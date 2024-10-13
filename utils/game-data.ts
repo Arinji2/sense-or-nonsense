@@ -36,9 +36,9 @@ export async function ValidateGameIDCookie(
 }
 
 export async function GetGameData(pb: Client, gameID: string, userID: string) {
-  return await memoize(
-    async (id: string, user: string) => {
-      try {
+  try {
+    const memoizedFetch = memoize(
+      async (id: string, user: string) => {
         const gameRecord = await pb?.collection("games").getOne(id);
         const roundRecords = await pb?.collection("rounds").getFullList({
           filter: `game="${id}"`,
@@ -46,28 +46,34 @@ export async function GetGameData(pb: Client, gameID: string, userID: string) {
           expand: "game,fake_word,real_word",
         });
 
-        const parsedGame = GameSchema.parse(gameRecord);
-        if (parsedGame.user !== user) {
-          throw new Error();
-        }
+        return { gameRecord, roundRecords };
+      },
+      {
+        log: ["datacache", "verbose"],
+        revalidateTags: [`${CACHED_TAGS.game_data}-${userID}-${gameID}`],
+      },
+    );
 
-        const parsedRoundData = RoundsSchema.safeParse(roundRecords);
-        if (!parsedRoundData.success) {
-          throw new Error("Game not found");
-        }
+    const { gameRecord, roundRecords } = await memoizedFetch(gameID!, userID!);
 
-        return {
-          gameData: parsedGame,
-          rounds: parsedRoundData.data,
-        };
-      } catch (e: any) {
-        redirect("/unauthorized");
-      }
-    },
+    const parsedGame = GameSchema.parse(gameRecord);
+    if (parsedGame.user !== userID) {
+      throw new Error();
+    }
 
-    {
-      log: ["datacache", "verbose"],
-      revalidateTags: [`${CACHED_TAGS.game_data}-${userID}-${gameID}`],
-    },
-  )(gameID!, userID!);
+    const parsedRoundData = RoundsSchema.safeParse(roundRecords);
+    if (!parsedRoundData.success) {
+      throw new Error("Game not found");
+    }
+
+    return {
+      gameData: parsedGame,
+      rounds: parsedRoundData.data,
+    };
+  } catch (e: any) {
+    try {
+      cookies().delete("game-id");
+    } catch (e) {}
+    redirect("/unauthorized");
+  }
 }

@@ -34,6 +34,7 @@ export default function GamemodeSelector({
         )}
       <Button
         className={className}
+        disabled={animate.queue}
         onClick={() => {
           if (isLoggedIn) router.push(`/${tag}`);
           else animate.setQueue(true);

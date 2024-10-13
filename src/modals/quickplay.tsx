@@ -2,6 +2,7 @@
 
 import { SetupGameAction, SetupQuickPlayGame } from "@/actions/game/setup";
 import { Button } from "@/components/button";
+import useLoading from "@/hooks/useLoading";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -59,7 +60,7 @@ export default function QuickplayModal({
   const router = useRouter();
 
   const searchParams = useSearchParams();
-
+  const { isGlobalLoading, startLoading, startAsyncLoading } = useLoading();
   return (
     Animate.actualState && (
       <div
@@ -113,17 +114,21 @@ export default function QuickplayModal({
                   We will select the backdrop and fighter for you.
                 </p>
                 <Button
+                  disabled={isGlobalLoading}
                   onClick={async () => {
-                    await toast.promise(
-                      SetupQuickPlayGame(gameData.id.toString()),
-                      {
-                        loading: "Setting up quick play game...",
-                        success: "Quick play game selected successfully!",
-                        error: "Failed to select game",
-                      },
-                    );
-
-                    router.push("/difficulty?redirected=true");
+                    startAsyncLoading(async () => {
+                      await toast.promise(
+                        SetupQuickPlayGame(gameData.id.toString()),
+                        {
+                          loading: "Setting up quick play game...",
+                          success: "Quick play game selected successfully!",
+                          error: "Failed to select game",
+                        },
+                      );
+                    });
+                    startLoading(async () => {
+                      router.push("/difficulty?redirected=true");
+                    });
                   }}
                   className="w-full bg-purple-500 text-xs text-white xl:w-fit xl:text-sm"
                 >
@@ -139,22 +144,27 @@ export default function QuickplayModal({
                   You will select the backdrop and fighter yourself.
                 </p>
                 <Button
+                  disabled={isGlobalLoading}
                   onClick={async () => {
-                    await toast.promise(
-                      SetupGameAction(gameData.id.toString()),
-                      {
-                        loading: "Setting up custom game...",
-                        success: "Custom game selected successfully!",
-                        error: "Failed to select game",
-                      },
-                    );
+                    startAsyncLoading(async () => {
+                      await toast.promise(
+                        SetupGameAction(gameData.id.toString()),
+                        {
+                          loading: "Setting up custom game...",
+                          success: "Custom game selected successfully!",
+                          error: "Failed to select game",
+                        },
+                      );
+                    });
 
-                    const isRedirected = searchParams.get("redirected");
-                    if (isRedirected && isRedirected === "true") {
-                      router.replace("/pregame");
-                    }
-
-                    router.push("/difficulty");
+                    startLoading(async () => {
+                      const isRedirected = searchParams.get("redirected");
+                      if (isRedirected && isRedirected === "true") {
+                        router.replace("/pregame");
+                        return;
+                      }
+                      router.push("/difficulty");
+                    });
                   }}
                   className="w-full bg-blue-500 text-xs text-white xl:w-fit xl:text-sm"
                 >

@@ -44,9 +44,11 @@ export default function Controls({
   userID: string;
 }) {
   const { startTimer, stopTimer, timer, resetTimer } = useTimerContext();
-  const { isCorrectAudio, isWrongAudio, backgroundMusic } = useMusicContext();
+  const { isCorrectAudio, isWrongAudio } = useMusicContext();
   const [loading, setLoading] = useState(false);
-
+  const hasShown3TimerRef = useRef(false);
+  const hasShown0TimerRef = useRef(false);
+  const [isCpuProcessing, setIsCpuProcessing] = useState(false);
   const [isCorrect, setIsCorrect] = useState<0 | 1 | 2>(0);
   const [streakCopy, setStreakCopy] = useState(currentStreak);
   const isSubmittingRef = useRef(false);
@@ -104,8 +106,9 @@ export default function Controls({
           setStreakCopy(0);
           setIsCorrect(0);
           resetTimer();
-
           isSubmittingRef.current = false;
+          hasShown3TimerRef.current = false;
+          hasShown0TimerRef.current = false;
         };
         const timeElapsed = currentTime - startTime.getTime();
 
@@ -136,6 +139,8 @@ export default function Controls({
     isFakeWord: wordData.isFake,
     level: difficultyLevel,
     answerSubmitted,
+    isProcessing: isCpuProcessing,
+    setIsProcessing: setIsCpuProcessing,
   });
 
   useEffect(() => {
@@ -154,14 +159,20 @@ export default function Controls({
   ]);
 
   useEffect(() => {
-    if (timer === 3) toast.success("3 seconds left!");
-    if (timer === 0) {
+    if (timer === 3 && !hasShown3TimerRef.current) {
+      toast.success("3 seconds left!");
+      hasShown3TimerRef.current = true;
+    }
+
+    if (timer === 0 && !hasShown0TimerRef.current) {
+      hasShown0TimerRef.current = true;
       toast.error(
         "Time's Up! The Word Was " + (wordData.isFake ? "Fake" : "Real"),
       );
       answerSubmitted(false);
     }
-  }, [timer, wordData.isFake, answerSubmitted]);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timer, wordData.isFake]);
 
   return (
     <>
@@ -174,7 +185,7 @@ export default function Controls({
 
       <div className="flex h-fit w-full flex-row items-center justify-center gap-10 xl:gap-20">
         <button
-          disabled={loading}
+          disabled={loading || isCorrect !== 0 || isCpuProcessing}
           onClick={() => {
             if (loading) return;
             if (currentRoundData.is_fake) {
@@ -203,9 +214,9 @@ export default function Controls({
             />
           </div>
         </button>
-        <TImerDisplay aiThinking={false} loading={loading} />
+        <TImerDisplay aiThinking={isCpuProcessing} loading={loading} />
         <button
-          disabled={loading}
+          disabled={loading || isCpuProcessing || isCorrect !== 0}
           onClick={() => {
             if (loading) return;
             if (!currentRoundData.is_fake) {

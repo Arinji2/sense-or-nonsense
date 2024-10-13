@@ -3,6 +3,7 @@
 import { SetDefaultBackdropAction } from "@/actions/defaults";
 import { AddBackdropAction } from "@/actions/game/backdrop";
 import { Button } from "@/components/button";
+import useLoading from "@/hooks/useLoading";
 import { ChevronUpCircle } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -20,13 +21,13 @@ export default function Menu({
   isSettingDefaults: boolean;
 }) {
   const [isActive, setIsActive] = useState(false);
-  const [randomSelected, setRandomSelected] = useState(false);
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams);
   const pathname = usePathname();
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const firstTimeClicked = useRef(false);
+  const { isGlobalLoading, startAsyncLoading, startLoading } = useLoading();
 
   useEffect(() => {
     const closeOpenMenus = (e: any) => {
@@ -89,18 +90,20 @@ export default function Menu({
       </button>
       <div className="mt-auto flex h-fit w-full flex-row flex-wrap items-center justify-center gap-5 px-8 xl:gap-10 xl:px-0">
         <Button
-          disabled={!backdrop.verified}
+          disabled={!backdrop.verified || isGlobalLoading}
           onClick={() => {
-            params.delete("selected");
-            window.history.pushState(null, "", `?${params.toString()}`);
+            startLoading(() => {
+              params.delete("selected");
+              window.history.pushState(null, "", `?${params.toString()}`);
 
-            router.replace(`${pathname}?${params.toString()}`, {
-              scroll: false,
+              router.replace(`${pathname}?${params.toString()}`, {
+                scroll: false,
+              });
+
+              setTimeout(() => {
+                toast.success("Backdrop Reset");
+              }, 500);
             });
-
-            setTimeout(() => {
-              toast.success("Backdrop Reset");
-            }, 500);
           }}
           className="h-fit w-full bg-red-500 text-xs text-white xl:w-fit"
         >
@@ -108,47 +111,54 @@ export default function Menu({
         </Button>
         <Button
           className="h-fit w-full bg-green-500 text-xs text-white xl:w-fit"
-          disabled={!backdrop.verified}
+          disabled={!backdrop.verified || isGlobalLoading}
           onClick={async () => {
             if (isSettingDefaults) {
-              await toast.promise(SetDefaultBackdropAction(backdrop.id), {
-                loading: "Setting Default Backdrop",
-                success: "Default Backdrop Set",
-                error: "Failed to set default backdrop",
+              await startAsyncLoading(async () => {
+                await toast.promise(SetDefaultBackdropAction(backdrop.id), {
+                  loading: "Setting Default Backdrop",
+                  success: "Default Backdrop Set",
+                  error: "Failed to set default backdrop",
+                });
               });
-
-              router.push("/dashboard/defaults");
-              return;
+              startLoading(() => {
+                router.push("/dashboard/defaults");
+              });
             }
-            await toast.promise(AddBackdropAction(backdrop.id), {
-              loading: "Selecting Backdrop",
-              success: "Backdrop Selected",
-              error: "Failed to select backdrop",
-            });
 
-            router.push("/pregame");
+            await startAsyncLoading(async () => {
+              await toast.promise(AddBackdropAction(backdrop.id), {
+                loading: "Selecting Backdrop",
+                success: "Backdrop Selected",
+                error: "Failed to select backdrop",
+              });
+            });
+            startLoading(() => {
+              router.push("/pregame");
+            });
           }}
         >
           LETS GO!
         </Button>
         <Button
-          disabled={randomSelected}
+          disabled={isGlobalLoading}
           onClick={async () => {
-            const selectedBackdrop =
-              BackdropsList[Math.floor(Math.random() * BackdropsList.length)];
-            setRandomSelected(true);
-            params.set("selected", selectedBackdrop.id.toString());
-            window.history.pushState(null, "", `?${params.toString()}`);
+            startLoading(() => {
+              const selectedBackdrop =
+                BackdropsList[Math.floor(Math.random() * BackdropsList.length)];
 
-            router.replace(`${pathname}?${params.toString()}`, {
-              scroll: false,
+              params.set("selected", selectedBackdrop.id.toString());
+              window.history.pushState(null, "", `?${params.toString()}`);
+
+              router.replace(`${pathname}?${params.toString()}`, {
+                scroll: false,
+              });
+              setTimeout(() => {
+                toast.success(
+                  `Now Viewing ${NameFormat(selectedBackdrop.name)} Backdrop`,
+                );
+              }, 500);
             });
-            setTimeout(() => {
-              toast.success(
-                `Now Viewing ${NameFormat(selectedBackdrop.name)} Backdrop`,
-              );
-            }, 500);
-            setRandomSelected(false);
           }}
           className="h-fit w-full bg-purple-500 text-xs text-white xl:w-fit"
         >

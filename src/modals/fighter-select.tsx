@@ -31,6 +31,8 @@ export default function FighterModal({
   const [locFighterData, setLocFighterData] =
     useState<GameFighterSchemaType[]>(fighterData);
 
+  const [loading, setLoading] = useState(false);
+
   const closeOpenMenus = useCallback(
     (e: any) => {
       if (
@@ -117,11 +119,13 @@ export default function FighterModal({
               onSubmit={async (e) => {
                 e.preventDefault();
                 if (!name) return;
+                setLoading(true);
                 const parse = FighterNameSchema.safeParse(name);
                 if (parse.error) {
                   const errorMessage =
                     parse.error.errors[0]?.message || "Invalid input";
                   toast.error(errorMessage);
+                  setLoading(false);
                   return;
                 }
                 const characterData = {
@@ -138,6 +142,7 @@ export default function FighterModal({
                   });
 
                   router.push("/dashboard/defaults");
+                  setLoading(false);
                   return;
                 }
 
@@ -152,7 +157,7 @@ export default function FighterModal({
 
                 finalizeAnimate.setQueue(true);
                 Animate.setQueue(false);
-
+                setLoading(false);
                 setName("");
               }}
               className="relative flex h-fit w-full flex-col items-center justify-center gap-10 p-6 xl:h-full xl:w-[70%] xl:py-20"
@@ -186,7 +191,7 @@ export default function FighterModal({
               <div className="flex h-fit w-fit flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
                 <Button
                   type="submit"
-                  disabled={name.length === 0}
+                  disabled={name.length === 0 || loading}
                   className={cn(
                     "bg-blue-500 px-2 text-sm text-white xl:text-base",
                   )}

@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { RemoveFighterAction } from "@/actions/game/fighters";
 import { useFighterContext } from "@/app/fighters/context";
 import { Button } from "@/components/button";
+import useLoading from "@/hooks/useLoading";
 import { cn } from "../../utils/cn";
 import useAnimate from "../../utils/useAnimate";
 import { GameFighterSchemaType } from "../../validations/game-data/types";
@@ -26,6 +27,7 @@ export default function FighterFinalize({
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isMultiplayer } = useFighterContext();
+  const { isGlobalLoading, startLoading } = useLoading();
 
   const closeOpenMenus = useCallback(
     async (e: any, override?: boolean) => {
@@ -41,17 +43,19 @@ export default function FighterFinalize({
           );
 
         if (confirmation) {
-          await RemoveFighterAction();
-          toast.error("Fighter Selection Cancelled");
+          startLoading(async () => {
+            await RemoveFighterAction();
+            toast.error("Fighter Selection Cancelled");
 
-          Animate.setQueue(false);
-          window.location.reload();
+            Animate.setQueue(false);
+            window.location.reload();
+          });
         } else {
           return;
         }
       }
     },
-    [Animate],
+    [Animate, startLoading],
   );
 
   const generatedFighters = useMemo(() => {
@@ -162,6 +166,7 @@ export default function FighterFinalize({
           </div>
           <div className="mt-auto flex h-fit w-[80%] flex-col flex-wrap items-center justify-center gap-5 xl:w-fit xl:flex-row xl:gap-11">
             <Button
+              disabled={isGlobalLoading}
               onClick={() => {
                 closeOpenMenus({}, true);
               }}
@@ -170,19 +175,23 @@ export default function FighterFinalize({
               RESET!
             </Button>
             <Button
+              disabled={isGlobalLoading}
               onClick={async () => {
-                Animate.setQueue(false);
-                const isRedirected = searchParams.get("redirected");
-                const completed = searchParams.get("completed") === "backdrop";
-                if (!isRedirected && !completed) {
-                  router.push("/backdrop");
-                }
-                if (isRedirected === "true") {
-                  router.replace("/pregame");
-                }
-                if (completed) {
-                  router.push("/pregame");
-                }
+                startLoading(() => {
+                  Animate.setQueue(false);
+                  const isRedirected = searchParams.get("redirected");
+                  const completed =
+                    searchParams.get("completed") === "backdrop";
+                  if (!isRedirected && !completed) {
+                    router.push("/backdrop");
+                  }
+                  if (isRedirected === "true") {
+                    router.replace("/pregame");
+                  }
+                  if (completed) {
+                    router.push("/pregame");
+                  }
+                });
               }}
               className="w-full bg-green-500 text-white xl:w-fit"
             >
@@ -190,8 +199,11 @@ export default function FighterFinalize({
             </Button>
             {isMultiplayer && (
               <Button
+                disabled={isGlobalLoading}
                 onClick={async () => {
-                  Animate.setQueue(false);
+                  startLoading(() => {
+                    Animate.setQueue(false);
+                  });
                 }}
                 className="w-full bg-purple-500 text-xs text-white xl:w-fit xl:text-base"
               >

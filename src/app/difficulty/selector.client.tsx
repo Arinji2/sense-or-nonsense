@@ -9,6 +9,7 @@ import {
   CheckDefaultFighterAction,
 } from "@/actions/defaults";
 import { AddDifficultyAction } from "@/actions/game/difficulty";
+import useLoading from "@/hooks/useLoading";
 import { DifficultyList } from "./difficully";
 
 export default function Selector({
@@ -20,58 +21,63 @@ export default function Selector({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { isGlobalLoading, startLoading, startAsyncLoading } = useLoading();
   return (
     <>
       {DifficultyList.map((difficulty) => (
         <button
+          disabled={isGlobalLoading}
           onClick={async () => {
-            await toast.promise(AddDifficultyAction(gameID, difficulty.level), {
-              loading: "Setting difficulty...",
-              success: "Difficulty selected successfully!",
-              error: "Failed to select difficulty",
+            await startAsyncLoading(async () => {
+              await toast.promise(
+                AddDifficultyAction(gameID, difficulty.level),
+                {
+                  loading: "Setting difficulty...",
+                  success: "Difficulty selected successfully!",
+                  error: "Failed to select difficulty",
+                },
+              );
             });
 
-            const isRedirected = searchParams.get("redirected");
-            if (isRedirected && isRedirected === "true") {
-              router.replace("/pregame");
-              return;
-            }
+            startLoading(async () => {
+              const isRedirected = searchParams.get("redirected");
+              if (isRedirected && isRedirected === "true") {
+                router.replace("/pregame");
 
-            if (isMultiplayer) {
-              router.push("/fighters");
-              return;
-            }
+                return;
+              }
 
-            const fighterDefaults = await CheckDefaultFighterAction();
+              if (isMultiplayer) {
+                router.push("/fighters");
+              }
 
-            const backdropDefaults = await CheckDefaultBackdropAction();
+              const fighterDefaults = await CheckDefaultFighterAction();
 
-            if (backdropDefaults && fighterDefaults) {
-              toast.success("Default backdrop selected successfully!");
-              toast.success("Default fighter selected successfully!");
-              router.push("/pregame");
-              return;
-            }
+              const backdropDefaults = await CheckDefaultBackdropAction();
 
-            if (!backdropDefaults && fighterDefaults) {
-              toast.success("Default fighter selected successfully!");
-              toast.error("Default backdrop not found.");
-              router.push("/backdrop");
-              return;
-            }
+              if (backdropDefaults && fighterDefaults) {
+                toast.success("Default backdrop selected successfully!");
+                toast.success("Default fighter selected successfully!");
+                router.push("/pregame");
+              }
 
-            if (backdropDefaults && !fighterDefaults) {
-              toast.success("Default backdrop selected successfully!");
-              toast.error("Default fighter not found.");
-              router.push("/fighters?completed=backdrop");
-              return;
-            }
-            if (!backdropDefaults && !fighterDefaults) {
-              toast.error("Default backdrop not found.");
-              toast.error("Default fighter not found.");
-              router.push("/fighters");
-              return;
-            }
+              if (!backdropDefaults && fighterDefaults) {
+                toast.success("Default fighter selected successfully!");
+                toast.error("Default backdrop not found.");
+                router.push("/backdrop");
+              }
+
+              if (backdropDefaults && !fighterDefaults) {
+                toast.success("Default backdrop selected successfully!");
+                toast.error("Default fighter not found.");
+                router.push("/fighters?completed=backdrop");
+              }
+              if (!backdropDefaults && !fighterDefaults) {
+                toast.error("Default backdrop not found.");
+                toast.error("Default fighter not found.");
+                router.push("/fighters");
+              }
+            });
           }}
           key={difficulty.id}
           className="group relative flex h-[300px] w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-md bg-transparent px-3 md:h-[450px] md:w-[300px]"

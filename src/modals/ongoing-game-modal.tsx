@@ -2,6 +2,7 @@
 
 import { RemoveGameAction } from "@/actions/game/setup";
 import { Button } from "@/components/button";
+import useLoading from "@/hooks/useLoading";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -21,6 +22,7 @@ export default function OngoingGame({
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
+  const { isGlobalLoading, startLoading, startAsyncLoading } = useLoading();
   const closeOpenMenus = useCallback(
     async (e: any, isEventlistener?: boolean, override?: boolean) => {
       if (
@@ -44,22 +46,34 @@ export default function OngoingGame({
         confirmation = isDeleting ? true : confirmation;
 
         if (confirmation) {
-          toast.promise(RemoveGameAction(), {
-            loading: "Deleting game...",
-            success: "Game deleted",
-            error: "Failed to delete game",
+          await startAsyncLoading(async () => {
+            toast.promise(RemoveGameAction(), {
+              loading: "Deleting game...",
+              success: "Game deleted",
+              error: "Failed to delete game",
+            });
           });
-          if (isDeleting) {
-            router.push("/");
-          }
-          router.refresh();
-          Animate.setQueue(false);
+          startLoading(() => {
+            if (isDeleting) {
+              router.push("/");
+            }
+            router.refresh();
+            Animate.setQueue(false);
+          });
         } else {
           return;
         }
       }
     },
-    [Animate, containerRef, router, isDeleting, resetTimer],
+    [
+      Animate,
+      containerRef,
+      router,
+      isDeleting,
+      resetTimer,
+      startLoading,
+      startAsyncLoading,
+    ],
   );
   useEffect(() => {
     if (Animate.showComponent) {
@@ -99,15 +113,18 @@ export default function OngoingGame({
         >
           <div className="relative h-[40%] w-full overflow-hidden xl:h-full xl:w-[30%]">
             <button
+              disabled={isGlobalLoading}
               aria-label="Close Modal"
               onClick={() => {
-                if (isDeleting && resetTimer) {
-                  Animate.setQueue(false);
-                  resetTimer();
-                  router.refresh();
-                } else {
-                  closeOpenMenus({}, true);
-                }
+                startLoading(() => {
+                  if (isDeleting && resetTimer) {
+                    Animate.setQueue(false);
+                    resetTimer();
+                    router.refresh();
+                  } else {
+                    closeOpenMenus({}, true);
+                  }
+                });
               }}
               className="absolute right-8 top-8 z-20 block rounded-sm bg-black/30 p-2 xl:hidden"
             >
@@ -126,14 +143,17 @@ export default function OngoingGame({
           <div className="relative flex h-fit w-full flex-col items-center justify-center gap-16 p-6 xl:h-full xl:w-[70%] xl:py-20">
             <button
               aria-label="Close Modal"
+              disabled={isGlobalLoading}
               onClick={() => {
-                if (isDeleting && resetTimer) {
-                  Animate.setQueue(false);
-                  resetTimer();
-                  router.refresh();
-                } else {
-                  closeOpenMenus({}, true);
-                }
+                startLoading(() => {
+                  if (isDeleting && resetTimer) {
+                    Animate.setQueue(false);
+                    resetTimer();
+                    router.refresh();
+                  } else {
+                    closeOpenMenus({}, true);
+                  }
+                });
               }}
               className="absolute right-8 top-8 hidden xl:block"
             >
@@ -150,29 +170,36 @@ export default function OngoingGame({
             </div>
             <div className="flex h-fit w-fit flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
               <Button
+                disabled={isGlobalLoading}
                 onClick={async () => {
-                  if (isDeleting && resetTimer) {
-                    Animate.setQueue(false);
-                    resetTimer();
-                    router.refresh();
-                  }
-                  if (!isDeleting) {
-                    router.push("/pregame");
-                  }
+                  startLoading(() => {
+                    if (isDeleting && resetTimer) {
+                      Animate.setQueue(false);
+                      resetTimer();
+                      router.refresh();
+                    }
+                    if (!isDeleting) {
+                      router.push("/pregame");
+                    }
+                  });
                 }}
                 className="w-full bg-green-500 text-xs text-white xl:w-fit xl:text-sm"
               >
                 {isDeleting ? "RETURN" : "CONTINUE"} TO GAME
               </Button>
               <Button
+                disabled={isGlobalLoading}
                 onClick={async () => {
-                  await toast.promise(RemoveGameAction(), {
-                    loading: "Deleting game...",
-                    success: "Game deleted",
-                    error: "Failed to delete game",
+                  await startAsyncLoading(async () => {
+                    await toast.promise(RemoveGameAction(), {
+                      loading: "Deleting game...",
+                      success: "Game deleted",
+                      error: "Failed to delete game",
+                    });
                   });
-
-                  router.push("/");
+                  startLoading(() => {
+                    router.push("/");
+                  });
                 }}
                 className="w-full bg-red-500 text-xs text-white xl:w-fit xl:text-sm"
               >
