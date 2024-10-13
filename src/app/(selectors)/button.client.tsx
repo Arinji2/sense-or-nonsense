@@ -19,6 +19,7 @@ export default function PlayNowButton({
   const animate = useAnimate(800);
   const [documentDefined, setDocumentDefined] = useState(false);
   const [showQuickPlayModal, setShowQuickPlayModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setDocumentDefined(true);
@@ -32,10 +33,13 @@ export default function PlayNowButton({
           document.body,
         )}
       <button
+        disabled={loading || animate.queue}
         onClick={async () => {
+          setLoading(true);
           if (gameData.hasQuickPlaySupport) {
             animate.setQueue(true);
             setShowQuickPlayModal(true);
+            setLoading(false);
             return;
           }
           await toast.promise(SetupGameAction(gameData.id.toString()), {
@@ -46,10 +50,12 @@ export default function PlayNowButton({
 
           const isRedirected = searchParams.get("redirected");
           if (isRedirected && isRedirected === "true") {
+            setLoading(false);
             router.replace("/pregame");
           }
 
           router.push("/difficulty");
+          setLoading(false);
         }}
         className="w-full shrink-0 rounded-sm bg-green-500 p-2 px-4 text-xss font-bold text-white transition-all duration-200 ease-in-out hover:bg-green-600 md:text-xs xl:w-fit xl:text-sm xl:font-normal"
       >
