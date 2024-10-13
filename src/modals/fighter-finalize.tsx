@@ -55,7 +55,7 @@ export default function FighterFinalize({
         }
       }
     },
-    [Animate],
+    [Animate, startLoading],
   );
 
   const generatedFighters = useMemo(() => {
