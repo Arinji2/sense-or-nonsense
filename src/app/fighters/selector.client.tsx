@@ -110,7 +110,7 @@ export default function Selector() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [clicked]);
+  }, [clicked, scrollWidth]);
 
   return (
     <>
