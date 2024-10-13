@@ -111,7 +111,7 @@ export function MusicProvider({
       animate.setQueue(true);
       stopTimer();
     }
-  }, [animate, backgroundMusic, stopTimer]);
+  }, [getBackgroundMusicSettings, animate, backgroundMusic, stopTimer]);
 
   const contextValue = useMemo(
     () => ({
