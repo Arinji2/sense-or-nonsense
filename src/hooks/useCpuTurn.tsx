@@ -33,7 +33,7 @@ export const useCpuTurn = ({
 
       setIsProcessing(false);
     }, 2000);
-  }, [isFakeWord, level, answerSubmitted]);
+  }, [isFakeWord, level, answerSubmitted, isProcessing, setIsProcessing]);
 };
 
 export default useCpuTurn;
