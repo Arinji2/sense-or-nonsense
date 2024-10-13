@@ -22,6 +22,7 @@ export default function OngoingGame({
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
+  const { isGlobalLoading, startLoading, startAsyncLoading } = useLoading();
   const closeOpenMenus = useCallback(
     async (e: any, isEventlistener?: boolean, override?: boolean) => {
       if (
@@ -64,7 +65,15 @@ export default function OngoingGame({
         }
       }
     },
-    [Animate, containerRef, router, isDeleting, resetTimer],
+    [
+      Animate,
+      containerRef,
+      router,
+      isDeleting,
+      resetTimer,
+      startLoading,
+      startAsyncLoading,
+    ],
   );
   useEffect(() => {
     if (Animate.showComponent) {
@@ -90,7 +99,6 @@ export default function OngoingGame({
       document.body.style.overflow = "unset";
     };
   }, [Animate.showComponent, closeOpenMenus]);
-  const { isGlobalLoading, startLoading, startAsyncLoading } = useLoading();
 
   return (
     Animate.actualState && (
