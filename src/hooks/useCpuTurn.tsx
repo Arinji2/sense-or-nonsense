@@ -1,21 +1,22 @@
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { toast } from "react-hot-toast";
 
 export const useCpuTurn = ({
   isFakeWord,
   level,
   answerSubmitted,
+  isProcessing,
+  setIsProcessing,
 }: {
   isFakeWord: boolean;
   level: number;
   answerSubmitted: (correct: boolean) => void;
+  isProcessing: boolean;
+  setIsProcessing: (isProcessing: boolean) => void;
 }) => {
-  const isProcessingRef = useRef(false);
-
   return useCallback(() => {
-    if (isProcessingRef.current) return;
-
-    isProcessingRef.current = true;
+    if (isProcessing) return;
+    setIsProcessing(true);
 
     toast.success("CPU is thinking...");
 
@@ -30,7 +31,7 @@ export const useCpuTurn = ({
 
       answerSubmitted(isCorrect === isFakeWord);
 
-      isProcessingRef.current = false;
+      setIsProcessing(false);
     }, 2000);
   }, [isFakeWord, level, answerSubmitted]);
 };
