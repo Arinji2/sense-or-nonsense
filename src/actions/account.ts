@@ -85,6 +85,7 @@ export async function UpdateUsernameAction(username: string) {
     });
 
     revalidateTag(CACHED_TAGS.user_client);
+    revalidateTag(CACHED_TAGS.leaderboard);
   } catch (error) {
     console.error(error);
     throw new Error("Update Username Failed");
