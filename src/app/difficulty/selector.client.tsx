@@ -9,6 +9,7 @@ import {
   CheckDefaultFighterAction,
 } from "@/actions/defaults";
 import { AddDifficultyAction } from "@/actions/game/difficulty";
+import { useState } from "react";
 import { DifficultyList } from "./difficully";
 
 export default function Selector({
@@ -20,11 +21,14 @@ export default function Selector({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [loading, setLoading] = useState(false);
   return (
     <>
       {DifficultyList.map((difficulty) => (
         <button
+          disabled={loading}
           onClick={async () => {
+            setLoading(true);
             await toast.promise(AddDifficultyAction(gameID, difficulty.level), {
               loading: "Setting difficulty...",
               success: "Difficulty selected successfully!",
@@ -34,11 +38,13 @@ export default function Selector({
             const isRedirected = searchParams.get("redirected");
             if (isRedirected && isRedirected === "true") {
               router.replace("/pregame");
+              setLoading(false);
               return;
             }
 
             if (isMultiplayer) {
               router.push("/fighters");
+              setLoading(false);
               return;
             }
 
@@ -50,6 +56,7 @@ export default function Selector({
               toast.success("Default backdrop selected successfully!");
               toast.success("Default fighter selected successfully!");
               router.push("/pregame");
+              setLoading(false);
               return;
             }
 
@@ -57,6 +64,7 @@ export default function Selector({
               toast.success("Default fighter selected successfully!");
               toast.error("Default backdrop not found.");
               router.push("/backdrop");
+              setLoading(false);
               return;
             }
 
@@ -64,14 +72,18 @@ export default function Selector({
               toast.success("Default backdrop selected successfully!");
               toast.error("Default fighter not found.");
               router.push("/fighters?completed=backdrop");
+              setLoading(false);
               return;
             }
             if (!backdropDefaults && !fighterDefaults) {
               toast.error("Default backdrop not found.");
               toast.error("Default fighter not found.");
               router.push("/fighters");
+              setLoading(false);
               return;
             }
+
+            setLoading(false);
           }}
           key={difficulty.id}
           className="group relative flex h-[300px] w-full flex-col items-center justify-center gap-5 overflow-hidden rounded-md bg-transparent px-3 md:h-[450px] md:w-[300px]"
