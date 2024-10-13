@@ -4,7 +4,7 @@ import { FightersList } from "@/../constants/fighters";
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 import { RemoveFighterAction } from "@/actions/game/fighters";
@@ -26,6 +26,7 @@ export default function FighterFinalize({
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isMultiplayer } = useFighterContext();
+  const [loading, setLoading] = useState(false);
 
   const closeOpenMenus = useCallback(
     async (e: any, override?: boolean) => {
@@ -41,9 +42,10 @@ export default function FighterFinalize({
           );
 
         if (confirmation) {
+          setLoading(true);
           await RemoveFighterAction();
           toast.error("Fighter Selection Cancelled");
-
+          setLoading(false);
           Animate.setQueue(false);
           window.location.reload();
         } else {
@@ -162,6 +164,7 @@ export default function FighterFinalize({
           </div>
           <div className="mt-auto flex h-fit w-[80%] flex-col flex-wrap items-center justify-center gap-5 xl:w-fit xl:flex-row xl:gap-11">
             <Button
+              disabled={loading}
               onClick={() => {
                 closeOpenMenus({}, true);
               }}
@@ -170,6 +173,7 @@ export default function FighterFinalize({
               RESET!
             </Button>
             <Button
+              disabled={loading}
               onClick={async () => {
                 Animate.setQueue(false);
                 const isRedirected = searchParams.get("redirected");
@@ -190,6 +194,7 @@ export default function FighterFinalize({
             </Button>
             {isMultiplayer && (
               <Button
+                disabled={loading}
                 onClick={async () => {
                   Animate.setQueue(false);
                 }}
