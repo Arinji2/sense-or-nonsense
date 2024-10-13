@@ -27,6 +27,7 @@ export default function Menu({
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const firstTimeClicked = useRef(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const closeOpenMenus = (e: any) => {
@@ -89,8 +90,9 @@ export default function Menu({
       </button>
       <div className="mt-auto flex h-fit w-full flex-row flex-wrap items-center justify-center gap-5 px-8 xl:gap-10 xl:px-0">
         <Button
-          disabled={!backdrop.verified}
+          disabled={!backdrop.verified || loading}
           onClick={() => {
+            setLoading(true);
             params.delete("selected");
             window.history.pushState(null, "", `?${params.toString()}`);
 
@@ -101,6 +103,7 @@ export default function Menu({
             setTimeout(() => {
               toast.success("Backdrop Reset");
             }, 500);
+            setLoading(false);
           }}
           className="h-fit w-full bg-red-500 text-xs text-white xl:w-fit"
         >
@@ -108,8 +111,9 @@ export default function Menu({
         </Button>
         <Button
           className="h-fit w-full bg-green-500 text-xs text-white xl:w-fit"
-          disabled={!backdrop.verified}
+          disabled={!backdrop.verified || loading}
           onClick={async () => {
+            setLoading(true);
             if (isSettingDefaults) {
               await toast.promise(SetDefaultBackdropAction(backdrop.id), {
                 loading: "Setting Default Backdrop",
@@ -118,6 +122,7 @@ export default function Menu({
               });
 
               router.push("/dashboard/defaults");
+              setLoading(false);
               return;
             }
             await toast.promise(AddBackdropAction(backdrop.id), {
@@ -127,6 +132,7 @@ export default function Menu({
             });
 
             router.push("/pregame");
+            setLoading(false);
           }}
         >
           LETS GO!
