@@ -171,6 +171,7 @@ export default function Controls({
       );
       answerSubmitted(false);
     }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer, wordData.isFake]);
 
   return (
