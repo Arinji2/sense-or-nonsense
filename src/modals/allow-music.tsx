@@ -4,6 +4,7 @@ import { useTimerContext } from "@/app/game/context/timer-context";
 import { Button } from "@/components/button";
 import { Slider } from "@/components/slider";
 import { Switch } from "@/components/switch";
+import useLoading from "@/hooks/useLoading";
 import {
   ChevronRight,
   Music,
@@ -19,7 +20,6 @@ import { useEffect, useRef, useState } from "react";
 import MusicGif from "../../public/music.gif";
 import { cn } from "../../utils/cn";
 import useAnimate from "../../utils/useAnimate";
-import { useRouterRefresh } from "../../utils/useRouterRefresh";
 import {
   AudioHookReturn,
   SavedSoundSettingsSchemaType,
@@ -40,8 +40,7 @@ export default function AllowMusic({
   const [isBackgroundExpanded, setIsBackgroundExpanded] = useState(false);
   const [isSFXExpanded, setIsSFXExpanded] = useState(false);
   const { resetTimer } = useTimerContext();
-  const refresh = useRouterRefresh();
-
+  const { isGlobalLoading, startLoading } = useLoading();
   useEffect(() => {
     if (Animate.showComponent) {
       document.body.style.overflow = "hidden";
@@ -274,31 +273,37 @@ export default function AllowMusic({
             </div>
             <div className="flex h-fit w-fit shrink-0 flex-row flex-wrap items-center justify-center gap-5 xl:gap-10">
               <Button
+                disabled={isGlobalLoading}
                 onClick={async () => {
-                  Animate.setQueue(false);
-                  backgroundAudio.setHasErrored(false);
+                  startLoading(() => {
+                    Animate.setQueue(false);
+                    backgroundAudio.setHasErrored(false);
 
-                  localStorage.setItem(
-                    "backgroundMusicSettings",
-                    JSON.stringify({
-                      volume: backgroundAudio.volume,
-                      isEnabled: backgroundAudio.isEnabled,
-                    } as SavedSoundSettingsSchemaType),
-                  );
+                    localStorage.setItem(
+                      "backgroundMusicSettings",
+                      JSON.stringify({
+                        volume: backgroundAudio.volume,
+                        isEnabled: backgroundAudio.isEnabled,
+                      } as SavedSoundSettingsSchemaType),
+                    );
 
-                  localStorage.setItem(
-                    "sfxSoundSettings",
-                    JSON.stringify({
-                      volume: isCorrectAudio.volume,
-                      isEnabled: isCorrectAudio.isEnabled,
-                    } as SavedSoundSettingsSchemaType),
-                  );
+                    localStorage.setItem(
+                      "sfxSoundSettings",
+                      JSON.stringify({
+                        volume: isCorrectAudio.volume,
+                        isEnabled: isCorrectAudio.isEnabled,
+                      } as SavedSoundSettingsSchemaType),
+                    );
 
-                  if (!backgroundAudio.isPlaying && backgroundAudio.isEnabled) {
-                    backgroundAudio.play();
-                  }
-                  router.refresh();
-                  resetTimer();
+                    if (
+                      !backgroundAudio.isPlaying &&
+                      backgroundAudio.isEnabled
+                    ) {
+                      backgroundAudio.play();
+                    }
+                    router.refresh();
+                    resetTimer();
+                  });
                 }}
                 className="w-full whitespace-nowrap bg-purple-500/60 text-xs text-white xl:text-xs"
               >
