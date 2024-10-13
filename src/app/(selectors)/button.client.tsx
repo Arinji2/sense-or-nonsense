@@ -45,7 +45,7 @@ export default function PlayNowButton({
               return;
             }
           });
-          startAsyncLoading(async () => {
+          await startAsyncLoading(async () => {
             await toast.promise(SetupGameAction(gameData.id.toString()), {
               loading: "Setting up game...",
               success: "Game selected successfully!",
