@@ -27,7 +27,7 @@ export default function LeaderboardModal({
         Animate.setQueue(false);
       }
     },
-    [Animate, containerRef, router],
+    [Animate, containerRef],
   );
   useEffect(() => {
     if (Animate.showComponent) {
