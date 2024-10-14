@@ -116,7 +116,7 @@ export default function QuickplayModal({
                 <Button
                   disabled={isGlobalLoading}
                   onClick={async () => {
-                    startAsyncLoading(async () => {
+                    await startAsyncLoading(async () => {
                       await toast.promise(
                         SetupQuickPlayGame(gameData.id.toString()),
                         {
