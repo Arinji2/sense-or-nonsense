@@ -1,7 +1,6 @@
 import { Info, Loader2 } from "lucide-react";
 import { memoize } from "nextjs-better-unstable-cache";
 import { Suspense } from "react";
-import { CACHED_TAGS } from "../../../constants/tags";
 import { ConnectPBAdmin } from "../../../utils/connectPB";
 import { GetUserMode } from "../../../utils/getMode";
 import { RoundsSchema } from "../../../validations/pb/schema";
@@ -32,6 +31,9 @@ export default async function Leaderboard() {
                 </p>
               </div>
             </div>
+            <p className="text-center text-sm font-bold text-white/80 md:text-lg">
+              Updates Every 30 Minutes
+            </p>
 
             <div className="md: h-[400px] w-full overflow-x-auto overflow-y-hidden py-10">
               <Suspense
@@ -77,16 +79,16 @@ async function Table() {
         )
           continue;
 
-        const { id, difficulty, expand } = round.expand.game;
-        if (!gameScores.has(id)) {
-          gameScores.set(id, {
+        const { user, difficulty, expand } = round.expand.game;
+        if (!gameScores.has(user)) {
+          gameScores.set(user, {
             score: 0,
             game: round.expand.game,
             user: expand?.user,
           });
         }
 
-        const gameData = gameScores.get(id)!;
+        const gameData = gameScores.get(user)!;
         gameData.score +=
           difficulty === "easy" ? 1 : difficulty === "medium" ? 2 : 3;
       }
@@ -94,7 +96,7 @@ async function Table() {
       const finalData = [...gameScores.values()]
         .sort((a, b) => b.score - a.score)
         .slice(0, 5)
-        .map(({ score, game, user }) => ({
+        .map(({ score, user }) => ({
           username: user?.username as string,
           user: user?.id as string,
           score,
@@ -103,7 +105,7 @@ async function Table() {
       return finalData;
     },
     {
-      revalidateTags: [CACHED_TAGS.leaderboard],
+      duration: 60 * 30, // 30 minutes
     },
   )();
 

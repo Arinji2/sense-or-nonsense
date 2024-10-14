@@ -1,7 +1,7 @@
 "use server";
 import { revalidateTag, unstable_noStore } from "next/cache";
 import { cookies } from "next/headers";
-import Pocketbase from "pocketbase";
+import Pocketbase, { ClientResponseError } from "pocketbase";
 import { CACHED_TAGS } from "../../constants/tags";
 import { ConnectPBAdmin } from "../../utils/connectPB";
 import { GetUserMode } from "../../utils/getMode";
@@ -21,9 +21,7 @@ export async function AddAccountCookieAction(token: string) {
       // 7 days
       expires: new Date(Date.now() + 60 * 60 * 24 * 7 * 1000),
     });
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 }
 
 export async function ConvertAccountAction() {
@@ -68,11 +66,28 @@ export async function ConvertAccountAction() {
 
     cookies().delete("guest-session");
   } catch (error) {
-    console.error(error);
     throw new Error("Convert Account Failed");
   }
 }
 
+async function CheckUsernameExists(username: string) {
+  try {
+    const { userID, mode, pb } = await GetUserMode();
+    if (mode !== "user") throw new Error("User not logged in");
+
+    UsernameSchema.parse(username);
+    if (username.length === 0) throw new Error("Username can't be empty");
+
+    try {
+      await pb.collection("users").getFirstListItem(`username="${username}"`);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  } catch (error) {
+    return true;
+  }
+}
 export async function UpdateUsernameAction(username: string) {
   try {
     const { userID, mode, pb } = await GetUserMode();
@@ -80,6 +95,11 @@ export async function UpdateUsernameAction(username: string) {
 
     UsernameSchema.parse(username);
     if (username.length === 0) throw new Error("Username can't be empty");
+
+    const usernameExists = await CheckUsernameExists(username);
+
+    if (usernameExists) throw new Error("Username already exists");
+
     await pb.collection("users").update(userID!, {
       username,
     });
@@ -87,8 +107,17 @@ export async function UpdateUsernameAction(username: string) {
     revalidateTag(CACHED_TAGS.user_client);
     revalidateTag(CACHED_TAGS.leaderboard);
   } catch (error) {
-    console.error(error);
-    throw new Error("Update Username Failed");
+    if (error instanceof ClientResponseError) {
+      if (
+        error.response.message ===
+        "Something went wrong while processing your request."
+      ) {
+        throw new Error("Username already exists");
+      }
+    }
+    if (error instanceof Error && error.message === "Username already exists") {
+      throw new Error("Username already exists");
+    } else throw new Error("Update Username Failed");
   }
 }
 
@@ -117,7 +146,6 @@ export async function DeleteAccountAction() {
 
     revalidateTag(`${CACHED_TAGS.user_client}`);
   } catch (error) {
-    console.error(error);
     throw new Error("Delete Account Failed");
   }
 }

@@ -17,6 +17,7 @@ export default function Username({
 }) {
   const router = useRouter();
   const [username, setUsername] = useState(currentUsername);
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <div
       className={cn(
@@ -58,17 +59,36 @@ export default function Username({
           />
         </div>
         <Button
-          disabled={isGuest || username === currentUsername || username === ""}
+          disabled={
+            isGuest ||
+            username === currentUsername ||
+            username === "" ||
+            isLoading
+          }
           type="submit"
-          onClick={(e) => {
+          onClick={async (e) => {
             e.preventDefault();
-            toast.promise(UpdateUsernameAction(username), {
-              loading: "Updating Username...",
-              success: "Username Updated Successfully!",
-              error: "Username Update Failed!",
-            });
+            setIsLoading(true);
+            const toastID = toast.loading("Updating Username...");
+            try {
+              await UpdateUsernameAction(username);
+
+              toast.success("Username Updated Successfully!");
+            } catch (e) {
+              if (
+                e instanceof Error &&
+                e.message === "Username already exists"
+              ) {
+                toast.error("Username Already Exists");
+              } else {
+                toast.error("Username Update Failed");
+              }
+            } finally {
+              toast.dismiss(toastID);
+            }
 
             router.refresh();
+            setIsLoading(false);
           }}
           className="h-fit w-full shrink-0 rounded-sm bg-green-500 bg-opacity-30 px-3 leading-tight hover:bg-opacity-70 md:ml-auto xl:w-[120px] xl:py-2"
         >
