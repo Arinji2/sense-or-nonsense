@@ -37,14 +37,13 @@ export default function PlayNowButton({
       <Button
         disabled={isGlobalLoading || animate.queue}
         onClick={async () => {
-          startLoading(() => {
-            if (gameData.hasQuickPlaySupport) {
-              animate.setQueue(true);
-              setShowQuickPlayModal(true);
+          if (gameData.hasQuickPlaySupport) {
+            animate.setQueue(true);
+            setShowQuickPlayModal(true);
 
-              return;
-            }
-          });
+            return;
+          }
+
           await startAsyncLoading(async () => {
             await toast.promise(SetupGameAction(gameData.id.toString()), {
               loading: "Setting up game...",
