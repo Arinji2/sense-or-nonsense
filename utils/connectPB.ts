@@ -15,8 +15,8 @@ export async function ConnectPBAdmin() {
   const cachedTokenData = await memoize(
     async (email: string, password: string) => {
       const pb = new Pocketbase("https://db-word.arinji.com/");
-      await pb.admins.authWithPassword(email, password);
-      const token = await pb.admins.authRefresh();
+      await pb.collection("_superusers").authWithPassword(email, password);
+      const token = await pb.collection("_superusers").authRefresh();
       return token;
     },
     {
@@ -26,7 +26,7 @@ export async function ConnectPBAdmin() {
   )(email, password);
 
   const pb = new Pocketbase("https://db-word.arinji.com");
-  pb.authStore.save(cachedTokenData.token, cachedTokenData.admin);
+  pb.authStore.save(cachedTokenData.token, cachedTokenData.record);
   return pb;
 }
 
