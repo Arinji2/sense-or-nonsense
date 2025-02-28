@@ -51,7 +51,6 @@ func main() {
 	})
 
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-
 		w.Write([]byte("Sense Backend: Health Check"))
 		render.Status(r, 200)
 	})
