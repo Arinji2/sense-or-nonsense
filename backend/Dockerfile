@@ -2,7 +2,7 @@
 FROM golang:1.23.0-alpine AS builder
 
 # Add a label to the Repo
-LABEL org.opencontainers.image.source="https://github.com/Arinji2/sense-backend"
+LABEL org.opencontainers.image.source="https://github.com/Arinji2/sense-or-nonsense"
 
 # Set the working directory inside the container
 WORKDIR /app
