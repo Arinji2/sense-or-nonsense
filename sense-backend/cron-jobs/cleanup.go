@@ -21,7 +21,7 @@ func VerifyFakeWords() {
 
 	totalWorkers := 3
 
-	var workerPool = make(chan VerifiedWord, totalWorkers)
+	workerPool := make(chan VerifiedWord, totalWorkers)
 	var wg sync.WaitGroup
 
 	for i := 0; i < totalWorkers; i++ {
@@ -37,7 +37,7 @@ func VerifyFakeWords() {
 		close(workerPool)
 	}()
 
-	var recordPool = make(chan []bool, totalWorkers)
+	recordPool := make(chan []bool, totalWorkers)
 
 	for word := range workerPool {
 		wg.Add(1)
@@ -65,7 +65,6 @@ func VerifyFakeWords() {
 	totalVerified := 0
 
 	for record := range recordPool {
-
 		for _, isVerified := range record {
 			if isVerified {
 				totalVerified++
@@ -73,12 +72,10 @@ func VerifyFakeWords() {
 				totalDeleted++
 			}
 		}
-
 	}
 
 	fmt.Println("Total verified", totalVerified)
 	fmt.Println("Total deleted", totalDeleted)
-
 }
 
 func fetchWord(pbClient *api.ApiClient, pbAddress, token string, workerPool chan<- VerifiedWord) {
@@ -90,15 +87,18 @@ func fetchWord(pbClient *api.ApiClient, pbAddress, token string, workerPool chan
 	}, map[string]string{
 		"AUTHORIZATION": token,
 	})
-
 	if err != nil {
 		fmt.Println("Error in fetching fake words:", err)
 		return
 	}
 
 	items, ok := data["items"].([]interface{})
-	if !ok || len(items) == 0 {
-		fmt.Println("Error in parsing items or no items found")
+	if len(items) == 0 {
+		fmt.Println("No items found")
+		return
+	}
+	if !ok {
+		fmt.Println("Error in parsing items ")
 		return
 	}
 
@@ -139,18 +139,15 @@ func verifyWord(word VerifiedWord) bool {
 	defer res.Body.Close()
 
 	return res.StatusCode == 200
-
 }
 
 func deleteWord(id, token string, pbClient *api.ApiClient) {
 	_, err := pbClient.SendRequestWithBody("DELETE", fmt.Sprintf("/api/collections/fake_words/records/%s", id), nil, map[string]string{
 		"AUTHORIZATION": token,
 	})
-
 	if err != nil {
 		fmt.Println("Error in deleting word", err)
 	}
-
 }
 
 func updateVerification(id, token string, pbClient *api.ApiClient) {
@@ -159,7 +156,6 @@ func updateVerification(id, token string, pbClient *api.ApiClient) {
 	}, map[string]string{
 		"AUTHORIZATION": token,
 	})
-
 	if err != nil {
 		fmt.Println("Error in updating verification", err)
 	}
