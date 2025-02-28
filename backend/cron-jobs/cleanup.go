@@ -92,7 +92,7 @@ func fetchWord(pbClient *api.ApiClient, pbAddress, token string, workerPool chan
 		return
 	}
 
-	items, ok := data["items"].([]interface{})
+	items, ok := data["items"].([]any)
 	if len(items) == 0 {
 		fmt.Println("No items found")
 		return
@@ -102,7 +102,7 @@ func fetchWord(pbClient *api.ApiClient, pbAddress, token string, workerPool chan
 		return
 	}
 
-	item := items[0].(map[string]interface{})
+	item := items[0].(map[string]any)
 
 	id, ok := item["id"].(string)
 	if !ok {
