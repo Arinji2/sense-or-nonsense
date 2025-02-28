@@ -31,8 +31,6 @@ func main() {
 	}
 
 	r.Group(func(r chi.Router) {
-		// Only routes within this group will be logged. We don't want to log health checks, as they
-		// are too frequent.
 		r.Use(middleware.Logger)
 
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
