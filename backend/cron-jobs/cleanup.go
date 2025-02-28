@@ -24,7 +24,7 @@ func VerifyFakeWords() {
 	workerPool := make(chan VerifiedWord, totalWorkers)
 	var wg sync.WaitGroup
 
-	for i := 0; i < totalWorkers; i++ {
+	for range totalWorkers {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
