@@ -2,6 +2,8 @@ name: Continue Deployment (Backend)
 
 on:
   push:
+    branches:
+      - main 
     paths:
       - 'backend/**'
 
