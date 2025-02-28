@@ -28,7 +28,6 @@ export const metadata: Metadata = {
     name: "Arinji",
     url: "https://arinji.com",
   },
-
   metadataBase: new URL(process.env.METADATA_BASE ?? "localhost:3000"),
 };
 
@@ -39,7 +38,7 @@ export default async function RootLayout({
 }>) {
   let showGameModal = false;
   try {
-    const game = await ValidateGameIDCookie({
+    await ValidateGameIDCookie({
       disableRedirect: true,
     });
   } catch (error: any) {
