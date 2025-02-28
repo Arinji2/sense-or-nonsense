@@ -94,7 +94,6 @@ func fetchWord(pbClient *api.ApiClient, pbAddress, token string, workerPool chan
 
 	items, ok := data["items"].([]any)
 	if len(items) == 0 {
-		fmt.Println("No items found")
 		return
 	}
 	if !ok {
