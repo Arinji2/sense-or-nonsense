@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import { ValidateGameIDCookie } from "../../utils/game-data";
 import GameInProgress from "./game-in-progress";
@@ -51,6 +52,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="bg-[#2C2828]">
+      <Script
+        strategy="afterInteractive"
+        src="https://analytics.arinji.com/script.js"
+        data-website-id={process.env.ANALYTICS_ID}
+      />
       <head>
         <meta property="og:title" content="Sense Or Nonsense" />
         <meta property="og:type" content="website" />
